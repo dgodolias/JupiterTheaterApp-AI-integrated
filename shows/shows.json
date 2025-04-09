@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Moonlight Sonata",
+    "day": "Friday",
+    "topic": "Drama",
+    "time": "20:00",
+    "cast": ["Elena Papadopoulou", "Nikos Alexiou", "Maria Katsari", "Dimitris Pavlidis"],
+    "room": "12A",
+    "duration": "120",
+    "stars": 4.8
+  },
+  {
+    "name": "The Tempest's Echo",
+    "day": "Saturday",
+    "topic": "Classical",
+    "time": "19:30",
+    "cast": ["Andreas Konstantinou", "Sofia Kokkali", "Yiannis Stankoglou", "Christina Maxouri"],
+    "room": "15B",
+    "duration": "150",
+    "stars": 4.9
+  },
+  {
+    "name": "Laughter Therapy",
+    "day": "Sunday",
+    "topic": "Comedy",
+    "time": "21:00",
+    "cast": ["Petros Filippidis", "Smaragda Karydi", "Thanasis Alevras", "Georgia Vourvou"],
+    "room": "7C",
+    "duration": "90",
+    "stars": 4.5
+  },
+  {
+    "name": "Prometheus Unbound",
+    "day": "Wednesday",
+    "topic": "Ancient Greek",
+    "time": "18:30",
+    "cast": ["Kostas Kazakos", "Manos Vakousis", "Marisa Triantafyllidou", "Alexandros Mylonas"],
+    "room": "21A",
+    "duration": "135",
+    "stars": 4.7
+  },
+  {
+    "name": "Digital Dreams",
+    "day": "Thursday",
+    "topic": "Modern",
+    "time": "20:30",
+    "cast": ["Orfeas Avgoustidis", "Dorothea Merkouri", "Yannis Tsortekis"],
+    "room": "9D",
+    "duration": "100",
+    "stars": 4.2
+  },
+  {
+    "name": "The Last Dance",
+    "day": "Monday",
+    "topic": "Musical",
+    "time": "19:00",
+    "cast": ["Tamta", "Sakis Rouvas", "Eleni Foureira", "Konstantinos Argyros", "Despina Vandi"],
+    "room": "18A",
+    "duration": "180",
+    "stars": 4.6
+  },
+  {
+    "name": "Whispers in the Dark",
+    "day": "Tuesday",
+    "topic": "Mystery",
+    "time": "21:30",
+    "cast": ["Giorgos Karamihos", "Katerina Lehou", "Alexandros Bourdoumis"],
+    "room": "5B",
+    "duration": "110",
+    "stars": 4.3
+  },
+  {
+    "name": "Children of Tomorrow",
+    "day": "Saturday",
+    "topic": "Family",
+    "time": "16:00",
+    "cast": ["Stefania Goulioti", "Apostolis Totsikas", "Maria Kavoyianni", "Jason Mantzoukas"],
+    "room": "11C",
+    "duration": "75",
+    "stars": 4.9
+  },
+  {
+    "name": "Revolutionary Tales",
+    "day": "Sunday",
+    "topic": "Historical",
+    "time": "17:30",
+    "cast": ["Konstantinos Markoulakis", "Odyseas Papaspiliopoulos", "Vicky Papadopoulou"],
+    "room": "14B",
+    "duration": "160",
+    "stars": 4.7
+  },
+  {
+    "name": "Midnight Cabaret",
+    "day": "Friday",
+    "topic": "Variety Show",
+    "time": "23:00",
+    "cast": ["Eleni Vaitsou", "Panos Mouzourakis", "Katerina Vrana", "Lambros Fisfis", "Zoi Dimitriou"],
+    "room": "3D",
+    "duration": "140",
+    "stars": 4.8
+  }
+]
