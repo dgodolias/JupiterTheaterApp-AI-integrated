@@ -1,4 +1,5 @@
 import os
+import sys
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -47,6 +48,54 @@ def send_message_to_llm(user_message, system_message="You are a helpful assistan
         print(f"Error calling OpenRouter API: {e}")
         return f"Error: {str(e)}"
 
+
+def categorize_prompt(user_message):
+    """
+    Categorizes the user message into one of the predefined Greek categories.
+    
+    Args:
+        user_message (str): The user's message to categorize
+        
+    Returns:
+        str: The category label
+    """
+    system_prompt = """
+    You are a text classifier. Classify the user's message into EXACTLY ONE of these categories:
+    - ΚΡΑΤΗΣΗ (for reservation requests)
+    - ΑΚΥΡΩΣΗ (for cancellation requests)
+    - ΠΛΗΡΟΦΟΡΙΕΣ (for information requests about shows, times, etc.)
+    - ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ (for reviews, comments, feedback)
+    - ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ (for questions about discounts, offers, promotions)
+    
+    Respond ONLY with the category name in Greek, nothing else.
+    """
+    
+    # Use a smaller, faster model for classification
+    model = AVAILABLE_MODELS["llama-4-scout"]
+    
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=model,
+        max_tokens=20  # Short response for classification
+    )
+    
+    # Clean up and normalize the response
+    result = result.strip().upper()
+    
+    # Validate category
+    valid_categories = [
+        "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
+    ]
+    
+    # Return the category if valid, otherwise default to ΠΛΗΡΟΦΟΡΙΕΣ
+    if any(category in result for category in valid_categories):
+        for category in valid_categories:
+            if category in result:
+                return category
+    
+    return "ΠΛΗΡΟΦΟΡΙΕΣ"  # Default category
+
 # Available models
 AVAILABLE_MODELS = {
     "llama-4-maverick": "meta-llama/llama-4-maverick:free",
@@ -55,45 +104,17 @@ AVAILABLE_MODELS = {
     "gemini-2.5": "google/gemini-2.5-pro-exp-03-25:free"
 }
 
-def select_model(message_type):
-    """
-    Programmatically select a model based on the message type or other criteria
-    
-    Args:
-        message_type (str): Type of message being processed
-        
-    Returns:
-        str: The selected model identifier
-    """
-    # You can implement your selection logic here
-    # This is just an example implementation
-    if "complex" in message_type.lower():
-        return AVAILABLE_MODELS["gemini-2.5"]  # Use Gemini for complex queries
-    elif "creative" in message_type.lower():
-        return AVAILABLE_MODELS["llama-4-maverick"]  # Use Llama Maverick for creative tasks
-    elif "factual" in message_type.lower():
-        return AVAILABLE_MODELS["deepseek-v3"]  # Use Deepseek for factual info
-    else:
-        return AVAILABLE_MODELS["llama-4-scout"]  # Default to Llama Scout
-
 if __name__ == "__main__":
-    print("LLM Message Sender")
-    print("------------------")
+    print("Jupiter Theater Assistant")
+    print("-------------------------")
     
     # Get user input
     user_input = input("Enter your message: ")
-    message_type = input("Enter message type (complex/creative/factual/default): ")
     
-    # Programmatically select the model
-    selected_model = select_model(message_type)
+    # Categorize the message
+    category = categorize_prompt(user_input)
+    print(f"Message category: {category}")
     
-    # Send message to LLM and get response
-    response = send_message_to_llm(
-        user_message=user_input,
-        model=selected_model
-    )
+    # Exit after displaying the category
+    sys.exit(0)
     
-    # Display response
-    print("\nLLM Response:")
-    print("-------------")
-    print(response)
