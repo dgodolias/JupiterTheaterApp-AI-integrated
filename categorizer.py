@@ -406,7 +406,114 @@ def extract_booking_info(user_message):
     return booking_template
 
 
-# Updates for the main function
+def extract_cancellation_info(user_message):
+    """
+    Extracts cancellation information from user message.
+    
+    Args:
+        user_message (str): The user's cancellation request message
+        
+    Returns:
+        dict: Structured cancellation information with reservation number and passcode
+    """
+    # Define cancellation template with default empty values
+    cancellation_template = {
+        "reservation_number": "",
+        "passcode": ""
+    }
+    
+    system_prompt = """
+    Extract cancellation information from the user's message, which may be in Greek or English.
+    
+    IMPORTANT: Focus on finding the RESERVATION NUMBER and PASSCODE.
+    - Reservation numbers are typically 6-10 digits
+    - Passcodes are typically 4-6 digits or alphanumeric codes
+    
+    Look for phrases like:
+    - "Cancel reservation number..."
+    - "My booking number is..."
+    - "Passcode/PIN/verification code..."
+    - "Ακύρωση κράτησης με αριθμό..."
+    - "Κωδικός επιβεβαίωσης..."
+    
+    Return ONLY a valid JSON object with these fields:
+    - reservation_number: The booking reference number (string)
+    - passcode: The verification code or passcode (string)
+    
+    Example: {"reservation_number": "12345678", "passcode": "AB123"}
+    
+    If either field is not found in the message, leave it as an empty string.
+    Format as valid JSON with no additional text.
+    """
+    
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=AVAILABLE_MODELS["primary"],
+        max_tokens=100  # Short response for simple extraction
+    )
+    
+    extracted_info = {}
+    
+    try:
+        # Try to parse the response as JSON
+        if result and result.strip():
+            # Find any JSON-like structure in the response
+            start_idx = result.find('{')
+            end_idx = result.rfind('}')
+            
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = result[start_idx:end_idx+1]
+                extracted_info = json.loads(json_str)
+    except json.JSONDecodeError:
+        print("Failed to parse cancellation JSON from LLM response")
+    
+    # If extraction failed, try with a simplified prompt
+    if not extracted_info:
+        system_prompt = """
+        Find the reservation number and passcode in the user's message.
+        Look for numbers or codes that could identify a booking.
+        
+        Return a simple JSON with these fields:
+        - reservation_number: The booking reference number
+        - passcode: The verification code
+        
+        Example: {"reservation_number": "12345678", "passcode": "AB123"}
+        """
+        
+        result = send_message_to_llm(
+            user_message=user_message,
+            system_message=system_prompt,
+            model=AVAILABLE_MODELS["fallback"],
+            max_tokens=100
+        )
+        
+        try:
+            # Try to parse again
+            if result and result.strip():
+                start_idx = result.find('{')
+                end_idx = result.rfind('}')
+                
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_str = result[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str)
+        except json.JSONDecodeError:
+            print("Failed to extract cancellation info even with simplified prompt")
+            # Initialize with empty values to prevent errors
+            extracted_info = {
+                "reservation_number": "",
+                "passcode": ""
+            }
+    
+    # Merge extracted info with template to ensure all fields are present
+    for key in ["reservation_number", "passcode"]:
+        if key in extracted_info:
+            cancellation_template[key] = extracted_info[key]
+    
+    return cancellation_template
+
+
+# Update main function to handle "ΑΚΥΡΩΣΗ" category
 if __name__ == "__main__":
     print("Jupiter Theater Assistant")
     print("-------------------------")
@@ -441,5 +548,15 @@ if __name__ == "__main__":
         booking_info_path = os.path.join(booking_folder, 'booking_info.json')
         with open(booking_info_path, 'w', encoding='utf-8') as f:
             json.dump(booking_info, f, ensure_ascii=False, indent=2)
+            
+    elif category == "ΑΚΥΡΩΣΗ":
+        # Extract cancellation information for cancellation requests
+        cancellation_info = extract_cancellation_info(user_input)
+        print(f"Extracted cancellation info: {json.dumps(cancellation_info, ensure_ascii=False)}")
+        
+        # Save cancellation information to a file
+        cancellation_info_path = os.path.join(booking_folder, 'cancellation_info.json')
+        with open(cancellation_info_path, 'w', encoding='utf-8') as f:
+            json.dump(cancellation_info, f, ensure_ascii=False, indent=2)
     
     sys.exit(0)
