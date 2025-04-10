@@ -257,6 +257,156 @@ def extract_show_info(user_message):
     
     return template
 
+def extract_booking_info(user_message):
+    """
+    Extracts booking information from user message including show details and attendees.
+    
+    Args:
+        user_message (str): The user's booking request message
+        
+    Returns:
+        dict: Structured booking information
+    """
+    # Define booking template with default empty values
+    booking_template = {
+        "show_name": "",
+        "room": "",
+        "day": "",
+        "time": "",
+        # Initialize persons 1-10 with empty subfields
+    }
+    
+    # Initialize person1 through person10 fields with empty subfields
+    for i in range(1, 11):
+        booking_template[f"person{i}"] = {
+            f"name{i}": "",
+            f"age{i}": "",
+            f"seat{i}": ""
+        }
+    
+    system_prompt = """
+    Extract booking information from the user's message, which may be in Greek or English.
+    
+    IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
+    - Show name (translate if possible, otherwise transliterate)
+    - Person names (transliterate properly)
+    - Theater room or venue names (transliterate) 
+    
+    For days, use English day names: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+    
+    Return a valid JSON object with these fields:
+    - show_name: Name of the show (string)
+    - room: Theater room number or name (string)
+    - day: Day of the week for the booking (string)
+    - time: Time of the show in 24-hour format (HH:MM) (string)
+    - person1 through person10: Information for up to 10 people in the booking (objects)
+      Each person object should have:
+      - name{i}: Person's name (string)
+      - age{i}: Person's age (string or number)
+      - seat{i}: Requested seat number/location if specified (string)
+    
+    Only include person fields that are explicitly mentioned. If no specific seats are requested,
+    leave the seat fields empty. Format as valid JSON with no additional text.
+    
+    Example for a booking with 2 people:
+    {
+      "show_name": "Hamlet",
+      "room": "Main Stage",
+      "day": "Friday",
+      "time": "20:00",
+      "person1": {"name1": "John Smith", "age1": "35", "seat1": "A12"},
+      "person2": {"name2": "Mary Smith", "age2": "30", "seat2": "A13"},
+      "person3": {"name3": "", "age3": "", "seat3": ""},
+      ...and so on for person4-person10
+    }
+    """
+    
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=AVAILABLE_MODELS["primary"],
+        max_tokens=500  # Larger max_tokens for booking details
+    )
+    
+    extracted_info = {}
+    
+    try:
+        # Try to parse the response as JSON
+        if result and result.strip():
+            # Find any JSON-like structure in the response
+            start_idx = result.find('{')
+            end_idx = result.rfind('}')
+            
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = result[start_idx:end_idx+1]
+                extracted_info = json.loads(json_str)
+    except json.JSONDecodeError:
+        print("Failed to parse booking JSON from LLM response")
+    
+    # If extraction failed, try with a simplified prompt
+    if not extracted_info:
+        system_prompt = """
+        Extract basic booking information from the user's message.
+        Translate all Greek text to English.
+        
+        Return a simple JSON with these fields:
+        - show_name: Name of the show
+        - room: Theater room/venue 
+        - day: Day of the week in English
+        - time: Show time in 24-hour format
+        - person1: {"name1": "Person's name", "age1": "age", "seat1": "seat number"}
+        
+        Only include information that is explicitly mentioned.
+        Example: {"show_name": "Hamlet", "day": "Friday", "time": "20:00", 
+                  "person1": {"name1": "John", "age1": "35", "seat1": ""}}
+        """
+        
+        result = send_message_to_llm(
+            user_message=user_message,
+            system_message=system_prompt,
+            model=AVAILABLE_MODELS["fallback"],
+            max_tokens=300
+        )
+        
+        try:
+            # Try to parse again
+            if result and result.strip():
+                start_idx = result.find('{')
+                end_idx = result.rfind('}')
+                
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_str = result[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str)
+        except json.JSONDecodeError:
+            print("Failed to extract booking info even with simplified prompt")
+            # Initialize with minimal info to prevent errors
+            extracted_info = {
+                "show_name": "",
+                "room": "",
+                "day": "",
+                "time": "",
+                "person1": {"name1": "", "age1": "", "seat1": ""}
+            }
+    
+    # Merge extracted info with template to ensure all fields are present
+    # First handle the top-level fields
+    for key in ["show_name", "room", "day", "time"]:
+        if key in extracted_info:
+            booking_template[key] = extracted_info[key]
+    
+    # Then handle the person fields
+    for i in range(1, 11):
+        person_key = f"person{i}"
+        if person_key in extracted_info:
+            # Get all subfields that exist in the extracted data
+            for subkey in [f"name{i}", f"age{i}", f"seat{i}"]:
+                if subkey in extracted_info[person_key]:
+                    booking_template[person_key][subkey] = extracted_info[person_key][subkey]
+    
+    return booking_template
+
+
+# Updates for the main function
 if __name__ == "__main__":
     print("Jupiter Theater Assistant")
     print("-------------------------")
@@ -268,20 +418,28 @@ if __name__ == "__main__":
     category = categorize_prompt(user_input)
     print(f"Message category: {category}")
     
-    # If category is ΠΛΗΡΟΦΟΡΙΕΣ, extract show information
+    # Create the booking folder if it doesn't exist
+    booking_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'booking')
+    os.makedirs(booking_folder, exist_ok=True)
+    
     if category == "ΠΛΗΡΟΦΟΡΙΕΣ":
-        # Extract show information from the user's message
+        # Extract show information for information requests
         show_info = extract_show_info(user_input)
         print(f"Extracted information: {json.dumps(show_info, ensure_ascii=False)}")
         
-        # Create the booking folder if it doesn't exist
-        booking_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'booking')
-        os.makedirs(booking_folder, exist_ok=True)
-        
-        # Save extracted information to a file for booking.py to read
+        # Save extracted information to a file
         extracted_info_path = os.path.join(booking_folder, 'extracted_info.json')
         with open(extracted_info_path, 'w', encoding='utf-8') as f:
             json.dump(show_info, f, ensure_ascii=False, indent=2)
+    
+    elif category == "ΚΡΑΤΗΣΗ":
+        # Extract booking information for reservation requests
+        booking_info = extract_booking_info(user_input)
+        print(f"Extracted booking: {json.dumps(booking_info, ensure_ascii=False)}")
         
+        # Save booking information to a file
+        booking_info_path = os.path.join(booking_folder, 'booking_info.json')
+        with open(booking_info_path, 'w', encoding='utf-8') as f:
+            json.dump(booking_info, f, ensure_ascii=False, indent=2)
     
     sys.exit(0)
