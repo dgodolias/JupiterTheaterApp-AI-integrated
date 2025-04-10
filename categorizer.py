@@ -513,7 +513,331 @@ def extract_cancellation_info(user_message):
     return cancellation_template
 
 
-# Update main function to handle "ΑΚΥΡΩΣΗ" category
+def extract_discount_info(user_message):
+    """
+    Extracts discount/promotion information from user message.
+    
+    Args:
+        user_message (str): The user's discount/promotion request message
+        
+    Returns:
+        dict: Structured discount information with show names, number of people, ages, and dates
+    """
+    # Define discount template with default empty values
+    discount_template = {
+        "show_name": [],  # Multiple show names
+        "no_of_people": 0,  # Single value for number of people
+        "age": [],  # Multiple age values or ranges
+        "date": []  # Multiple dates
+    }
+    
+    system_prompt = """
+    Extract discount/promotion information from the user's message, which may be in Greek or English.
+    
+    IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
+    - Show names (translate if possible, otherwise transliterate)
+    - Dates and age information
+    
+    Return a valid JSON object with these fields:
+    - show_name: Name(s) of the show(s) the user is interested in (array of strings)
+    - no_of_people: Number of people for the discount (number)
+    - age: Age(s) or age ranges mentioned (array of strings like "15", ">60", "<18")
+    - date: Date(s) or date ranges mentioned (array of strings)
+    
+    For dates, convert Greek month names to English and use the format "DD Month" or "DD/MM".
+    For age ranges, use operators like ">60" (over 60), "<18" (under 18), etc.
+    
+    Only include information that is explicitly mentioned in the message.
+    Format as valid JSON with no additional text.
+    
+    Example: {
+      "show_name": ["Hamlet", "Romeo and Juliet"],
+      "no_of_people": 3,
+      "age": ["student", ">65"],
+      "date": ["15 March", "Weekend"]
+    }
+    """
+    
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=AVAILABLE_MODELS["primary"],
+        max_tokens=200
+    )
+    
+    extracted_info = {}
+    
+    try:
+        # Try to parse the response as JSON
+        if result and result.strip():
+            # Find any JSON-like structure in the response
+            start_idx = result.find('{')
+            end_idx = result.rfind('}')
+            
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = result[start_idx:end_idx+1]
+                extracted_info = json.loads(json_str)
+    except json.JSONDecodeError:
+        print("Failed to parse discount JSON from LLM response")
+    
+    # If extraction failed, try with a simplified prompt
+    if not extracted_info:
+        system_prompt = """
+        Extract basic discount information from the user's message.
+        Translate all Greek text to English.
+        
+        Return a simple JSON with these fields:
+        - show_name: Name(s) of the show(s) (array)
+        - no_of_people: Number of people (number)
+        - age: Age(s) mentioned (array)
+        - date: Date(s) mentioned (array)
+        
+        Example: {
+          "show_name": ["Hamlet"],
+          "no_of_people": 2,
+          "age": ["student"],
+          "date": ["Friday"]
+        }
+        """
+        
+        result = send_message_to_llm(
+            user_message=user_message,
+            system_message=system_prompt,
+            model=AVAILABLE_MODELS["fallback"],
+            max_tokens=150
+        )
+        
+        try:
+            # Try to parse again
+            if result and result.strip():
+                start_idx = result.find('{')
+                end_idx = result.rfind('}')
+                
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_str = result[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str)
+        except json.JSONDecodeError:
+            print("Failed to extract discount info even with simplified prompt")
+            # Initialize with minimal info to prevent errors
+            extracted_info = {
+                "show_name": [],
+                "no_of_people": 0,
+                "age": [],
+                "date": []
+            }
+    
+    # Merge extracted info with template to ensure all fields are present
+    for key in ["show_name", "age", "date"]:
+        if key in extracted_info:
+            # Ensure these fields are arrays
+            if not isinstance(extracted_info[key], list):
+                discount_template[key] = [extracted_info[key]]
+            else:
+                discount_template[key] = extracted_info[key]
+    
+    # Handle no_of_people, ensuring it's a number
+    if "no_of_people" in extracted_info:
+        try:
+            discount_template["no_of_people"] = int(extracted_info["no_of_people"])
+        except (ValueError, TypeError):
+            # If conversion fails, try to extract a number from the value
+            if isinstance(extracted_info["no_of_people"], str) and any(c.isdigit() for c in extracted_info["no_of_people"]):
+                # Extract digits and convert to int
+                digits = ''.join(c for c in extracted_info["no_of_people"] if c.isdigit())
+                if digits:
+                    discount_template["no_of_people"] = int(digits)
+    
+    return discount_template
+
+
+def extract_review_info(user_message):
+    """
+    Extracts review and rating information from user message.
+    
+    Args:
+        user_message (str): The user's review/comment message
+        
+    Returns:
+        dict: Structured review information with reservation number, passcode, stars, and review text
+    """
+    # Define review template with default empty values
+    review_template = {
+        "reservation_number": "",
+        "passcode": "",
+        "stars": 0,
+        "review": ""
+    }
+    
+    system_prompt = """
+    Extract review/rating information from the user's message, which may be in Greek or English.
+    
+    IMPORTANT: TRANSLATE ALL GREEK TEXT TO ENGLISH for the review field.
+    
+    Return a valid JSON object with these fields:
+    - reservation_number: The booking reference number (string)
+    - passcode: The verification code or passcode (string)
+    - stars: Star rating given, typically 1-5 (number)
+    - review: The user's review text or comments (string) - TRANSLATED TO ENGLISH
+    
+    Look for phrases that indicate ratings such as:
+    - "I rate this show X stars"
+    - "X out of 5"
+    - "Rating: X"
+    - "Βαθμολογία: X"
+    - "X αστέρια"
+    
+    If specific fields are not found in the message, leave as empty string (or 0 for stars).
+    Format as valid JSON with no additional text.
+    
+    Example: {
+      "reservation_number": "12345678",
+      "passcode": "AB123",
+      "stars": 4,
+      "review": "The performance was excellent, with outstanding acting."
+    }
+    """
+    
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=AVAILABLE_MODELS["primary"],
+        max_tokens=300  # Higher token count for reviews
+    )
+    
+    extracted_info = {}
+    
+    try:
+        # Try to parse the response as JSON
+        if result and result.strip():
+            # Find any JSON-like structure in the response
+            start_idx = result.find('{')
+            end_idx = result.rfind('}')
+            
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_str = result[start_idx:end_idx+1]
+                extracted_info = json.loads(json_str)
+    except json.JSONDecodeError:
+        print("Failed to parse review JSON from LLM response")
+    
+    # If extraction failed, try with a simplified prompt
+    if not extracted_info:
+        system_prompt = """
+        Extract basic review information from the user's message.
+        Translate all Greek text to English.
+        
+        Return a simple JSON with these fields:
+        - reservation_number: Booking reference number
+        - passcode: Verification code
+        - stars: Rating (number 1-5)
+        - review: User's comments (translated to English)
+        
+        Example: {
+          "reservation_number": "12345678",
+          "passcode": "AB123",
+          "stars": 4,
+          "review": "Great performance"
+        }
+        """
+        
+        result = send_message_to_llm(
+            user_message=user_message,
+            system_message=system_prompt,
+            model=AVAILABLE_MODELS["fallback"],
+            max_tokens=200
+        )
+        
+        try:
+            # Try to parse again
+            if result and result.strip():
+                start_idx = result.find('{')
+                end_idx = result.rfind('}')
+                
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_str = result[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str)
+        except json.JSONDecodeError:
+            print("Failed to extract review info even with simplified prompt")
+            # Initialize with default values to prevent errors
+            extracted_info = {
+                "reservation_number": "",
+                "passcode": "",
+                "stars": 0,
+                "review": ""
+            }
+    
+    # Merge extracted info with template to ensure all fields are present
+    for key in ["reservation_number", "passcode", "review"]:
+        if key in extracted_info:
+            review_template[key] = extracted_info[key]
+    
+    # Handle stars field, ensuring it's a number
+    if "stars" in extracted_info:
+        try:
+            # Convert to integer if possible
+            review_template["stars"] = int(extracted_info["stars"])
+        except (ValueError, TypeError):
+            # Try to extract digits if it's a string with non-numeric characters
+            if isinstance(extracted_info["stars"], str):
+                digits = ''.join(c for c in extracted_info["stars"] if c.isdigit())
+                if digits:
+                    # Use only the first digit if multiple were found
+                    review_template["stars"] = int(digits[0])
+    
+    return review_template
+
+
+def categorize_prompt(user_message):
+    """
+    Categorizes the user message into one of the predefined Greek categories.
+    
+    Args:
+        user_message (str): The user's message to categorize
+        
+    Returns:
+        str: The category label
+    """
+    system_prompt = """
+    You are a text classifier. Classify the user's message into EXACTLY ONE of these categories:
+    - ΚΡΑΤΗΣΗ (for reservation requests)
+    - ΑΚΥΡΩΣΗ (for cancellation requests)
+    - ΠΛΗΡΟΦΟΡΙΕΣ (for information requests about shows, times, etc.)
+    - ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ (for reviews, comments, feedback)
+    - ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ (for questions about discounts, offers, promotions)
+    - ΕΞΟΔΟΣ (for exit/quit requests, closing the application)
+    
+    The ΕΞΟΔΟΣ category should be used for requests to exit, quit, close, or terminate the application.
+    Phrases like "exit", "quit", "close", "βγες απο την εφαρμογη", "κλεισε", "εξοδος", "τελος" should be classified as ΕΞΟΔΟΣ.
+    
+    Respond ONLY with the category name in Greek, nothing else.
+    """
+    
+    # Use primary model for classification
+    result = send_message_to_llm(
+        user_message=user_message,
+        system_message=system_prompt,
+        model=AVAILABLE_MODELS["primary"],
+        max_tokens=20  # Short response for classification
+    )
+    
+    # Clean up and normalize the response
+    result = result.strip().upper()
+    
+    # Validate category
+    valid_categories = [
+        "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
+        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "ΕΞΟΔΟΣ"
+    ]
+    
+    # Return the category if valid, otherwise default to ΠΛΗΡΟΦΟΡΙΕΣ
+    if any(category in result for category in valid_categories):
+        for category in valid_categories:
+            if category in result:
+                return category
+    
+    return "ΠΛΗΡΟΦΟΡΙΕΣ"  # Default category
+
+
+# Update main function to handle "ΕΞΟΔΟΣ" category
 if __name__ == "__main__":
     print("Jupiter Theater Assistant")
     print("-------------------------")
@@ -524,6 +848,11 @@ if __name__ == "__main__":
     # Categorize the message
     category = categorize_prompt(user_input)
     print(f"Message category: {category}")
+    
+    # Handle exit requests immediately
+    if category == "ΕΞΟΔΟΣ":
+        print("Exiting the application...")
+        sys.exit(0)
     
     # Create the booking folder if it doesn't exist
     booking_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'booking')
@@ -558,5 +887,25 @@ if __name__ == "__main__":
         cancellation_info_path = os.path.join(booking_folder, 'cancellation_info.json')
         with open(cancellation_info_path, 'w', encoding='utf-8') as f:
             json.dump(cancellation_info, f, ensure_ascii=False, indent=2)
+            
+    elif category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+        # Extract discount information for promotion/discount requests
+        discount_info = extract_discount_info(user_input)
+        print(f"Extracted discount info: {json.dumps(discount_info, ensure_ascii=False)}")
+        
+        # Save discount information to a file
+        discount_info_path = os.path.join(booking_folder, 'discount_info.json')
+        with open(discount_info_path, 'w', encoding='utf-8') as f:
+            json.dump(discount_info, f, ensure_ascii=False, indent=2)
+            
+    elif category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+        # Extract review information for reviews/comments
+        review_info = extract_review_info(user_input)
+        print(f"Extracted review info: {json.dumps(review_info, ensure_ascii=False)}")
+        
+        # Save review information to a file
+        review_info_path = os.path.join(booking_folder, 'review_info.json')
+        with open(review_info_path, 'w', encoding='utf-8') as f:
+            json.dump(review_info, f, ensure_ascii=False, indent=2)
     
     sys.exit(0)
