@@ -127,33 +127,44 @@ def extract_show_info(user_message):
     Returns:
         dict: Complete show information dictionary with all fields
     """
-    # Define template with all required fields (empty by default)
+    # Define template with all fields as arrays (empty by default)
     template = {
-        "name": "",
-        "day": [],  # Changed to array for multiple days
-        "topic": [],  # Changed to array for multiple topics
-        "time": "",
+        "name": [],
+        "day": [],  # Array for multiple days
+        "topic": [],  # Array for multiple topics
+        "time": [],  # Array for time constraints with operators
         "cast": [],
-        "room": "",
-        "duration": "",
-        "stars": ""
+        "room": [],
+        "duration": [],
+        "stars": []
     }
     
     system_prompt = """
-    Extract information about theater shows from the user's message in Greek or English.
-    Translate any Greek terms to their English equivalents.
+    Extract information about theater shows from the user's message, which may be in Greek or English.
+    
+    IMPORTANT: TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
+    - Names of actors/performers (transliterate properly)
+    - Show titles (transliterate or translate when possible)
+    - Venue or theater names (transliterate)
+    - Topics/genres (translate to English equivalent terms)
     
     For days of the week, use: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
     
-    Return ONLY a valid JSON object with these fields:
-    - name: The show name (string)
-    - day: Days of the week as ARRAY (e.g. ["Saturday", "Sunday"] for weekend)
-    - topic: Show genres/topics as ARRAY
-    - time: Show time (e.g. "20:00")
-    - cast: Array of cast member names mentioned
-    - room: Room number (e.g. "12A")
-    - duration: Show duration in minutes
-    - stars: Minimum star rating (as a number)
+    TIME FORMATTING RULES:
+    - For "after X time" use ">HH:MM" format (e.g., after 7 PM = ">19:00")
+    - For "before X time" use "<HH:MM" format
+    - For time ranges "between X and Y" use ">HH:MM,<HH:MM" format (e.g., between 5-7 PM = ">17:00,<19:00")
+    - For "before X OR after Y" use "<HH:MM,>HH:MM" format (e.g., before 5 PM or after 8 PM = "<17:00,>20:00")
+    
+    Return ONLY a valid JSON object with these fields (all must be arrays, even if single value):
+    - name: Show names (array of strings)
+    - day: Days of the week (array of strings)
+    - topic: Show genres/topics (array of strings)
+    - time: Time constraints with operators (array of strings)
+    - cast: Cast member names mentioned (array of strings) - TRANSLITERATED TO ENGLISH
+    - room: Room numbers or theater venues (array of strings)
+    - duration: Show durations (array of strings)
+    - stars: Star ratings (array of numbers or strings with operators like ">4")
     
     IMPORTANT: If weekend ("Σαββατοκύριακο" or similar) is mentioned, include both Saturday and Sunday in the day array.
     Only include fields explicitly mentioned. Format as valid JSON with no additional text.
@@ -184,20 +195,29 @@ def extract_show_info(user_message):
     # If extraction failed completely, try one more time with a simpler prompt
     if not extracted_info:
         system_prompt = """
-        Extract days of week and minimum star rating from the user's message.
-        Translate Greek terms to English (e.g. "Σάββατο" → "Saturday", "Σαββατοκύριακο" → ["Saturday", "Sunday"]).
+        Extract and TRANSLITERATE all information from the user's message to English.
         
-        IMPORTANT: If weekend is mentioned, include both Saturday and Sunday in the day array.
-        IMPORTANT: If minimum star rating is mentioned, include it as a number.
+        TRANSLITERATION RULES:
+        - Convert Greek letters to their closest English equivalents
+        - "α" → "a", "β" → "v", "γ" → "g", "δ" → "d", "ε" → "e", etc.
+        - Greek names should be properly transliterated, not translated
+        - Greek genres/topics should be translated to English equivalents
+        - Greek days should be converted to English day names
         
-        Return ONLY a valid JSON like {"day": ["Saturday", "Sunday"], "stars": 3.5} - nothing else.
+        TIME FORMATTING:
+        - After specific time → ">HH:MM" (e.g., after 7 PM = ">19:00")
+        - Before specific time → "<HH:MM" (e.g., before 5 PM = "<17:00")
+        - Between times → ">HH:MM,<HH:MM" (e.g., between 5-7 PM = ">17:00,<19:00")
+        
+        Return a valid JSON with ALL text in English, formatted as arrays.
+        Example: {"day": ["Saturday", "Sunday"], "cast": ["Actor Name"], "topic": ["thriller"]}
         """
         
         result = send_message_to_llm(
             user_message=user_message,
             system_message=system_prompt,
             model=AVAILABLE_MODELS["fallback"],
-            max_tokens=100
+            max_tokens=150
         )
         
         try:
@@ -212,29 +232,28 @@ def extract_show_info(user_message):
         except json.JSONDecodeError:
             print("Failed to extract even with simplified prompt")
             
-            # Last resort - common Greek patterns for weekend
+            # Basic pattern matching without hardcoding specific names
+            # Only for critical weekend and time patterns
             if "σαββατοκυριακο" in user_message.lower() or "σαββατοκύριακο" in user_message.lower():
                 extracted_info = {"day": ["Saturday", "Sunday"]}
                 
-                # Try to extract stars if mentioned
-                if "αστερι" in user_message.lower() or "αστέρι" in user_message.lower():
-                    for num in ["3", "3.5", "4", "4.5", "5"]:
-                        if num in user_message:
-                            extracted_info["stars"] = float(num)
-                            break
+                # Handle time constraints with basic pattern matching
+                if "μετα" in user_message.lower() or "μετά" in user_message.lower():
+                    if "7" in user_message or "19" in user_message or "επτα" in user_message.lower() or "επτά" in user_message.lower():
+                        extracted_info["time"] = [">19:00"]
+                    elif "8" in user_message or "20" in user_message or "οκτω" in user_message.lower() or "οκτώ" in user_message.lower():
+                        extracted_info["time"] = [">20:00"]
     
     # Merge extracted info with template to ensure all fields are present
     for key, value in extracted_info.items():
         if key in template:
-            template[key] = value
+            # Convert single values to arrays if they're not already
+            if not isinstance(value, list):
+                template[key] = [value]
+            else:
+                template[key] = value
     
-    # Convert string day to array if needed
-    if template["day"] and isinstance(template["day"], str):
-        template["day"] = [template["day"]]
-    
-    # Convert string topic to array if needed
-    if template["topic"] and isinstance(template["topic"], str):
-        template["topic"] = [template["topic"]]
+    return template
     
     return template
 

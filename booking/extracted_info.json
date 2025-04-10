@@ -1,10 +1,12 @@
 {
-  "name": "",
+  "name": [],
   "day": [],
   "topic": [],
-  "time": "",
+  "time": [],
   "cast": [],
-  "room": "",
-  "duration": 0,
-  "stars": 0
+  "room": [],
+  "duration": [],
+  "stars": [
+    ">4"
+  ]
 }
