@@ -1,0 +1,6 @@
+{
+    "reservation_number": "",
+    "passcode": "",
+    "stars": 0,
+    "review": ""
+}

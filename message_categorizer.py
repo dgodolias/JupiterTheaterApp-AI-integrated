@@ -70,6 +70,14 @@ def send_message_to_llm(user_message, system_message="You are a helpful assistan
 
 from llm_utils import send_message_to_llm, AVAILABLE_MODELS
 
+def load_prompt(filename):
+    with open(os.path.join("prompts", filename), "r", encoding="utf-8") as f:
+        return f.read()
+
+def load_json_template(filename):
+    with open(os.path.join("json_templates", filename), "r", encoding="utf-8") as f:
+        return json.load(f)
+
 def categorize_prompt(user_message):
     """
     Categorizes the user message into one of the predefined Greek categories.
@@ -80,20 +88,7 @@ def categorize_prompt(user_message):
     Returns:
         str: The category label
     """
-    system_prompt = """
-    You are a text classifier. Classify the user's message into EXACTLY ONE of these categories:
-    - ΚΡΑΤΗΣΗ (for reservation requests)
-    - ΑΚΥΡΩΣΗ (for cancellation requests)
-    - ΠΛΗΡΟΦΟΡΙΕΣ (for information requests about shows, times, etc.)
-    - ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ (for reviews, comments, feedback)
-    - ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ (for questions about discounts, offers, promotions)
-    - ΕΞΟΔΟΣ (for exit/quit requests, closing the application)
-    
-    The ΕΞΟΔΟΣ category should be used for requests to exit, quit, close, or terminate the application.
-    Phrases like "exit", "quit", "close", "βγες απο την εφαρμογη", "κλεισε", "εξοδος", "τελος" should be classified as ΕΞΟΔΟΣ.
-    
-    Respond ONLY with the category name in Greek, nothing else.
-    """
+    system_prompt = load_prompt("categorize.txt")
     
     # Use primary model for classification
     result = send_message_to_llm(

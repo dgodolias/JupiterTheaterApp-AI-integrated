@@ -1,0 +1,16 @@
+{
+    "show_name": "",
+    "room": "",
+    "day": "",
+    "time": "",
+    "person1": {"name1": "", "age1": "", "seat1": ""},
+    "person2": {"name2": "", "age2": "", "seat2": ""},
+    "person3": {"name3": "", "age3": "", "seat3": ""},
+    "person4": {"name4": "", "age4": "", "seat4": ""},
+    "person5": {"name5": "", "age5": "", "seat5": ""},
+    "person6": {"name6": "", "age6": "", "seat6": ""},
+    "person7": {"name7": "", "age7": "", "seat7": ""},
+    "person8": {"name8": "", "age8": "", "seat8": ""},
+    "person9": {"name9": "", "age9": "", "seat9": ""},
+    "person10": {"name10": "", "age10": "", "seat10": ""}
+}

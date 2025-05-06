@@ -1,0 +1,8 @@
+Find the reservation number and passcode in the user's message.
+Look for numbers or codes that could identify a booking.
+
+Return a simple JSON with these fields:
+- reservation_number: The booking reference number
+- passcode: The verification code
+
+Example: {"reservation_number": "12345678", "passcode": "AB123"}

@@ -1,0 +1,4 @@
+{
+    "reservation_number": "",
+    "passcode": ""
+}

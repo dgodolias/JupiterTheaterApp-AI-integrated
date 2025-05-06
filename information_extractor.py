@@ -1,5 +1,16 @@
 import json
+import os  # Add os import
 from llm_utils import send_message_to_llm, AVAILABLE_MODELS
+
+# Helper function to load prompts from files
+def load_prompt(filename):
+    with open(os.path.join("prompts", filename), "r", encoding="utf-8") as f:
+        return f.read()
+
+# Helper function to load JSON templates from files
+def load_json_template(filename):
+    with open(os.path.join("json_templates", filename), "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def extract_show_info(user_message):
     """
@@ -12,47 +23,9 @@ def extract_show_info(user_message):
         dict: Complete show information dictionary with all fields
     """
     # Define template with all fields as arrays (empty by default)
-    template = {
-        "name": [],
-        "day": [],  # Array for multiple days
-        "topic": [],  # Array for multiple topics
-        "time": [],  # Array for time constraints with operators
-        "cast": [],
-        "room": [],
-        "duration": [],
-        "stars": []
-    }
+    template = load_json_template("show_info.txt")
     
-    system_prompt = """
-    Extract information about theater shows from the user's message, which may be in Greek or English.
-    
-    IMPORTANT: TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
-    - Names of actors/performers (transliterate properly)
-    - Show titles (transliterate or translate when possible)
-    - Venue or theater names (transliterate)
-    - Topics/genres (translate to English equivalent terms)
-    
-    For days of the week, use: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-    
-    TIME FORMATTING RULES:
-    - For "after X time" use ">HH:MM" format (e.g., after 7 PM = ">19:00")
-    - For "before X time" use "<HH:MM" format
-    - For time ranges "between X and Y" use ">HH:MM,<HH:MM" format (e.g., between 5-7 PM = ">17:00,<19:00")
-    - For "before X OR after Y" use "<HH:MM,>HH:MM" format (e.g., before 5 PM or after 8 PM = "<17:00,>20:00")
-    
-    Return ONLY a valid JSON object with these fields (all must be arrays, even if single value):
-    - name: Show names (array of strings)
-    - day: Days of the week (array of strings)
-    - topic: Show genres/topics (array of strings)
-    - time: Time constraints with operators (array of strings)
-    - cast: Cast member names mentioned (array of strings) - TRANSLITERATED TO ENGLISH
-    - room: Room numbers or theater venues (array of strings)
-    - duration: Show durations (array of strings)
-    - stars: Star ratings (array of numbers or strings with operators like ">4")
-    
-    IMPORTANT: If weekend ("Σαββατοκύριακο" or similar) is mentioned, include both Saturday and Sunday in the day array.
-    Only include fields explicitly mentioned. Format as valid JSON with no additional text.
-    """
+    system_prompt = load_prompt("show_info.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
@@ -78,24 +51,7 @@ def extract_show_info(user_message):
     
     # If extraction failed completely, try one more time with a simpler prompt
     if not extracted_info:
-        system_prompt = """
-        Extract and TRANSLITERATE all information from the user's message to English.
-        
-        TRANSLITERATION RULES:
-        - Convert Greek letters to their closest English equivalents
-        - "α" → "a", "β" → "v", "γ" → "g", "δ" → "d", "ε" → "e", etc.
-        - Greek names should be properly transliterated, not translated
-        - Greek genres/topics should be translated to English equivalents
-        - Greek days should be converted to English day names
-        
-        TIME FORMATTING:
-        - After specific time → ">HH:MM" (e.g., after 7 PM = ">19:00")
-        - Before specific time → "<HH:MM" (e.g., before 5 PM = "<17:00")
-        - Between times → ">HH:MM,<HH:MM" (e.g., between 5-7 PM = ">17:00,<19:00")
-        
-        Return a valid JSON with ALL text in English, formatted as arrays.
-        Example: {"day": ["Saturday", "Sunday"], "cast": ["Actor Name"], "topic": ["thriller"]}
-        """
+        system_prompt = load_prompt("show_info_fallback.txt")
         
         result = send_message_to_llm(
             user_message=user_message,
@@ -150,58 +106,9 @@ def extract_booking_info(user_message):
         dict: Structured booking information
     """
     # Define booking template with default empty values
-    booking_template = {
-        "show_name": "",
-        "room": "",
-        "day": "",
-        "time": "",
-        # Initialize persons 1-10 with empty subfields
-    }
+    booking_template = load_json_template("booking.txt")
     
-    # Initialize person1 through person10 fields with empty subfields
-    for i in range(1, 11):
-        booking_template[f"person{i}"] = {
-            f"name{i}": "",
-            f"age{i}": "",
-            f"seat{i}": ""
-        }
-    
-    system_prompt = """
-    Extract booking information from the user's message, which may be in Greek or English.
-    
-    IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
-    - Show name (translate if possible, otherwise transliterate)
-    - Person names (transliterate properly)
-    - Theater room or venue names (transliterate) 
-    
-    For days, use English day names: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-    
-    Return a valid JSON object with these fields:
-    - show_name: Name of the show (string)
-    - room: Theater room number or name (string)
-    - day: Day of the week for the booking (string)
-    - time: Time of the show in 24-hour format (HH:MM) (string)
-    - person1 through person10: Information for up to 10 people in the booking (objects)
-      Each person object should have:
-      - name{i}: Person's name (string)
-      - age{i}: Person's age (string or number)
-      - seat{i}: Requested seat number/location if specified (string)
-    
-    Only include person fields that are explicitly mentioned. If no specific seats are requested,
-    leave the seat fields empty. Format as valid JSON with no additional text.
-    
-    Example for a booking with 2 people:
-    {
-      "show_name": "Hamlet",
-      "room": "Main Stage",
-      "day": "Friday",
-      "time": "20:00",
-      "person1": {"name1": "John Smith", "age1": "35", "seat1": "A12"},
-      "person2": {"name2": "Mary Smith", "age2": "30", "seat2": "A13"},
-      "person3": {"name3": "", "age3": "", "seat3": ""},
-      ...and so on for person4-person10
-    }
-    """
+    system_prompt = load_prompt("booking.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
@@ -227,21 +134,7 @@ def extract_booking_info(user_message):
     
     # If extraction failed, try with a simplified prompt
     if not extracted_info:
-        system_prompt = """
-        Extract basic booking information from the user's message.
-        Translate all Greek text to English.
-        
-        Return a simple JSON with these fields:
-        - show_name: Name of the show
-        - room: Theater room/venue 
-        - day: Day of the week in English
-        - time: Show time in 24-hour format
-        - person1: {"name1": "Person's name", "age1": "age", "seat1": "seat number"}
-        
-        Only include information that is explicitly mentioned.
-        Example: {"show_name": "Hamlet", "day": "Friday", "time": "20:00", 
-                  "person1": {"name1": "John", "age1": "35", "seat1": ""}}
-        """
+        system_prompt = load_prompt("booking_fallback.txt")
         
         result = send_message_to_llm(
             user_message=user_message,
@@ -262,13 +155,10 @@ def extract_booking_info(user_message):
         except json.JSONDecodeError:
             print("Failed to extract booking info even with simplified prompt")
             # Initialize with minimal info to prevent errors
-            extracted_info = {
-                "show_name": "",
-                "room": "",
-                "day": "",
-                "time": "",
-                "person1": {"name1": "", "age1": "", "seat1": ""}
-            }
+            extracted_info = load_json_template("booking.txt")  # Fallback to empty template
+            # Ensure person1 is present for basic fallback if template is complex
+            if "person1" not in extracted_info:
+                extracted_info["person1"] = {"name1": "", "age1": "", "seat1": ""}
     
     # Merge extracted info with template to ensure all fields are present
     # First handle the top-level fields
@@ -298,34 +188,9 @@ def extract_cancellation_info(user_message):
         dict: Structured cancellation information with reservation number and passcode
     """
     # Define cancellation template with default empty values
-    cancellation_template = {
-        "reservation_number": "",
-        "passcode": ""
-    }
+    cancellation_template = load_json_template("cancellation.txt")
     
-    system_prompt = """
-    Extract cancellation information from the user's message, which may be in Greek or English.
-    
-    IMPORTANT: Focus on finding the RESERVATION NUMBER and PASSCODE.
-    - Reservation numbers are typically 6-10 digits
-    - Passcodes are typically 4-6 digits or alphanumeric codes
-    
-    Look for phrases like:
-    - "Cancel reservation number..."
-    - "My booking number is..."
-    - "Passcode/PIN/verification code..."
-    - "Ακύρωση κράτησης με αριθμό..."
-    - "Κωδικός επιβεβαίωσης..."
-    
-    Return ONLY a valid JSON object with these fields:
-    - reservation_number: The booking reference number (string)
-    - passcode: The verification code or passcode (string)
-    
-    Example: {"reservation_number": "12345678", "passcode": "AB123"}
-    
-    If either field is not found in the message, leave it as an empty string.
-    Format as valid JSON with no additional text.
-    """
+    system_prompt = load_prompt("cancellation.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
@@ -351,16 +216,7 @@ def extract_cancellation_info(user_message):
     
     # If extraction failed, try with a simplified prompt
     if not extracted_info:
-        system_prompt = """
-        Find the reservation number and passcode in the user's message.
-        Look for numbers or codes that could identify a booking.
-        
-        Return a simple JSON with these fields:
-        - reservation_number: The booking reference number
-        - passcode: The verification code
-        
-        Example: {"reservation_number": "12345678", "passcode": "AB123"}
-        """
+        system_prompt = load_prompt("cancellation_fallback.txt")
         
         result = send_message_to_llm(
             user_message=user_message,
@@ -381,10 +237,7 @@ def extract_cancellation_info(user_message):
         except json.JSONDecodeError:
             print("Failed to extract cancellation info even with simplified prompt")
             # Initialize with empty values to prevent errors
-            extracted_info = {
-                "reservation_number": "",
-                "passcode": ""
-            }
+            extracted_info = load_json_template("cancellation.txt")  # Fallback to empty template
     
     # Merge extracted info with template to ensure all fields are present
     for key in ["reservation_number", "passcode"]:
@@ -404,39 +257,9 @@ def extract_discount_info(user_message):
         dict: Structured discount information with show names, number of people, ages, and dates
     """
     # Define discount template with default empty values
-    discount_template = {
-        "show_name": [],  # Multiple show names
-        "no_of_people": 0,  # Single value for number of people
-        "age": [],  # Multiple age values or ranges
-        "date": []  # Multiple dates
-    }
+    discount_template = load_json_template("discount.txt")
     
-    system_prompt = """
-    Extract discount/promotion information from the user's message, which may be in Greek or English.
-    
-    IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
-    - Show names (translate if possible, otherwise transliterate)
-    - Dates and age information
-    
-    Return a valid JSON object with these fields:
-    - show_name: Name(s) of the show(s) the user is interested in (array of strings)
-    - no_of_people: Number of people for the discount (number)
-    - age: Age(s) or age ranges mentioned (array of strings like "15", ">60", "<18")
-    - date: Date(s) or date ranges mentioned (array of strings)
-    
-    For dates, convert Greek month names to English and use the format "DD Month" or "DD/MM".
-    For age ranges, use operators like ">60" (over 60), "<18" (under 18), etc.
-    
-    Only include information that is explicitly mentioned in the message.
-    Format as valid JSON with no additional text.
-    
-    Example: {
-      "show_name": ["Hamlet", "Romeo and Juliet"],
-      "no_of_people": 3,
-      "age": ["student", ">65"],
-      "date": ["15 March", "Weekend"]
-    }
-    """
+    system_prompt = load_prompt("discount.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
@@ -462,23 +285,7 @@ def extract_discount_info(user_message):
     
     # If extraction failed, try with a simplified prompt
     if not extracted_info:
-        system_prompt = """
-        Extract basic discount information from the user's message.
-        Translate all Greek text to English.
-        
-        Return a simple JSON with these fields:
-        - show_name: Name(s) of the show(s) (array)
-        - no_of_people: Number of people (number)
-        - age: Age(s) mentioned (array)
-        - date: Date(s) mentioned (array)
-        
-        Example: {
-          "show_name": ["Hamlet"],
-          "no_of_people": 2,
-          "age": ["student"],
-          "date": ["Friday"]
-        }
-        """
+        system_prompt = load_prompt("discount_fallback.txt")
         
         result = send_message_to_llm(
             user_message=user_message,
@@ -499,12 +306,7 @@ def extract_discount_info(user_message):
         except json.JSONDecodeError:
             print("Failed to extract discount info even with simplified prompt")
             # Initialize with minimal info to prevent errors
-            extracted_info = {
-                "show_name": [],
-                "no_of_people": 0,
-                "age": [],
-                "date": []
-            }
+            extracted_info = load_json_template("discount.txt")  # Fallback to empty template
     
     # Merge extracted info with template to ensure all fields are present
     for key in ["show_name", "age", "date"]:
@@ -540,41 +342,9 @@ def extract_review_info(user_message):
         dict: Structured review information with reservation number, passcode, stars, and review text
     """
     # Define review template with default empty values
-    review_template = {
-        "reservation_number": "",
-        "passcode": "",
-        "stars": 0,
-        "review": ""
-    }
+    review_template = load_json_template("review.txt")
     
-    system_prompt = """
-    Extract review/rating information from the user's message, which may be in Greek or English.
-    
-    IMPORTANT: TRANSLATE ALL GREEK TEXT TO ENGLISH for the review field.
-    
-    Return a valid JSON object with these fields:
-    - reservation_number: The booking reference number (string)
-    - passcode: The verification code or passcode (string)
-    - stars: Star rating given, typically 1-5 (number)
-    - review: The user's review text or comments (string) - TRANSLATED TO ENGLISH
-    
-    Look for phrases that indicate ratings such as:
-    - "I rate this show X stars"
-    - "X out of 5"
-    - "Rating: X"
-    - "Βαθμολογία: X"
-    - "X αστέρια"
-    
-    If specific fields are not found in the message, leave as empty string (or 0 for stars).
-    Format as valid JSON with no additional text.
-    
-    Example: {
-      "reservation_number": "12345678",
-      "passcode": "AB123",
-      "stars": 4,
-      "review": "The performance was excellent, with outstanding acting."
-    }
-    """
+    system_prompt = load_prompt("review.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
@@ -600,23 +370,7 @@ def extract_review_info(user_message):
     
     # If extraction failed, try with a simplified prompt
     if not extracted_info:
-        system_prompt = """
-        Extract basic review information from the user's message.
-        Translate all Greek text to English.
-        
-        Return a simple JSON with these fields:
-        - reservation_number: Booking reference number
-        - passcode: Verification code
-        - stars: Rating (number 1-5)
-        - review: User's comments (translated to English)
-        
-        Example: {
-          "reservation_number": "12345678",
-          "passcode": "AB123",
-          "stars": 4,
-          "review": "Great performance"
-        }
-        """
+        system_prompt = load_prompt("review_fallback.txt")
         
         result = send_message_to_llm(
             user_message=user_message,
@@ -637,12 +391,7 @@ def extract_review_info(user_message):
         except json.JSONDecodeError:
             print("Failed to extract review info even with simplified prompt")
             # Initialize with default values to prevent errors
-            extracted_info = {
-                "reservation_number": "",
-                "passcode": "",
-                "stars": 0,
-                "review": ""
-            }
+            extracted_info = load_json_template("review.txt")  # Fallback to empty template
     
     # Merge extracted info with template to ensure all fields are present
     for key in ["reservation_number", "passcode", "review"]:

@@ -1,0 +1,15 @@
+Extract basic review information from the user's message.
+Translate all Greek text to English.
+
+Return a simple JSON with these fields:
+- reservation_number: Booking reference number
+- passcode: Verification code
+- stars: Rating (number 1-5)
+- review: User's comments (translated to English)
+
+Example: {
+  "reservation_number": "12345678",
+  "passcode": "AB123",
+  "stars": 4,
+  "review": "Great performance"
+}
