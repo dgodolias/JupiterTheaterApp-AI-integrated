@@ -109,28 +109,36 @@ def extract_booking_info(user_message):
         # Try to parse the response as JSON
         # The LLM might return a single JSON object or an array of JSON objects
         if result and result.strip():
-            # Check if the result is an array of bookings or a single booking
-            if result.strip().startswith('['):
-                # It's an array of bookings
-                parsed_result = json.loads(result)
-                if isinstance(parsed_result, list):
-                    extracted_bookings.extend(parsed_result)
-                else:
-                    # Handle cases where it's a list but not of dicts, or other unexpected list content
-                    print("Parsed result is a list, but not in the expected format of booking objects.")
-            elif result.strip().startswith('{'):
-                # It's a single booking object
-                parsed_object = json.loads(result)
-                extracted_bookings.append(parsed_object)
-            else:
-                print("LLM response:", result)
-                print("LLM response is not a valid JSON object or array.")
+            # Attempt to find the start and end of the JSON content
+            json_start_index = -1
+            json_end_index = -1
 
-    except json.JSONDecodeError:
-        print("Failed to parse booking JSON from LLM response")
-        # Fallback or error handling if primary parsing fails
-        # This part might need to be adjusted based on how fallback_prompt is structured
-        # For now, we assume fallback might also return one or more bookings
+            if result.strip().startswith('['):
+                json_start_index = result.find('[')
+                json_end_index = result.rfind(']')
+            elif result.strip().startswith('{'):
+                json_start_index = result.find('{')
+                json_end_index = result.rfind('}')
+            
+            if json_start_index != -1 and json_end_index != -1 and json_end_index > json_start_index:
+                json_str = result[json_start_index : json_end_index + 1]
+                # Check if the extracted string is an array or object
+                if json_str.strip().startswith('['):
+                    parsed_result = json.loads(json_str)
+                    if isinstance(parsed_result, list):
+                        extracted_bookings.extend(parsed_result)
+                    else:
+                        print(f"Parsed result from primary LLM is a list, but not in the expected format. Content: {json_str}")
+                elif json_str.strip().startswith('{'):
+                    parsed_object = json.loads(json_str)
+                    extracted_bookings.append(parsed_object) # Add as a single item list if it's one booking
+                else:
+                    print(f"LLM response (primary) after stripping non-JSON content is not a valid JSON object or array. Content: {json_str}")
+            else:
+                 print(f"Could not find valid JSON structure in primary LLM response. Raw response: {result}")
+
+    except json.JSONDecodeError as e:
+        print(f"Failed to parse booking JSON from primary LLM response: {e}. Raw response: {result}")
 
     # If primary extraction failed or didn't yield results, try with a simplified prompt
     if not extracted_bookings:
@@ -145,21 +153,31 @@ def extract_booking_info(user_message):
         
         try:
             if result_fallback and result_fallback.strip():
-                if result_fallback.strip().startswith('['):
-                    parsed_fallback = json.loads(result_fallback)
-                    if isinstance(parsed_fallback, list):
-                        extracted_bookings.extend(parsed_fallback)
-                elif result_fallback.strip().startswith('{'):
-                    parsed_fallback_object = json.loads(result_fallback)
-                    extracted_bookings.append(parsed_fallback_object)
-                else:
-                    print("Fallback LLM response is not a valid JSON object or array.")
-        except json.JSONDecodeError:
-            print("Failed to extract booking info even with simplified prompt")
-            # If all fails, we might return an empty list or a list with one empty template
-            # For consistency, let's return a list containing one default template if nothing was extracted
-            # extracted_bookings.append(load_json_template("booking.txt"))
+                json_start_index_fb = -1
+                json_end_index_fb = -1
 
+                if result_fallback.strip().startswith('['):
+                    json_start_index_fb = result_fallback.find('[')
+                    json_end_index_fb = result_fallback.rfind(']')
+                elif result_fallback.strip().startswith('{'):
+                    json_start_index_fb = result_fallback.find('{')
+                    json_end_index_fb = result_fallback.rfind('}')
+
+                if json_start_index_fb != -1 and json_end_index_fb != -1 and json_end_index_fb > json_start_index_fb:
+                    json_str_fb = result_fallback[json_start_index_fb : json_end_index_fb + 1]
+                    if json_str_fb.strip().startswith('['):
+                        parsed_fallback = json.loads(json_str_fb)
+                        if isinstance(parsed_fallback, list):
+                            extracted_bookings.extend(parsed_fallback)
+                    elif json_str_fb.strip().startswith('{'):
+                        parsed_fallback_object = json.loads(json_str_fb)
+                        extracted_bookings.append(parsed_fallback_object)
+                    else:
+                        print(f"Fallback LLM response after stripping non-JSON content is not a valid JSON object or array. Content: {json_str_fb}")
+                else:
+                    print(f"Could not find valid JSON structure in fallback LLM response. Raw response: {result_fallback}")
+        except json.JSONDecodeError as e:
+            print(f"Failed to extract booking info even with simplified prompt: {e}. Raw response: {result_fallback}")
 
     # Validate and structure each booking in the list
     final_bookings = []

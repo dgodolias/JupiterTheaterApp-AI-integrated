@@ -7,10 +7,14 @@ Return a simple JSON (or an array of them if multiple people) with these fields:
 - day: Day of the week in English
 - time: Show time in 24-hour format
 - person: {"name": "Person's name", "age": "age", "seat": "seat number"}
-  If "pvalues" for age is available (e.g. ["child < 18", "grownup > 18", "granny > 65"]), the value for "age" MUST be one of those.
+
+PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["child < 18", "grownup > 18", "granny > 65"]) and that list is NOT empty, the value for "age" MUST be one of those "pvalues". If "pvalues" for age is empty, determine the age value freely.
 
 Only include information that is explicitly mentioned.
-Example (for one person):
+
+CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+
+Example (for one person, respond with raw JSON only):
 {
   "show_name": "Hamlet",
   "day": "Friday",
