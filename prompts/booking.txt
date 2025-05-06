@@ -7,28 +7,28 @@ IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
 
 For days, use English day names: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 
-Return a valid JSON object with these fields:
+Return a valid JSON object or an array of JSON objects if multiple people are booking separately.
+Each JSON object should have these fields:
 - show_name: Name of the show (string)
 - room: Theater room number or name (string)
 - day: Day of the week for the booking (string)
 - time: Time of the show in 24-hour format (HH:MM) (string)
-- person1 through person10: Information for up to 10 people in the booking (objects)
-  Each person object should have:
-  - name{i}: Person's name (string)
-  - age{i}: Person's age (string or number)
-  - seat{i}: Requested seat number/location if specified (string)
+- person: Information for the person in the booking (object)
+  The person object should have:
+  - name: Person's name (string)
+  - age: Person's age (string or number). If "pvalues" for age is not empty, the value MUST be one of the "pvalues".
+  - seat: Requested seat number/location if specified (string)
+
+If a field has a "pvalues" list that is not empty, the extracted "value" for that field MUST be one of the values present in the "pvalues" list.
 
 Only include person fields that are explicitly mentioned. If no specific seats are requested,
 leave the seat fields empty. Format as valid JSON with no additional text.
 
-Example for a booking with 2 people:
+Example for a booking with 2 people (will be an array of two such objects):
 {
   "show_name": "Hamlet",
   "room": "Main Stage",
   "day": "Friday",
   "time": "20:00",
-  "person1": {"name1": "John Smith", "age1": "35", "seat1": "A12"},
-  "person2": {"name2": "Mary Smith", "age2": "30", "seat2": "A13"},
-  "person3": {"name3": "", "age3": "", "seat3": ""},
-  ...and so on for person4-person10
+  "person": {"name": "John Smith", "age": "grownup > 18", "seat": "A12"}
 }

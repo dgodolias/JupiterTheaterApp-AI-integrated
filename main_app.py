@@ -34,8 +34,13 @@ if __name__ == "__main__":
     
     elif category == "ΚΡΑΤΗΣΗ":
         # Extract booking information for reservation requests
-        booking_info = extract_booking_info(user_input)
-        print(f"Extracted booking: {json.dumps(booking_info, ensure_ascii=False, indent=2)}")
+        bookings = extract_booking_info(user_input) # Returns a list of bookings
+        if bookings:
+            print("Extracted booking(s):")
+            for i, booking_info in enumerate(bookings):
+                print(f"booking {i+1}: {json.dumps(booking_info, ensure_ascii=False, indent=2)}")
+        else:
+            print("Could not extract booking information.")
             
     elif category == "ΑΚΥΡΩΣΗ":
         # Extract cancellation information for cancellation requests

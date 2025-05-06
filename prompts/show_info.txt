@@ -16,13 +16,15 @@ TIME FORMATTING RULES:
 
 Return ONLY a valid JSON object with these fields (all must be arrays, even if single value):
 - name: Show names (array of strings)
-- day: Days of the week (array of strings)
+- day: Days of the week (array of strings). If "pvalues" for day is not empty, the value MUST be one of the "pvalues".
 - topic: Show genres/topics (array of strings)
 - time: Time constraints with operators (array of strings)
 - cast: Cast member names mentioned (array of strings) - TRANSLITERATED TO ENGLISH
 - room: Room numbers or theater venues (array of strings)
 - duration: Show durations (array of strings)
-- stars: Star ratings (array of numbers or strings with operators like ">4")
+- stars: Star ratings (array of numbers or strings with operators like ">4"). If "pvalues" for stars is not empty, the value MUST be one of the "pvalues".
 
 IMPORTANT: If weekend ("Σαββατοκύριακο" or similar) is mentioned, include both Saturday and Sunday in the day array.
+If a field has a "pvalues" list that is not empty, the extracted "value" for that field MUST be one of the values present in the "pvalues" list.
+
 Only include fields explicitly mentioned. Format as valid JSON with no additional text.

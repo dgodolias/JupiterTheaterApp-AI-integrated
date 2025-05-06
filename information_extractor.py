@@ -22,9 +22,7 @@ def extract_show_info(user_message):
     Returns:
         dict: Complete show information dictionary with all fields
     """
-    # Define template with all fields as arrays (empty by default)
     template = load_json_template("show_info.txt")
-    
     system_prompt = load_prompt("show_info.txt")
     
     result = send_message_to_llm(
@@ -35,63 +33,51 @@ def extract_show_info(user_message):
     )
     
     extracted_info = {}
-    
     try:
-        # Try to parse the response as JSON
         if result and result.strip():
-            # Find any JSON-like structure in the response
             start_idx = result.find('{')
             end_idx = result.rfind('}')
-            
             if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
                 json_str = result[start_idx:end_idx+1]
                 extracted_info = json.loads(json_str)
     except json.JSONDecodeError:
-        print("Failed to parse JSON from LLM response")
+        print("Failed to parse JSON from LLM response for show_info")
     
-    # If extraction failed completely, try one more time with a simpler prompt
     if not extracted_info:
-        system_prompt = load_prompt("show_info_fallback.txt")
-        
-        result = send_message_to_llm(
+        system_prompt_fallback = load_prompt("show_info_fallback.txt")
+        result_fallback = send_message_to_llm(
             user_message=user_message,
-            system_message=system_prompt,
+            system_message=system_prompt_fallback,
             model=AVAILABLE_MODELS["fallback"],
             max_tokens=150
         )
-        
         try:
-            # Try to parse again
-            if result and result.strip():
-                start_idx = result.find('{')
-                end_idx = result.rfind('}')
-                
+            if result_fallback and result_fallback.strip():
+                start_idx = result_fallback.find('{')
+                end_idx = result_fallback.rfind('}')
                 if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                    json_str = result[start_idx:end_idx+1]
-                    extracted_info = json.loads(json_str)
+                    json_str_fallback = result_fallback[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
-            print("Failed to extract even with simplified prompt")
-            
-            # Basic pattern matching without hardcoding specific names
-            # Only for critical weekend and time patterns
+            print("Failed to extract show_info even with simplified prompt")
             if "σαββατοκυριακο" in user_message.lower() or "σαββατοκύριακο" in user_message.lower():
-                extracted_info = {"day": ["Saturday", "Sunday"]}
-                
-                # Handle time constraints with basic pattern matching
+                extracted_info["day"] = ["Saturday", "Sunday"]
                 if "μετα" in user_message.lower() or "μετά" in user_message.lower():
                     if "7" in user_message or "19" in user_message or "επτα" in user_message.lower() or "επτά" in user_message.lower():
                         extracted_info["time"] = [">19:00"]
                     elif "8" in user_message or "20" in user_message or "οκτω" in user_message.lower() or "οκτώ" in user_message.lower():
                         extracted_info["time"] = [">20:00"]
     
-    # Merge extracted info with template to ensure all fields are present
-    for key, value in extracted_info.items():
+    # Merge extracted info with template
+    for key, extracted_value in extracted_info.items():
         if key in template:
-            # Convert single values to arrays if they're not already
-            if not isinstance(value, list):
-                template[key] = [value]
+            if isinstance(template[key]["value"], list):
+                if not isinstance(extracted_value, list):
+                    template[key]["value"] = [extracted_value]
+                else:
+                    template[key]["value"] = extracted_value
             else:
-                template[key] = value
+                template[key]["value"] = extracted_value
     
     return template
 
@@ -103,10 +89,10 @@ def extract_booking_info(user_message):
         user_message (str): The user's booking request message
         
     Returns:
-        dict: Structured booking information
+        list: A list of structured booking information dictionaries, one for each person.
     """
     # Define booking template with default empty values
-    booking_template = load_json_template("booking.txt")
+    booking_template_for_person = load_json_template("booking.txt") # This is a single person template
     
     system_prompt = load_prompt("booking.txt")
     
@@ -114,68 +100,103 @@ def extract_booking_info(user_message):
         user_message=user_message,
         system_message=system_prompt,
         model=AVAILABLE_MODELS["primary"],
-        max_tokens=500  # Larger max_tokens for booking details
+        max_tokens=1000  # Increased max_tokens for potentially multiple JSON objects
     )
     
-    extracted_info = {}
+    extracted_bookings = []
     
     try:
         # Try to parse the response as JSON
+        # The LLM might return a single JSON object or an array of JSON objects
         if result and result.strip():
-            # Find any JSON-like structure in the response
-            start_idx = result.find('{')
-            end_idx = result.rfind('}')
-            
-            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                json_str = result[start_idx:end_idx+1]
-                extracted_info = json.loads(json_str)
+            # Check if the result is an array of bookings or a single booking
+            if result.strip().startswith('['):
+                # It's an array of bookings
+                parsed_result = json.loads(result)
+                if isinstance(parsed_result, list):
+                    extracted_bookings.extend(parsed_result)
+                else:
+                    # Handle cases where it's a list but not of dicts, or other unexpected list content
+                    print("Parsed result is a list, but not in the expected format of booking objects.")
+            elif result.strip().startswith('{'):
+                # It's a single booking object
+                parsed_object = json.loads(result)
+                extracted_bookings.append(parsed_object)
+            else:
+                print("LLM response:", result)
+                print("LLM response is not a valid JSON object or array.")
+
     except json.JSONDecodeError:
         print("Failed to parse booking JSON from LLM response")
-    
-    # If extraction failed, try with a simplified prompt
-    if not extracted_info:
-        system_prompt = load_prompt("booking_fallback.txt")
+        # Fallback or error handling if primary parsing fails
+        # This part might need to be adjusted based on how fallback_prompt is structured
+        # For now, we assume fallback might also return one or more bookings
+
+    # If primary extraction failed or didn't yield results, try with a simplified prompt
+    if not extracted_bookings:
+        system_prompt_fallback = load_prompt("booking_fallback.txt") # Ensure this prompt asks for the new structure
         
-        result = send_message_to_llm(
+        result_fallback = send_message_to_llm(
             user_message=user_message,
-            system_message=system_prompt,
+            system_message=system_prompt_fallback,
             model=AVAILABLE_MODELS["fallback"],
-            max_tokens=300
+            max_tokens=600 # Adjusted for fallback
         )
         
         try:
-            # Try to parse again
-            if result and result.strip():
-                start_idx = result.find('{')
-                end_idx = result.rfind('}')
-                
-                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                    json_str = result[start_idx:end_idx+1]
-                    extracted_info = json.loads(json_str)
+            if result_fallback and result_fallback.strip():
+                if result_fallback.strip().startswith('['):
+                    parsed_fallback = json.loads(result_fallback)
+                    if isinstance(parsed_fallback, list):
+                        extracted_bookings.extend(parsed_fallback)
+                elif result_fallback.strip().startswith('{'):
+                    parsed_fallback_object = json.loads(result_fallback)
+                    extracted_bookings.append(parsed_fallback_object)
+                else:
+                    print("Fallback LLM response is not a valid JSON object or array.")
         except json.JSONDecodeError:
             print("Failed to extract booking info even with simplified prompt")
-            # Initialize with minimal info to prevent errors
-            extracted_info = load_json_template("booking.txt")  # Fallback to empty template
-            # Ensure person1 is present for basic fallback if template is complex
-            if "person1" not in extracted_info:
-                extracted_info["person1"] = {"name1": "", "age1": "", "seat1": ""}
-    
-    # Merge extracted info with template to ensure all fields are present
-    # First handle the top-level fields
-    for key in ["show_name", "room", "day", "time"]:
-        if key in extracted_info:
-            booking_template[key] = extracted_info[key]
-    
-    # Then handle the person fields
-    for i in range(1, 11):
-        person_key = f"person{i}"
-        if person_key in extracted_info:
-            # Get all subfields that exist in the extracted data
-            for subkey in [f"name{i}", f"age{i}", f"seat{i}"]:
-                if subkey in extracted_info[person_key]:
-                    booking_template[person_key][subkey] = extracted_info[person_key][subkey]
-    
-    return booking_template
+            # If all fails, we might return an empty list or a list with one empty template
+            # For consistency, let's return a list containing one default template if nothing was extracted
+            # extracted_bookings.append(load_json_template("booking.txt"))
+
+
+    # Validate and structure each booking in the list
+    final_bookings = []
+    if not extracted_bookings: # If still no bookings (e.g. LLM returned empty or unparsable)
+        # Add one empty template structure to signify failure but maintain type consistency
+        # final_bookings.append(booking_template_for_person)
+        # Or, based on requirements, could return an empty list:
+        return []
+
+
+    for booking_data in extracted_bookings:
+        # Create a fresh template for each booking to ensure no data leakage between them
+        current_booking_filled = json.loads(json.dumps(booking_template_for_person)) # Deep copy
+
+        # Merge top-level fields
+        for key in ["show_name", "room", "day", "time"]:
+            if key in booking_data and key in current_booking_filled: # Check if key exists in template
+                current_booking_filled[key]["value"] = booking_data.get(key, current_booking_filled[key]["value"])
+
+        # Merge person sub-fields
+        if "person" in booking_data and "person" in current_booking_filled: # Check if person key exists
+            person_data = booking_data["person"]
+            template_person_fields = current_booking_filled["person"]
+            for sub_key in template_person_fields.keys(): # name, age, seat
+                # The value from LLM is directly under person_data[sub_key], not person_data[sub_key]['value']
+                # The template has { "value": "", "pvalues": [] }
+                if sub_key in person_data:
+                     # Ensure that the value being assigned is not None or an empty dict if that's not desired
+                    actual_value = person_data.get(sub_key)
+                    if actual_value is not None : # and actual_value != {}: # Add more specific checks if needed
+                        current_booking_filled["person"][sub_key]["value"] = actual_value
+                    # else:
+                        # current_booking_filled["person"][sub_key]["value"] remains default from template
+        
+        final_bookings.append(current_booking_filled)
+        
+    return final_bookings
 
 def extract_cancellation_info(user_message):
     """
@@ -187,63 +208,51 @@ def extract_cancellation_info(user_message):
     Returns:
         dict: Structured cancellation information with reservation number and passcode
     """
-    # Define cancellation template with default empty values
     cancellation_template = load_json_template("cancellation.txt")
-    
     system_prompt = load_prompt("cancellation.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
         system_message=system_prompt,
         model=AVAILABLE_MODELS["primary"],
-        max_tokens=100  # Short response for simple extraction
+        max_tokens=100
     )
     
     extracted_info = {}
-    
     try:
-        # Try to parse the response as JSON
         if result and result.strip():
-            # Find any JSON-like structure in the response
             start_idx = result.find('{')
             end_idx = result.rfind('}')
-            
             if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
                 json_str = result[start_idx:end_idx+1]
                 extracted_info = json.loads(json_str)
     except json.JSONDecodeError:
         print("Failed to parse cancellation JSON from LLM response")
     
-    # If extraction failed, try with a simplified prompt
     if not extracted_info:
-        system_prompt = load_prompt("cancellation_fallback.txt")
-        
-        result = send_message_to_llm(
+        system_prompt_fallback = load_prompt("cancellation_fallback.txt")
+        result_fallback = send_message_to_llm(
             user_message=user_message,
-            system_message=system_prompt,
+            system_message=system_prompt_fallback,
             model=AVAILABLE_MODELS["fallback"],
             max_tokens=100
         )
-        
         try:
-            # Try to parse again
-            if result and result.strip():
-                start_idx = result.find('{')
-                end_idx = result.rfind('}')
-                
+            if result_fallback and result_fallback.strip():
+                start_idx = result_fallback.find('{')
+                end_idx = result_fallback.rfind('}')
                 if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                    json_str = result[start_idx:end_idx+1]
-                    extracted_info = json.loads(json_str)
+                    json_str_fallback = result_fallback[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
             print("Failed to extract cancellation info even with simplified prompt")
-            # Initialize with empty values to prevent errors
-            extracted_info = load_json_template("cancellation.txt")  # Fallback to empty template
+            # extracted_info remains empty, template will be returned with default values
     
-    # Merge extracted info with template to ensure all fields are present
+    # Merge extracted info with template
     for key in ["reservation_number", "passcode"]:
-        if key in extracted_info:
-            cancellation_template[key] = extracted_info[key]
-    
+        if key in extracted_info and key in cancellation_template:
+            cancellation_template[key]["value"] = extracted_info[key]
+            
     return cancellation_template
 
 def extract_discount_info(user_message):
@@ -254,11 +263,9 @@ def extract_discount_info(user_message):
         user_message (str): The user's discount/promotion request message
         
     Returns:
-        dict: Structured discount information with show names, number of people, ages, and dates
+        dict: Structured discount information
     """
-    # Define discount template with default empty values
     discount_template = load_json_template("discount.txt")
-    
     system_prompt = load_prompt("discount.txt")
     
     result = send_message_to_llm(
@@ -269,65 +276,54 @@ def extract_discount_info(user_message):
     )
     
     extracted_info = {}
-    
     try:
-        # Try to parse the response as JSON
         if result and result.strip():
-            # Find any JSON-like structure in the response
             start_idx = result.find('{')
             end_idx = result.rfind('}')
-            
             if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
                 json_str = result[start_idx:end_idx+1]
                 extracted_info = json.loads(json_str)
     except json.JSONDecodeError:
         print("Failed to parse discount JSON from LLM response")
-    
-    # If extraction failed, try with a simplified prompt
-    if not extracted_info:
-        system_prompt = load_prompt("discount_fallback.txt")
         
-        result = send_message_to_llm(
+    if not extracted_info:
+        system_prompt_fallback = load_prompt("discount_fallback.txt")
+        result_fallback = send_message_to_llm(
             user_message=user_message,
-            system_message=system_prompt,
+            system_message=system_prompt_fallback,
             model=AVAILABLE_MODELS["fallback"],
             max_tokens=150
         )
-        
         try:
-            # Try to parse again
-            if result and result.strip():
-                start_idx = result.find('{')
-                end_idx = result.rfind('}')
-                
+            if result_fallback and result_fallback.strip():
+                start_idx = result_fallback.find('{')
+                end_idx = result_fallback.rfind('}')
                 if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                    json_str = result[start_idx:end_idx+1]
-                    extracted_info = json.loads(json_str)
+                    json_str_fallback = result_fallback[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
             print("Failed to extract discount info even with simplified prompt")
-            # Initialize with minimal info to prevent errors
-            extracted_info = load_json_template("discount.txt")  # Fallback to empty template
-    
-    # Merge extracted info with template to ensure all fields are present
+
+    # Merge extracted info with template
     for key in ["show_name", "age", "date"]:
-        if key in extracted_info:
-            # Ensure these fields are arrays
-            if not isinstance(extracted_info[key], list):
-                discount_template[key] = [extracted_info[key]]
-            else:
-                discount_template[key] = extracted_info[key]
+        if key in extracted_info and key in discount_template:
+            extracted_value = extracted_info[key]
+            if isinstance(discount_template[key]["value"], list):
+                if not isinstance(extracted_value, list):
+                    discount_template[key]["value"] = [extracted_value]
+                else:
+                    discount_template[key]["value"] = extracted_value
+            else: #Should not happen for these keys as template value is list
+                discount_template[key]["value"] = extracted_value
     
-    # Handle no_of_people, ensuring it's a number
-    if "no_of_people" in extracted_info:
+    if "no_of_people" in extracted_info and "no_of_people" in discount_template:
         try:
-            discount_template["no_of_people"] = int(extracted_info["no_of_people"])
+            discount_template["no_of_people"]["value"] = int(extracted_info["no_of_people"])
         except (ValueError, TypeError):
-            # If conversion fails, try to extract a number from the value
             if isinstance(extracted_info["no_of_people"], str) and any(c.isdigit() for c in extracted_info["no_of_people"]):
-                # Extract digits and convert to int
                 digits = ''.join(c for c in extracted_info["no_of_people"] if c.isdigit())
                 if digits:
-                    discount_template["no_of_people"] = int(digits)
+                    discount_template["no_of_people"]["value"] = int(digits)
     
     return discount_template
 
@@ -339,76 +335,59 @@ def extract_review_info(user_message):
         user_message (str): The user's review/comment message
         
     Returns:
-        dict: Structured review information with reservation number, passcode, stars, and review text
+        dict: Structured review information
     """
-    # Define review template with default empty values
     review_template = load_json_template("review.txt")
-    
     system_prompt = load_prompt("review.txt")
     
     result = send_message_to_llm(
         user_message=user_message,
         system_message=system_prompt,
         model=AVAILABLE_MODELS["primary"],
-        max_tokens=300  # Higher token count for reviews
+        max_tokens=300
     )
     
     extracted_info = {}
-    
     try:
-        # Try to parse the response as JSON
         if result and result.strip():
-            # Find any JSON-like structure in the response
             start_idx = result.find('{')
             end_idx = result.rfind('}')
-            
             if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
                 json_str = result[start_idx:end_idx+1]
                 extracted_info = json.loads(json_str)
     except json.JSONDecodeError:
         print("Failed to parse review JSON from LLM response")
-    
-    # If extraction failed, try with a simplified prompt
+
     if not extracted_info:
-        system_prompt = load_prompt("review_fallback.txt")
-        
-        result = send_message_to_llm(
+        system_prompt_fallback = load_prompt("review_fallback.txt")
+        result_fallback = send_message_to_llm(
             user_message=user_message,
-            system_message=system_prompt,
+            system_message=system_prompt_fallback,
             model=AVAILABLE_MODELS["fallback"],
             max_tokens=200
         )
-        
         try:
-            # Try to parse again
-            if result and result.strip():
-                start_idx = result.find('{')
-                end_idx = result.rfind('}')
-                
+            if result_fallback and result_fallback.strip():
+                start_idx = result_fallback.find('{')
+                end_idx = result_fallback.rfind('}')
                 if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-                    json_str = result[start_idx:end_idx+1]
-                    extracted_info = json.loads(json_str)
+                    json_str_fallback = result_fallback[start_idx:end_idx+1]
+                    extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
             print("Failed to extract review info even with simplified prompt")
-            # Initialize with default values to prevent errors
-            extracted_info = load_json_template("review.txt")  # Fallback to empty template
-    
-    # Merge extracted info with template to ensure all fields are present
+
+    # Merge extracted info with template
     for key in ["reservation_number", "passcode", "review"]:
-        if key in extracted_info:
-            review_template[key] = extracted_info[key]
-    
-    # Handle stars field, ensuring it's a number
-    if "stars" in extracted_info:
+        if key in extracted_info and key in review_template:
+            review_template[key]["value"] = extracted_info[key]
+            
+    if "stars" in extracted_info and "stars" in review_template:
         try:
-            # Convert to integer if possible
-            review_template["stars"] = int(extracted_info["stars"])
+            review_template["stars"]["value"] = int(extracted_info["stars"])
         except (ValueError, TypeError):
-            # Try to extract digits if it's a string with non-numeric characters
             if isinstance(extracted_info["stars"], str):
                 digits = ''.join(c for c in extracted_info["stars"] if c.isdigit())
                 if digits:
-                    # Use only the first digit if multiple were found
-                    review_template["stars"] = int(digits[0])
+                    review_template["stars"]["value"] = int(digits[0])
     
     return review_template

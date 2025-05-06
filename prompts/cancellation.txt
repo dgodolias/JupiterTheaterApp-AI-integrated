@@ -15,6 +15,8 @@ Return ONLY a valid JSON object with these fields:
 - reservation_number: The booking reference number (string)
 - passcode: The verification code or passcode (string)
 
+If a field has a "pvalues" list that is not empty, the extracted "value" for that field MUST be one of the values present in the "pvalues" list.
+
 Example: {"reservation_number": "12345678", "passcode": "AB123"}
 
 If either field is not found in the message, leave it as an empty string.

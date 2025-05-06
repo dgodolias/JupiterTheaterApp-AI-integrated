@@ -1,6 +1,6 @@
 {
-    "show_name": [],
-    "no_of_people": 0,
-    "age": [],
-    "date": []
+    "show_name": {"value": [], "pvalues": []},
+    "no_of_people": {"value": 0, "pvalues": []},
+    "age": {"value": [], "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+    "date": {"value": [], "pvalues": []}
 }

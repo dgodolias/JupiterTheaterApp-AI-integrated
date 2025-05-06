@@ -5,4 +5,6 @@ Return a simple JSON with these fields:
 - reservation_number: The booking reference number
 - passcode: The verification code
 
+If a field has a "pvalues" list that is not empty (as defined in the system's main template for this category), the extracted value for that field MUST be one of the values present in that "pvalues" list.
+
 Example: {"reservation_number": "12345678", "passcode": "AB123"}

@@ -13,4 +13,6 @@ TIME FORMATTING:
 - Between times → ">HH:MM,<HH:MM" (e.g., between 5-7 PM = ">17:00,<19:00")
 
 Return a valid JSON with ALL text in English, formatted as arrays.
-Example: {"day": ["Saturday", "Sunday"], "cast": ["Actor Name"], "topic": ["thriller"]}
+If a field like "day" or "stars" has a "pvalues" list in the main system template (e.g. for "day": ["Monday", "Tuesday", ...], for "stars": [1,2,3,4,5,">3"]), the extracted values for those fields MUST conform to one of the pvalues.
+
+Example: {"day": ["Saturday", "Sunday"], "cast": ["Actor Name"], "topic": ["thriller"], "stars": [4]}

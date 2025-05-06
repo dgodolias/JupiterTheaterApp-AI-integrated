@@ -5,7 +5,7 @@ IMPORTANT: TRANSLATE ALL GREEK TEXT TO ENGLISH for the review field.
 Return a valid JSON object with these fields:
 - reservation_number: The booking reference number (string)
 - passcode: The verification code or passcode (string)
-- stars: Star rating given, typically 1-5 (number)
+- stars: Star rating given, typically 1-5 (number). If "pvalues" for stars is not empty, the value MUST be one of the "pvalues".
 - review: The user's review text or comments (string) - TRANSLATED TO ENGLISH
 
 Look for phrases that indicate ratings such as:
@@ -14,6 +14,8 @@ Look for phrases that indicate ratings such as:
 - "Rating: X"
 - "Βαθμολογία: X"
 - "X αστέρια"
+
+If a field has a "pvalues" list that is not empty, the extracted "value" for that field MUST be one of the values present in the "pvalues" list.
 
 If specific fields are not found in the message, leave as empty string (or 0 for stars).
 Format as valid JSON with no additional text.
