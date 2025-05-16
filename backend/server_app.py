@@ -36,16 +36,43 @@ def process_client_request(client_message):
         # Create dummy response data based on the category
         dummy_data = None
         if category == "ΠΛΗΡΟΦΟΡΙΕΣ":
-            dummy_data = {"show_name": "Dummy Show", "date": "2025-06-01", "time": "20:00"}
+            dummy_data = {
+                "name": {"value": ["A Midsummer Night's Dream"], "pvalues": []},
+                "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+                "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []},
+                "time": {"value": ["20:00", "15:00"], "pvalues": []},
+                "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []},
+                "room": {"value": ["Grand Hall"], "pvalues": []},
+                "duration": {"value": ["120 minutes"], "pvalues": []},
+                "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}
+            }
             print(f"Using DUMMY show info: {dummy_data}")
         elif category == "ΚΡΑΤΗΣΗ":
-            dummy_data = [{"show_name": "Dummy Show", "date": "2025-06-01", "seats": 2, "name": "Dummy User"}]
+            dummy_data = {
+                "show_name": {"value": "Romeo and Juliet", "pvalues": []},
+                "room": {"value": "Main Theater", "pvalues": []},
+                "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+                "time": {"value": "19:30", "pvalues": []},
+                "person": {
+                    "name": {"value": "Maria Papadopoulos", "pvalues": []},
+                    "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                    "seat": {"value": "B12", "pvalues": []}
+                }
+            }
             print(f"Using DUMMY booking info: {dummy_data}")
         elif category == "ΑΚΥΡΩΣΗ":
-            dummy_data = {"reservation_number": "DUMMY123", "reason": "Test cancellation"}
+            dummy_data = {
+                "reservation_number": {"value": "RES78901", "pvalues": []},
+                "passcode": {"value": "JUPITER2025", "pvalues": []}
+            }
             print(f"Using DUMMY cancellation info: {dummy_data}")
         elif category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-            dummy_data = {"discount_code": "DUMMY25", "discount_percent": 25, "eligibility": "All shows"}
+            dummy_data = {
+                "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
+                "no_of_people": {"value": 3, "pvalues": []},
+                "age": {"value": ["child < 18", "granny > 65"], "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
+            }
             print(f"Using DUMMY discount info: {dummy_data}")
         elif category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
             dummy_data = {

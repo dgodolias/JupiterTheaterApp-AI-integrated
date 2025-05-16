@@ -22,7 +22,7 @@ def extract_show_info(user_message):
     Returns:
         dict: Complete show information dictionary with all fields
     """
-    template = load_json_template("show_info.txt")
+    template = load_json_template("show_info.json")
     system_prompt = load_prompt("show_info.txt")
     
     result = send_message_to_llm(
@@ -92,7 +92,7 @@ def extract_booking_info(user_message):
         list: A list of structured booking information dictionaries, one for each person.
     """
     # Define booking template with default empty values
-    booking_template_for_person = load_json_template("booking.txt") # This is a single person template
+    booking_template_for_person = load_json_template("booking.json") # This is a single person template
     
     system_prompt = load_prompt("booking.txt")
     
@@ -226,7 +226,7 @@ def extract_cancellation_info(user_message):
     Returns:
         dict: Structured cancellation information with reservation number and passcode
     """
-    cancellation_template = load_json_template("cancellation.txt")
+    cancellation_template = load_json_template("cancellation.json")
     system_prompt = load_prompt("cancellation.txt")
     
     result = send_message_to_llm(
@@ -283,7 +283,7 @@ def extract_discount_info(user_message):
     Returns:
         dict: Structured discount information
     """
-    discount_template = load_json_template("discount.txt")
+    discount_template = load_json_template("discount.json")
     system_prompt = load_prompt("discount.txt")
     
     result = send_message_to_llm(
@@ -355,7 +355,7 @@ def extract_review_info(user_message):
     Returns:
         dict: Structured review information
     """
-    review_template = load_json_template("review.txt")
+    review_template = load_json_template("review.json")
     system_prompt = load_prompt("review.txt")
     
     result = send_message_to_llm(
