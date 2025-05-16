@@ -1,79 +1,140 @@
 {
   "root": {
     "id": "root",
-    "message": "Hello! Welcome to Jupiter Theater. How can I help you?",
+    "message": "Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;",
+    "content": "",
     "children": [
       {
-        "id": "showTimes",
-        "message": "Would you like to see our current show times?",
+        "id": "ΚΡΑΤΗΣΗ",
+        "message": "Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;",
+        "content": "",
         "children": [
           {
-            "id": "showTimes1",
-            "message": "We have shows at 2PM, 5PM, and 8PM today.",
+            "id": "booking1",
+            "message": "Έχουμε παραστάσεις στις 2μμ, 5μμ και 8μμ σήμερα. Ποια ώρα σας ενδιαφέρει;",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "These are our standard showtimes. Would you like to know about any specific show?"
+            "fallback": "Για να προχωρήσετε με την κράτηση, παρακαλώ επιλέξτε μια από τις διαθέσιμες ώρες."
           },
           {
-            "id": "showTimes2",
-            "message": "Our current showtimes are: matinee at 2PM and evening shows at 6PM and 9PM.",
+            "id": "booking2",
+            "message": "Τα εισιτήρια κοστίζουν 15€ για ενήλικες και 10€ για παιδιά. Πόσα εισιτήρια θα θέλατε;",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "Our schedule sometimes varies by day. Can I help you with anything else?"
+            "fallback": "Μπορούμε να προχωρήσουμε με την κράτηση μόλις μου πείτε τον αριθμό των εισιτηρίων."
           }
         ],
-        "fallback": "We have several shows throughout the day. Is there a specific time you're interested in?"
+        "fallback": "Για να κάνετε κράτηση, χρειάζομαι πληροφορίες όπως την ημερομηνία, την ώρα και τον αριθμό των εισιτηρίων."
       },
       {
-        "id": "tickets",
-        "message": "Are you interested in purchasing tickets?",
+        "id": "ΑΚΥΡΩΣΗ",
+        "message": "Θα θέλατε να ακυρώσετε μια κράτηση;",
+        "content": "",
         "children": [
           {
-            "id": "tickets1",
-            "message": "Tickets are $15 for adults and $10 for children. Would you like to book now?",
+            "id": "cancel1",
+            "message": "Για να ακυρώσετε την κράτησή σας, θα χρειαστώ τον κωδικό κράτησης που λάβατε στο email σας.",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "We have different pricing options available. Would you like me to continue?"
+            "fallback": "Ο κωδικός κράτησης είναι απαραίτητος για την ακύρωση. Μπορείτε να τον βρείτε στο email επιβεβαίωσης."
           },
           {
-            "id": "tickets2",
-            "message": "We have standard tickets for $15 and premium seating for $25. How many would you like?",
+            "id": "cancel2",
+            "message": "Οι ακυρώσεις είναι δωρεάν έως και 24 ώρες πριν την παράσταση. Θέλετε να προχωρήσετε;",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "Our premium seats offer the best view of the stage. Can I help you book tickets?"
+            "fallback": "Για ακυρώσεις λιγότερο από 24 ώρες πριν την παράσταση, υπάρχει χρέωση 50% της αξίας του εισιτηρίου."
           }
         ],
-        "fallback": "We offer different ticket options. Would you like to know more about pricing?"
+        "fallback": "Για την ακύρωση της κράτησής σας, θα χρειαστώ περισσότερες πληροφορίες."
       },
       {
-        "id": "info",
-        "message": "Do you want to know more about our theater?",
+        "id": "ΠΛΗΡΟΦΟΡΙΕΣ",
+        "message": "Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;",
+        "content": "",
         "children": [
           {
             "id": "info1",
-            "message": "Jupiter Theater has been operating since 1995 with award-winning performances.",
+            "message": "Το Θέατρο Jupiter λειτουργεί από το 1995 με βραβευμένες παραστάσεις.",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "We're proud of our long history in the community. Is there something specific you'd like to know?"
+            "fallback": "Είμαστε περήφανοι για τη μακρά ιστορία μας στην κοινότητα. Υπάρχει κάτι συγκεκριμένο που θα θέλατε να μάθετε;"
           },
           {
             "id": "info2",
-            "message": "Our theater features state-of-the-art sound systems and comfortable seating for 200 guests.",
+            "message": "Το θέατρό μας διαθέτει υπερσύγχρονα ηχητικά συστήματα και άνετα καθίσματα για 200 επισκέπτες.",
+            "content": "",
             "children": [
               "root"
             ],
-            "fallback": "Our facilities are designed for the best possible theater experience. Anything else you'd like to know?"
+            "fallback": "Οι εγκαταστάσεις μας είναι σχεδιασμένες για την καλύτερη δυνατή θεατρική εμπειρία. Θα θέλατε να μάθετε κάτι άλλο;"
           }
         ],
-        "fallback": "Jupiter Theater is a premier venue for theatrical performances. What specific information are you looking for?"
+        "fallback": "Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;"
       },
-      "root"
+      {
+        "id": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ",
+        "message": "Θα θέλατε να δείτε αξιολογήσεις ή να αφήσετε σχόλιο για κάποια παράστασή μας;",
+        "content": "",
+        "children": [
+          {
+            "id": "review1",
+            "message": "Οι παραστάσεις μας έχουν μέσο όρο αξιολόγησης 4.8/5 αστέρια από τους θεατές μας.",
+            "content": "",
+            "children": [
+              "root"
+            ],
+            "fallback": "Είμαστε πολύ περήφανοι για τις θετικές κριτικές που λαμβάνουμε από το κοινό μας."
+          },
+          {
+            "id": "review2",
+            "message": "Θα θέλατε να αφήσετε τη δική σας αξιολόγηση για κάποια παράσταση που παρακολουθήσατε;",
+            "content": "",
+            "children": [
+              "root"
+            ],
+            "fallback": "Η γνώμη σας είναι πολύ σημαντική για εμάς. Μπορείτε να αφήσετε αξιολόγηση στην ιστοσελίδα μας ή στα μέσα κοινωνικής δικτύωσης."
+          }
+        ],
+        "fallback": "Τα σχόλια και οι αξιολογήσεις των θεατών μας είναι πολύτιμα για τη συνεχή βελτίωση των παραστάσεών μας."
+      },
+      {
+        "id": "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ",
+        "message": "Ενδιαφέρεστε για τις τρέχουσες προσφορές και εκπτώσεις μας;",
+        "content": "",
+        "children": [
+          {
+            "id": "offer1",
+            "message": "Αυτή την περίοδο έχουμε έκπτωση 20% για φοιτητές και 15% για ομαδικές κρατήσεις άνω των 5 ατόμων.",
+            "content": "",
+            "children": [
+              "root"
+            ],
+            "fallback": "Για να επωφεληθείτε από τις εκπτώσεις μας, απλώς επιδείξτε την κατάλληλη ταυτότητα κατά την είσοδο."
+          },
+          {
+            "id": "offer2",
+            "message": "Έχουμε ειδικό πακέτο προσφοράς για οικογένειες: 2 ενήλικες και 2 παιδιά με έκπτωση 25%.",
+            "content": "",
+            "children": [
+              "root"
+            ],
+            "fallback": "Οι οικογενειακές μας προσφορές είναι διαθέσιμες για όλες τις παραστάσεις του Σαββατοκύριακου."
+          }
+        ],
+        "fallback": "Οι προσφορές μας ανανεώνονται τακτικά. Μπορείτε να ενημερωθείτε για τις τρέχουσες εκπτώσεις στην ιστοσελίδα μας."
+      }
     ],
-    "fallback": "I'm not sure I understand. Can I help you with showtimes, tickets, or information about our theater?"
+    "fallback": "Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;"
   }
 }

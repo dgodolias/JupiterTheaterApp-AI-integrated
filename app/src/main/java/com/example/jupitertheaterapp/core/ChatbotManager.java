@@ -9,10 +9,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -24,7 +22,7 @@ public class ChatbotManager {
     private Map<String, JSONObject> nodeMap;
     private JSONObject currentNode;
     private Random random = new Random();
-    private boolean useServerForResponses = false;
+    private boolean useServerForResponses = true; // Default to use server
 
     public ChatbotManager(Context context) {
         loadConversationTree(context);
@@ -44,7 +42,22 @@ public class ChatbotManager {
                 // Map all nodes by their IDs for easy reference
                 mapAllNodes(conversationTree);
 
-                Log.d(TAG, "Conversation tree loaded successfully");
+                Log.d(TAG, "Conversation tree loaded successfully with " + nodeMap.size() + " nodes");
+                // Log available root children
+                try {
+                    JSONArray rootChildren = currentNode.getJSONArray("children");
+                    Log.d(TAG, "Root has " + rootChildren.length() + " children");
+                    for (int i = 0; i < rootChildren.length(); i++) {
+                        Object child = rootChildren.get(i);
+                        if (child instanceof JSONObject) {
+                            Log.d(TAG, "Root child " + i + ": " + ((JSONObject) child).getString("id"));
+                        } else {
+                            Log.d(TAG, "Root child " + i + ": " + child.toString());
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error logging root children", e);
+                }
             } else {
                 Log.e(TAG, "Failed to load conversation tree JSON");
                 createMinimalStructure();
@@ -61,6 +74,7 @@ public class ChatbotManager {
         if (parentObject.has("id")) {
             String id = parentObject.getString("id");
             nodeMap.put(id, parentObject);
+            Log.d(TAG, "Mapped node with ID: " + id);
 
             // Process children
             if (parentObject.has("children")) {
@@ -124,6 +138,23 @@ public class ChatbotManager {
             Log.e(TAG, "Error getting initial message", e);
             return "Configuration error: Please check your conversation_tree.json file.";
         }
+    }
+
+    // Get response based on node ID from server
+    public String getResponseForNodeId(String nodeId) throws JSONException {
+        Log.d(TAG, "Getting response for node ID: " + nodeId);
+
+        if (!nodeMap.containsKey(nodeId)) {
+            Log.e(TAG, "Node ID not found: " + nodeId);
+            return "Error: Could not find response for " + nodeId;
+        }
+
+        JSONObject node = nodeMap.get(nodeId);
+        currentNode = node;
+        String message = node.getString("message");
+        Log.d(TAG, "Found message for " + nodeId + ": " + message);
+
+        return message;
     }
 
     public String getLocalResponse(String userInput) {
@@ -206,6 +237,38 @@ public class ChatbotManager {
         }
 
         return null;
+    }
+
+    // Find a specific node child of root by ID
+    public String findNodeResponseById(String nodeId) {
+        try {
+            Log.d(TAG, "Finding node with ID: " + nodeId);
+
+            // Get the root node
+            JSONObject root = conversationTree.getJSONObject("root");
+            JSONArray children = root.getJSONArray("children");
+
+            // Look through children for matching ID
+            for (int i = 0; i < children.length(); i++) {
+                Object child = children.get(i);
+                if (child instanceof JSONObject) {
+                    JSONObject childObj = (JSONObject) child;
+                    if (childObj.has("id") && childObj.getString("id").equals(nodeId)) {
+                        currentNode = childObj;
+                        Log.d(TAG, "Found matching node: " + nodeId);
+                        return childObj.getString("message");
+                    }
+                }
+            }
+
+            // If not found, return fallback
+            Log.d(TAG, "Node not found among root children: " + nodeId);
+            return root.getString("fallback");
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error finding node by ID", e);
+            return "Error processing your request.";
+        }
     }
 
     // Determines whether to use server for responses
