@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.jupitertheaterapp.model.ChatbotNode;
+import com.example.jupitertheaterapp.model.MsgTemplate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,7 +172,15 @@ public class ChatbotManager {
         logAvailableChildren(children);
 
         // Simple selection - could be improved with NLP
-        return children.get(random.nextInt(children.size()));
+        int idx = random.nextInt(children.size());
+        ChatbotNode nextNode = children.get(idx);
+        // Assign messageTemplate for nextNode based on previous node's ID
+        try {
+            nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getId()));
+        } catch (IllegalArgumentException e) {
+            // No template available for this previous node ID; skip
+        }
+        return nextNode;
     }
 
     private void logAvailableChildren(List<ChatbotNode> children) {
