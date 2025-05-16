@@ -3,13 +3,12 @@ package com.example.jupitertheaterapp.core;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,15 +19,12 @@ import java.util.Random;
 public class ChatbotManager {
     private static final String TAG = "ChatbotManager";
     private static final String CONVERSATION_FILE = "conversation_tree.json";
-    private static final String DEFAULT_CONVERSATION_FILE = "default_conversation_tree.json";
 
     private JSONObject conversationTree;
-    private JSONObject nodesObject;
-    private Map<String, String> keywordMap;
-    private String currentNodeId = "root";
+    private Map<String, JSONObject> nodeMap;
+    private JSONObject currentNode;
     private Random random = new Random();
     private boolean useServerForResponses = false;
-    private boolean isConfigured = false;
 
     public ChatbotManager(Context context) {
         loadConversationTree(context);
@@ -39,44 +35,51 @@ public class ChatbotManager {
             // Read JSON file from assets
             String jsonString = readJSONFromAsset(context, CONVERSATION_FILE);
             if (jsonString != null) {
-                initializeFromJson(jsonString);
-                isConfigured = true;
+                conversationTree = new JSONObject(jsonString);
+                nodeMap = new HashMap<>();
+
+                // Start with the root node
+                currentNode = conversationTree.getJSONObject("root");
+
+                // Map all nodes by their IDs for easy reference
+                mapAllNodes(conversationTree);
+
+                Log.d(TAG, "Conversation tree loaded successfully");
             } else {
-                // Try to load default conversation tree
-                String defaultJsonString = readJSONFromAsset(context, DEFAULT_CONVERSATION_FILE);
-                if (defaultJsonString != null) {
-                    initializeFromJson(defaultJsonString);
-                    isConfigured = true;
-                } else {
-                    // Create minimal structure if no JSON files are available
-                    createMinimalStructure();
-                    isConfigured = false;
-                }
+                Log.e(TAG, "Failed to load conversation tree JSON");
+                createMinimalStructure();
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing conversation tree JSON", e);
             createMinimalStructure();
-            isConfigured = false;
         }
     }
 
-    private void initializeFromJson(String jsonString) throws JSONException {
-        conversationTree = new JSONObject(jsonString);
-        nodesObject = conversationTree.getJSONObject("nodes");
+    // Recursively map all nodes by their IDs
+    private void mapAllNodes(JSONObject parentObject) throws JSONException {
+        // Check if this is a node with an ID
+        if (parentObject.has("id")) {
+            String id = parentObject.getString("id");
+            nodeMap.put(id, parentObject);
 
-        // Load keywords map
-        keywordMap = new HashMap<>();
-        if (conversationTree.has("keywords")) {
-            JSONObject keywords = conversationTree.getJSONObject("keywords");
-            Iterator<String> keys = keywords.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                String nodeId = keywords.getString(key);
-
-                // Each key may contain multiple keywords separated by commas
-                String[] keywordArray = key.split(",");
-                for (String keyword : keywordArray) {
-                    keywordMap.put(keyword.trim().toLowerCase(), nodeId);
+            // Process children
+            if (parentObject.has("children")) {
+                JSONArray children = parentObject.getJSONArray("children");
+                for (int i = 0; i < children.length(); i++) {
+                    Object child = children.get(i);
+                    if (child instanceof JSONObject) {
+                        // Recursive mapping for embedded child objects
+                        mapAllNodes((JSONObject) child);
+                    }
+                }
+            }
+        } else {
+            // Handle the root object which might not have an ID field itself
+            for (Iterator<String> it = parentObject.keys(); it.hasNext();) {
+                String key = it.next();
+                Object value = parentObject.get(key);
+                if (value instanceof JSONObject) {
+                    mapAllNodes((JSONObject) value);
                 }
             }
         }
@@ -98,14 +101,13 @@ public class ChatbotManager {
         return json;
     }
 
-    // Create minimal conversation structure
     private void createMinimalStructure() {
         try {
-            // Create a minimal structure that indicates configuration is needed
-            String minimalJson = "{\"nodes\":{\"root\":{\"id\":\"root\",\"message\":\"Configuration error: Please check your conversation_tree.json file.\",\"children\":[],\"fallback\":\"The chatbot is not properly configured.\"}}}";
+            String minimalJson = "{\"root\":{\"id\":\"root\",\"message\":\"Configuration error: Please check your conversation_tree.json file.\",\"children\":[],\"fallback\":\"The chatbot is not properly configured.\"}}";
             conversationTree = new JSONObject(minimalJson);
-            nodesObject = conversationTree.getJSONObject("nodes");
-            keywordMap = new HashMap<>();
+            currentNode = conversationTree.getJSONObject("root");
+            nodeMap = new HashMap<>();
+            nodeMap.put("root", currentNode);
         } catch (JSONException e) {
             Log.e(TAG, "Error creating minimal structure", e);
         }
@@ -113,9 +115,8 @@ public class ChatbotManager {
 
     public String getInitialMessage() {
         try {
-            if (isConfigured && nodesObject.has("root")) {
-                JSONObject rootNode = nodesObject.getJSONObject("root");
-                return rootNode.getString("message");
+            if (currentNode != null && currentNode.has("message")) {
+                return currentNode.getString("message");
             } else {
                 return "Configuration error: Please check your conversation_tree.json file.";
             }
@@ -127,61 +128,83 @@ public class ChatbotManager {
 
     public String getLocalResponse(String userInput) {
         try {
-            if (!isConfigured) {
-                return "Configuration error: Please check your conversation_tree.json file.";
+            if (currentNode == null) {
+                return "Configuration error: Conversation tree not properly loaded.";
             }
 
-            JSONObject currentNode = nodesObject.getJSONObject(currentNodeId);
+            // Choose next node
+            JSONObject nextNode = chooseNextNode(userInput);
 
-            // Try to match keywords in user input
-            String nextNodeId = findMatchingNodeByKeywords(userInput);
-
-            if (nextNodeId == null) {
-                // If no keywords match, choose a random child
-                nextNodeId = getRandomChildId(currentNode);
-            }
-
-            if (nextNodeId != null && nodesObject.has(nextNodeId)) {
-                currentNodeId = nextNodeId;
-                JSONObject nextNode = nodesObject.getJSONObject(nextNodeId);
+            if (nextNode != null) {
+                currentNode = nextNode;
                 return nextNode.getString("message");
             } else {
                 // Return fallback message if no valid node found
                 return currentNode.has("fallback") ?
                     currentNode.getString("fallback") :
-                    "No response available. Please check your conversation configuration.";
+                    "I'm not sure how to respond to that.";
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error getting local response", e);
-            return "Configuration error: Please check your conversation_tree.json file.";
+            return "Error processing your request.";
         }
     }
 
-    private String findMatchingNodeByKeywords(String userInput) {
-        if (userInput == null || keywordMap.isEmpty()) {
+    // Function to choose the next node based on user input
+    public JSONObject chooseNextNode(String userInput) throws JSONException {
+        if (!currentNode.has("children") || currentNode.getJSONArray("children").length() == 0) {
             return null;
         }
 
-        userInput = userInput.toLowerCase();
-        for (Map.Entry<String, String> entry : keywordMap.entrySet()) {
-            if (userInput.contains(entry.getKey())) {
-                return entry.getValue();
-            }
-        }
-        return null;
+        JSONArray children = currentNode.getJSONArray("children");
+
+        // Log available children for debugging
+        logAvailableChildren(children);
+
+        // Randomly select a child
+        return getRandomChild(children);
     }
 
-    private String getRandomChildId(JSONObject node) throws JSONException {
-        if (node.has("children")) {
-            List<String> childIds = new ArrayList<>();
-            for (int i = 0; i < node.getJSONArray("children").length(); i++) {
-                childIds.add(node.getJSONArray("children").getString(i));
+    // Log available children for debugging
+    private void logAvailableChildren(JSONArray children) throws JSONException {
+        StringBuilder childrenInfo = new StringBuilder("Available children: ");
+
+        for (int i = 0; i < children.length(); i++) {
+            Object child = children.get(i);
+            if (child instanceof String) {
+                childrenInfo.append((String) child);
+            } else if (child instanceof JSONObject && ((JSONObject) child).has("id")) {
+                childrenInfo.append(((JSONObject) child).getString("id"));
             }
 
-            if (!childIds.isEmpty()) {
-                return childIds.get(random.nextInt(childIds.size()));
+            if (i < children.length() - 1) {
+                childrenInfo.append(", ");
             }
         }
+
+        Log.d(TAG, childrenInfo.toString());
+    }
+
+    // Get a random child from the children array
+    private JSONObject getRandomChild(JSONArray children) throws JSONException {
+        if (children.length() == 0) {
+            return null;
+        }
+
+        int randomIndex = random.nextInt(children.length());
+        Object selectedChild = children.get(randomIndex);
+
+        if (selectedChild instanceof String) {
+            // Reference to an existing node by ID
+            String nodeId = (String) selectedChild;
+            Log.d(TAG, "Selected child by ID: " + nodeId);
+            return nodeMap.get(nodeId);
+        } else if (selectedChild instanceof JSONObject) {
+            // Embedded node object
+            Log.d(TAG, "Selected embedded child node");
+            return (JSONObject) selectedChild;
+        }
+
         return null;
     }
 
@@ -196,6 +219,10 @@ public class ChatbotManager {
     }
 
     public void reset() {
-        currentNodeId = "root";
+        try {
+            currentNode = conversationTree.getJSONObject("root");
+        } catch (JSONException e) {
+            Log.e(TAG, "Error resetting to root node", e);
+        }
     }
 }
