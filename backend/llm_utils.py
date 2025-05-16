@@ -9,7 +9,6 @@ print(f"Found .env file at: {dotenv_path}")
 
 # Print API key from environment BEFORE loading .env (if it exists)
 api_key_before_load = os.getenv("OPENROUTER_API_KEY")
-print(f"API Key from environment BEFORE .env load: {api_key_before_load}")
 
 if dotenv_path:
     load_dotenv(dotenv_path=dotenv_path, override=True)
@@ -22,7 +21,6 @@ else:
 
 # Get API key from environment variable AFTER loading .env
 api_key = os.getenv("OPENROUTER_API_KEY")
-print(f"API Key from environment AFTER .env load: {api_key}")
 
 # Initialize the OpenAI client with OpenRouter endpoint
 client = OpenAI(

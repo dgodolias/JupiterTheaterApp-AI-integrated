@@ -50,8 +50,25 @@ def process_client_request(client_message):
 
     return response_data
 
-def start_server(host='127.0.0.1', port=65432):
+def get_local_ip():
+    """Get the local IP address of this machine."""
+    try:
+        # Create a socket to determine the IP address this machine uses to connect to the outside world
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # You don't actually need to send data - just start a connection
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return local_ip
+    except Exception as e:
+        print(f"Error getting local IP: {e}")
+        return "127.0.0.1"  # Fallback to localhost
+
+def start_server(host=None, port=65432):
     """Starts the TCP server to listen for client connections."""
+    if host is None:
+        host = get_local_ip()
+        
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
@@ -119,4 +136,13 @@ if __name__ == "__main__":
         extract_discount_info,
         extract_review_info
     )
-    start_server()
+    # Option to specify port via command line
+    port = 65432  # Default port
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+        except ValueError:
+            print(f"Invalid port number: {sys.argv[1]}. Using default: {port}")
+    
+    # Start server on the automatically detected IP address
+    start_server(port=port)
