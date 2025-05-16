@@ -1,4 +1,0 @@
-{
-    "reservation_number": {"value": "", "pvalues": []},
-    "passcode": {"value": "", "pvalues": []}
-}
