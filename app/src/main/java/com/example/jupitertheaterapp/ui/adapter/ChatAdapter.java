@@ -25,7 +25,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return messages.get(position).getType();
+        ChatMessage message = messages.get(position);
+        // Both bot and server messages use the same layout (left bubble)
+        return message.getType() == ChatMessage.TYPE_USER ? ChatMessage.TYPE_USER : ChatMessage.TYPE_BOT;
     }
 
     @NonNull

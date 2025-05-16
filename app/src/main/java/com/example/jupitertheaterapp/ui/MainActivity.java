@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.example.jupitertheaterapp.R;
 import com.example.jupitertheaterapp.core.ChatbotManager;
 import com.example.jupitertheaterapp.model.ChatMessage;
 import com.example.jupitertheaterapp.ui.adapter.ChatAdapter;
+import com.example.jupitertheaterapp.util.ServerClient;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private ChatAdapter chatAdapter;
     private LinearLayout inputLayout;
+    private ServerClient serverClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialize chatbot
         chatbotManager = new ChatbotManager();
 
+        // Initialize server client
+        serverClient = new ServerClient();
+
         // Display initial message
         addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);
 
@@ -58,12 +64,30 @@ public class MainActivity extends AppCompatActivity {
                 // Display user message
                 addMessage(userMessage, ChatMessage.TYPE_USER);
 
-                // Get chatbot response
-                String response = chatbotManager.getNextResponse(userMessage);
-                addMessage(response, ChatMessage.TYPE_BOT);
-
                 // Clear input field
                 userInputEditText.setText("");
+
+                if (chatbotManager.shouldUseServer()) {
+                    // Get response from server
+                    serverClient.sendMessage(userMessage, new ServerClient.ServerResponseCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            addMessage(response, ChatMessage.TYPE_SERVER);
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                            // Fallback to local response
+                            String fallbackResponse = chatbotManager.getLocalResponse(userMessage);
+                            addMessage(fallbackResponse, ChatMessage.TYPE_BOT);
+                        }
+                    });
+                } else {
+                    // Get local response
+                    String response = chatbotManager.getLocalResponse(userMessage);
+                    addMessage(response, ChatMessage.TYPE_BOT);
+                }
             }
         });
 
@@ -82,10 +106,21 @@ public class MainActivity extends AppCompatActivity {
 
             return WindowInsetsCompat.CONSUMED;
         });
+
+        // For testing, enable server responses (remove this line to use local responses)
+        // chatbotManager.setUseServerForResponses(true);
     }
 
     private void addMessage(String message, int type) {
         chatAdapter.addMessage(new ChatMessage(message, type));
         messagesRecyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serverClient != null) {
+            serverClient.shutdown();
+        }
     }
 }

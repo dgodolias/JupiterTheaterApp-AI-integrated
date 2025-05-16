@@ -5,6 +5,7 @@ import com.example.jupitertheaterapp.model.ChatbotNode;
 public class ChatbotManager {
     private ChatbotNode rootNode;
     private ChatbotNode currentNode;
+    private boolean useServerForResponses = false; // Flag to control response source
 
     public ChatbotManager() {
         // Initialize with a basic conversation tree
@@ -48,7 +49,8 @@ public class ChatbotManager {
         return currentNode.getMessage();
     }
 
-    public String getNextResponse(String userInput) {
+    // Local response generation
+    public String getLocalResponse(String userInput) {
         // Move to a random child node if available
         if (currentNode.hasChildren()) {
             currentNode = currentNode.getRandomChild();
@@ -58,6 +60,16 @@ public class ChatbotManager {
             currentNode = rootNode;
             return "I'm not sure what to say next. Let's start over. " + rootNode.getMessage();
         }
+    }
+
+    // Determines whether to use server for responses
+    public boolean shouldUseServer() {
+        return useServerForResponses;
+    }
+
+    // Enable/disable server responses
+    public void setUseServerForResponses(boolean useServer) {
+        this.useServerForResponses = useServer;
     }
 
     public void reset() {
