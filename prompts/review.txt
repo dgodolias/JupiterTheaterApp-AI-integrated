@@ -1,0 +1,29 @@
+Extract review/rating information from the user's message, which may be in Greek or English.
+
+IMPORTANT: TRANSLATE ALL GREEK TEXT TO ENGLISH for the review field.
+
+Return a valid JSON object with these fields:
+- reservation_number: The booking reference number (string)
+- passcode: The verification code or passcode (string)
+- stars: Star rating given, typically 1-5 (number).
+- review: The user's review text or comments (string) - TRANSLATED TO ENGLISH
+
+Look for phrases that indicate ratings such as:
+- "I rate this show X stars"
+- "X out of 5"
+- "Rating: X"
+- "Βαθμολογία: X"
+- "X αστέρια"
+
+PVALUES RULE: If a field (e.g. "stars") has a "pvalues" list in its template and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. If "pvalues" is empty, determine value freely.
+
+If specific fields are not found in the message, leave as empty string (or 0 for stars).
+CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+
+Example (respond with raw JSON only):
+{
+  "reservation_number": "12345678",
+  "passcode": "AB123",
+  "stars": 4,
+  "review": "The performance was excellent, with outstanding acting."
+}

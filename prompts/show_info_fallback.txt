@@ -1,0 +1,21 @@
+Extract and TRANSLITERATE all information from the user's message to English.
+
+TRANSLITERATION RULES:
+- Convert Greek letters to their closest English equivalents
+- "α" → "a", "β" → "v", "γ" → "g", "δ" → "d", "ε" → "e", etc.
+- Greek names should be properly transliterated, not translated
+- Greek genres/topics should be translated to English equivalents
+- Greek days should be converted to English day names
+
+TIME FORMATTING:
+- After specific time → ">HH:MM" (e.g., after 7 PM = ">19:00")
+- Before specific time → "<HH:MM" (e.g., before 5 PM = "<17:00")
+- Between times → ">HH:MM,<HH:MM" (e.g., between 5-7 PM = ">17:00,<19:00")
+
+Return a valid JSON with ALL text in English, formatted as arrays.
+
+PVALUES RULE: If a field like "day" or "stars" has a "pvalues" list in the main system template (e.g. for "day": ["Monday", "Tuesday", ...], for "stars": [1,2,3,4,5,">3"]) and that list is NOT empty, the extracted values for those fields MUST conform to one of the pvalues. If "pvalues" is empty, determine values freely.
+
+CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+Example (respond with raw JSON only):
+{"day": ["Saturday", "Sunday"], "cast": ["Actor Name"], "topic": ["thriller"], "stars": [4]}

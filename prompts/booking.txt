@@ -1,0 +1,45 @@
+Extract booking information from the user's message, which may be in Greek or English.
+
+IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
+- Show name (translate if possible, otherwise transliterate)
+- Person names (transliterate properly)
+- Theater room or venue names (transliterate)
+
+For days, use English day names: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+
+Return a valid JSON object or an array of JSON objects if multiple people are booking separately.
+Each JSON object should have these fields:
+- show_name: Name of the show (string)
+- room: Theater room number or name (string)
+- day: Day of the week for the booking (string)
+- time: Time of the show in 24-hour format (HH:MM) (string)
+- person: Information for the person in the booking (object)
+  The person object should have:
+  - name: Person's name (string)
+  - age: Person's age (string or number).
+  - seat: Requested seat number/location if specified (string)
+
+PVALUES RULE: If a field has a "pvalues" list in its template (e.g., for "age" or "day") and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. For example, if "age" is "10" and "pvalues" for age are ["child < 18", "grownup > 18", "granny > 65"], the "value" for age MUST be "child < 18". If the "pvalues" list is empty for a field, you can determine the appropriate value based on the user's input.
+
+Only include person fields that are explicitly mentioned. If no specific seats are requested,
+leave the seat fields empty.
+
+CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+
+Example for a booking with 2 people (will be an array of two such objects, respond with raw JSON only):
+[
+  {
+    "show_name": "Hamlet",
+    "room": "Main Stage",
+    "day": "Friday",
+    "time": "20:00",
+    "person": {"name": "John Smith", "age": "grownup > 18", "seat": "A12"}
+  },
+  {
+    "show_name": "Hamlet",
+    "room": "Main Stage",
+    "day": "Friday",
+    "time": "20:00",
+    "person": {"name": "Jane Doe", "age": "grownup > 18", "seat": "A13"}
+  }
+]
