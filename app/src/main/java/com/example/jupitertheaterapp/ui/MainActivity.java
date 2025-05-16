@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(new ArrayList<>());
         messagesRecyclerView.setAdapter(chatAdapter);
 
-        // Initialize chatbot
-        chatbotManager = new ChatbotManager();
+
+        chatbotManager = new ChatbotManager(this); // Pass context to constructor
 
         // Initialize server client
         serverClient = new ServerClient();

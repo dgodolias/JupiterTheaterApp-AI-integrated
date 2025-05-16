@@ -1,0 +1,69 @@
+{
+  "nodes": {
+    "root": {
+      "id": "root",
+      "message": "Hello! Welcome to Jupiter Theater. How can I help you?",
+      "children": ["showTimes", "tickets", "info"],
+      "fallback": "I'm not sure I understand. Can I help you with showtimes, tickets, or information about our theater?"
+    },
+    "showTimes": {
+      "id": "showTimes",
+      "message": "Would you like to see our current show times?",
+      "children": ["showTimes1", "showTimes2"],
+      "fallback": "We have several shows throughout the day. Is there a specific time you're interested in?"
+    },
+    "tickets": {
+      "id": "tickets",
+      "message": "Are you interested in purchasing tickets?",
+      "children": ["tickets1", "tickets2"],
+      "fallback": "We offer different ticket options. Would you like to know more about pricing?"
+    },
+    "info": {
+      "id": "info",
+      "message": "Do you want to know more about our theater?",
+      "children": ["info1", "info2"],
+      "fallback": "Jupiter Theater is a premier venue for theatrical performances. What specific information are you looking for?"
+    },
+    "showTimes1": {
+      "id": "showTimes1",
+      "message": "We have shows at 2PM, 5PM, and 8PM today.",
+      "children": [],
+      "fallback": "These are our standard showtimes. Would you like to know about any specific show?"
+    },
+    "showTimes2": {
+      "id": "showTimes2",
+      "message": "Our current showtimes are: matinee at 2PM and evening shows at 6PM and 9PM.",
+      "children": [],
+      "fallback": "Our schedule sometimes varies by day. Can I help you with anything else?"
+    },
+    "tickets1": {
+      "id": "tickets1",
+      "message": "Tickets are $15 for adults and $10 for children. Would you like to book now?",
+      "children": [],
+      "fallback": "We have different pricing options available. Would you like me to continue?"
+    },
+    "tickets2": {
+      "id": "tickets2",
+      "message": "We have standard tickets for $15 and premium seating for $25. How many would you like?",
+      "children": [],
+      "fallback": "Our premium seats offer the best view of the stage. Can I help you book tickets?"
+    },
+    "info1": {
+      "id": "info1",
+      "message": "Jupiter Theater has been operating since 1995 with award-winning performances.",
+      "children": [],
+      "fallback": "We're proud of our long history in the community. Is there something specific you'd like to know?"
+    },
+    "info2": {
+      "id": "info2",
+      "message": "Our theater features state-of-the-art sound systems and comfortable seating for 200 guests.",
+      "children": [],
+      "fallback": "Our facilities are designed for the best possible theater experience. Anything else you'd like to know?"
+    }
+  },
+  "keywords": {
+    "show,time,schedule,when": "showTimes",
+    "ticket,price,cost,buy,purchase": "tickets",
+    "about,info,history,theater,facility": "info"
+  }
+}
