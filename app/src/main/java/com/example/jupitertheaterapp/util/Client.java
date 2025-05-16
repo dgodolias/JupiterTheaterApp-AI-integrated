@@ -138,14 +138,24 @@ package com.example.jupitertheaterapp.util;
          }
 
          /**
-          * Gets the parent node ID for a given node
+          * Gets the appropriate category ID for a node.
+          * If the parent is root, we use the current node's ID.
+          * Otherwise, we use the parent's ID.
           */
          private String getParentNodeId(JSONObject node) {
              try {
-                 // Go up to level 2 to find the category node (level 1 is root)
                  String currentId = node.getString("id");
-                 // Ask ChatbotManager for the parent node ID
-                 return chatbotManager.getParentNodeId(currentId);
+
+                 // Get the parent node ID from ChatbotManager
+                 String parentId = chatbotManager.getParentNodeId(currentId);
+
+                 // If parent is "root" or empty, use the current node's ID
+                 if ("root".equals(parentId) || parentId.isEmpty()) {
+                     return currentId;
+                 }
+
+                 // Otherwise use the parent's ID
+                 return parentId;
              } catch (JSONException e) {
                  Log.e(TAG, "Error getting parent node ID", e);
                  return "";

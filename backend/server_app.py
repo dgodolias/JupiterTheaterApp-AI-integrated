@@ -25,95 +25,148 @@ def get_dummy_category():
     ]
     return random.choice(valid_categories)
 
-def process_client_request(client_message):
-    """Processes the client's message and returns a structured response."""
-    print(f"Received message: {client_message}")
-    
-    # Use dummy responses if the flag is enabled
-    if DUMMY_RESPONSES:
-        category = get_dummy_category()
-        print(f"Using DUMMY response. Categorized as: {category}")
+def process_client_request(client_data):
+    """
+    Processes the client's JSON request and returns a structured response.
+    Expected JSON format: {"type": "CATEGORISE|EXTRACT", "category": "", "message": "..."}
+    """
+    try:
+        # Try to parse the client message as JSON
+        try:
+            request = json.loads(client_data)
+            print(f"Received JSON request: {request}")
+            
+            # Validate JSON structure
+            if not isinstance(request, dict):
+                raise ValueError("Request must be a JSON object")
+                
+            if "type" not in request:
+                raise ValueError("Request must contain 'type' field")
+                
+            if "message" not in request:
+                raise ValueError("Request must contain 'message' field")
+                
+            request_type = request.get("type")
+            request_category = request.get("category", "")
+            request_message = request.get("message", "")
+            
+            if not request_message:
+                raise ValueError("Message field cannot be empty")
+                
+        except json.JSONDecodeError:
+            # Legacy support for plain text messages (optional, can be removed)
+            print(f"Received plain text message (legacy): {client_data}")
+            request_type = "CATEGORISE"
+            request_category = ""
+            request_message = client_data
         
-        # Create dummy response data based on the category
-        dummy_data = None
-        if category == "ΠΛΗΡΟΦΟΡΙΕΣ":
-            dummy_data = {
-                "name": {"value": ["A Midsummer Night's Dream"], "pvalues": []},
-                "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
-                "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []},
-                "time": {"value": ["20:00", "15:00"], "pvalues": []},
-                "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []},
-                "room": {"value": ["Grand Hall"], "pvalues": []},
-                "duration": {"value": ["120 minutes"], "pvalues": []},
-                "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}
-            }
-            print(f"Using DUMMY show info: {dummy_data}")
-        elif category == "ΚΡΑΤΗΣΗ":
-            dummy_data = {
-                "show_name": {"value": "Romeo and Juliet", "pvalues": []},
-                "room": {"value": "Main Theater", "pvalues": []},
-                "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
-                "time": {"value": "19:30", "pvalues": []},
-                "person": {
-                    "name": {"value": "Maria Papadopoulos", "pvalues": []},
-                    "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
-                    "seat": {"value": "B12", "pvalues": []}
-                }
-            }
-            print(f"Using DUMMY booking info: {dummy_data}")
-        elif category == "ΑΚΥΡΩΣΗ":
-            dummy_data = {
-                "reservation_number": {"value": "RES78901", "pvalues": []},
-                "passcode": {"value": "JUPITER2025", "pvalues": []}
-            }
-            print(f"Using DUMMY cancellation info: {dummy_data}")
-        elif category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-            dummy_data = {
-                "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
-                "no_of_people": {"value": 3, "pvalues": []},
-                "age": {"value": ["child < 18", "granny > 65"], "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
-                "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
-            }
-            print(f"Using DUMMY discount info: {dummy_data}")
-        elif category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-            dummy_data = {
-                "reservation_number": {"value": "DUMMY123", "pvalues": []},
-                "passcode": {"value": "12345", "pvalues": []},
-                "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
-                "review": {"value": "This is a dummy review for testing.", "pvalues": []}
-            }
-            print(f"Using DUMMY review info: {dummy_data}")
-        
-        response_data = {"category": category, "details": dummy_data, "error": None}
-    else:
-        # Normal LLM-based processing
-        category = categorize_prompt(client_message)
-        print(f"Categorized as: {category}")
-        
-        response_data = {"category": category, "details": None, "error": None}
-
-        if category == "ΠΛΗΡΟΦΟΡΙΕΣ":
-            show_info = extract_show_info(client_message)
-            response_data["details"] = show_info
-            print(f"Extracted show info: {show_info}")
-        elif category == "ΚΡΑΤΗΣΗ":
-            bookings = extract_booking_info(client_message)
-            response_data["details"] = bookings
-            print(f"Extracted booking(s): {bookings}")
-        elif category == "ΑΚΥΡΩΣΗ":
-            cancellation_info = extract_cancellation_info(client_message)
-            response_data["details"] = cancellation_info
-            print(f"Extracted cancellation info: {cancellation_info}")
-        elif category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-            discount_info = extract_discount_info(client_message)
-            response_data["details"] = discount_info
-            print(f"Extracted discount info: {discount_info}")
-        elif category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-            review_info = extract_review_info(client_message)
-            response_data["details"] = review_info
-            print(f"Extracted review info: {review_info}")
-        elif category == "ΕΞΟΔΟΣ":
-            response_data["details"] = "Client requested to close connection."
+        # Process request based on type
+        if request_type == "CATEGORISE":
+            print(f"Processing CATEGORISE request: {request_message}")
+            
+            # Use dummy responses if the flag is enabled
+            if DUMMY_RESPONSES:
+                category = get_dummy_category()
+                print(f"Using DUMMY response. Categorized as: {category}")
+                response_data = {"category": category, "details": None, "error": None}
+            else:
+                # Call the categorization function
+                category = categorize_prompt(request_message)
+                print(f"Categorized as: {category}")
+                response_data = {"category": category, "details": None, "error": None}
+                
+        elif request_type == "EXTRACT":
+            print(f"Processing EXTRACT request for category '{request_category}': {request_message}")
+            
+            if not request_category:
+                raise ValueError("Category field is required for EXTRACT requests")
+                
+            # Use dummy responses if the flag is enabled
+            if DUMMY_RESPONSES:
+                dummy_data = None
+                
+                if request_category == "ΠΛΗΡΟΦΟΡΙΕΣ":
+                    dummy_data = {
+                        "name": {"value": ["A Midsummer Night's Dream"], "pvalues": []},
+                        "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+                        "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []},
+                        "time": {"value": ["20:00", "15:00"], "pvalues": []},
+                        "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []},
+                        "room": {"value": ["Grand Hall"], "pvalues": []},
+                        "duration": {"value": ["120 minutes"], "pvalues": []},
+                        "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}
+                    }
+                    print(f"Using DUMMY show info: {dummy_data}")
+                elif request_category == "ΚΡΑΤΗΣΗ":
+                    dummy_data = {
+                        "show_name": {"value": "Romeo and Juliet", "pvalues": []},
+                        "room": {"value": "Main Theater", "pvalues": []},
+                        "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+                        "time": {"value": "19:30", "pvalues": []},
+                        "person": {
+                            "name": {"value": "Maria Papadopoulos", "pvalues": []},
+                            "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                            "seat": {"value": "B12", "pvalues": []}
+                        }
+                    }
+                    print(f"Using DUMMY booking info: {dummy_data}")
+                elif request_category == "ΑΚΥΡΩΣΗ":
+                    dummy_data = {
+                        "reservation_number": {"value": "RES78901", "pvalues": []},
+                        "passcode": {"value": "JUPITER2025", "pvalues": []}
+                    }
+                    print(f"Using DUMMY cancellation info: {dummy_data}")
+                elif request_category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+                    dummy_data = {
+                        "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
+                        "no_of_people": {"value": 3, "pvalues": []},
+                        "age": {"value": ["child < 18", "granny > 65"], "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                        "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
+                    }
+                    print(f"Using DUMMY discount info: {dummy_data}")
+                elif request_category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+                    dummy_data = {
+                        "reservation_number": {"value": "DUMMY123", "pvalues": []},
+                        "passcode": {"value": "12345", "pvalues": []},
+                        "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
+                        "review": {"value": "This is a dummy review for testing.", "pvalues": []}
+                    }
+                    print(f"Using DUMMY review info: {dummy_data}")
+                else:
+                    raise ValueError(f"Unsupported category: {request_category}")
+                
+                response_data = {"category": request_category, "details": dummy_data, "error": None}
+            else:
+                # Direct extraction based on provided category
+                details = None
+                
+                if request_category == "ΠΛΗΡΟΦΟΡΙΕΣ":
+                    details = extract_show_info(request_message)
+                    print(f"Extracted show info: {details}")
+                elif request_category == "ΚΡΑΤΗΣΗ":
+                    details = extract_booking_info(request_message)
+                    print(f"Extracted booking(s): {details}")
+                elif request_category == "ΑΚΥΡΩΣΗ":
+                    details = extract_cancellation_info(request_message)
+                    print(f"Extracted cancellation info: {details}")
+                elif request_category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+                    details = extract_discount_info(request_message)
+                    print(f"Extracted discount info: {details}")
+                elif request_category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+                    details = extract_review_info(request_message)
+                    print(f"Extracted review info: {details}")
+                elif request_category == "ΕΞΟΔΟΣ":
+                    details = "Client requested to close connection."
+                else:
+                    raise ValueError(f"Unsupported category: {request_category}")
+                
+                response_data = {"category": request_category, "details": details, "error": None}
+        else:
+            raise ValueError(f"Unsupported request type: {request_type}. Must be 'CATEGORISE' or 'EXTRACT'")
+            
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        response_data = {"category": None, "details": None, "error": str(e)}
     
     return response_data
 
@@ -189,11 +242,10 @@ def start_server(host=None, port=65432):
                         if not data:
                             print(f"Client {addr} disconnected (no data).")
                             break
+                        client_data = data.decode('utf-8').strip()
                         
-                        client_message = data.decode('utf-8').strip()
-                        
-                        # Process the message
-                        response_payload = process_client_request(client_message)
+                        # Process the client data (now expecting JSON format)
+                        response_payload = process_client_request(client_data)
                         
                         # Send the response back to the client
                         try:
