@@ -1,4 +1,4 @@
-package com.example.jupitertheaterapp;
+package com.example.jupitertheaterapp.model;
 
 import java.util.ArrayList;
 import java.util.List;

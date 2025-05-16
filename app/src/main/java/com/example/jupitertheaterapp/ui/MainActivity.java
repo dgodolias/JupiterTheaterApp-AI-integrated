@@ -1,7 +1,6 @@
-package com.example.jupitertheaterapp;
+package com.example.jupitertheaterapp.ui;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -13,6 +12,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jupitertheaterapp.R;
+import com.example.jupitertheaterapp.core.ChatbotManager;
+import com.example.jupitertheaterapp.model.ChatMessage;
+import com.example.jupitertheaterapp.ui.adapter.ChatAdapter;
 
 import java.util.ArrayList;
 

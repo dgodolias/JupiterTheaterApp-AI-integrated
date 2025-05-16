@@ -1,4 +1,6 @@
-package com.example.jupitertheaterapp;
+package com.example.jupitertheaterapp.core;
+
+import com.example.jupitertheaterapp.model.ChatbotNode;
 
 public class ChatbotManager {
     private ChatbotNode rootNode;

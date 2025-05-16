@@ -1,4 +1,4 @@
-package com.example.jupitertheaterapp;
+package com.example.jupitertheaterapp.model;
 
 public class ChatMessage {
     public static final int TYPE_USER = 0;

@@ -1,4 +1,4 @@
-package com.example.jupitertheaterapp;
+package com.example.jupitertheaterapp.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jupitertheaterapp.R;
+import com.example.jupitertheaterapp.model.ChatMessage;
 
 import java.util.List;
 
