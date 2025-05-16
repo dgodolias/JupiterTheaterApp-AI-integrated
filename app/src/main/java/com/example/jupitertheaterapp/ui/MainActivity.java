@@ -18,7 +18,7 @@ import com.example.jupitertheaterapp.R;
 import com.example.jupitertheaterapp.core.ChatbotManager;
 import com.example.jupitertheaterapp.model.ChatMessage;
 import com.example.jupitertheaterapp.ui.adapter.ChatAdapter;
-import com.example.jupitertheaterapp.util.ServerClient;
+import com.example.jupitertheaterapp.util.Client;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private ChatAdapter chatAdapter;
     private LinearLayout inputLayout;
-    private ServerClient serverClient;
+    private Client client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(new ArrayList<>());
         messagesRecyclerView.setAdapter(chatAdapter);
 
-
         chatbotManager = new ChatbotManager(this); // Pass context to constructor
 
-        // Initialize server client
-        serverClient = new ServerClient();
+        // Initialize client with chatbotManager
+        client = new Client(chatbotManager);
 
         // Display initial message
         addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);
@@ -69,10 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
                 if (chatbotManager.shouldUseServer()) {
                     // Get response from server
-                    serverClient.sendMessage(userMessage, new ServerClient.ServerResponseCallback() {
+                    client.sendMessage(userMessage, new Client.ServerResponseCallback() {
                         @Override
-                        public void onResponse(String response) {
-                            addMessage(response, ChatMessage.TYPE_SERVER);
+                        public void onServerResponse(String nodeId) {
+                            // Get the full response for the node ID
+                            try {
+                                String response = chatbotManager.getResponseForNodeId(nodeId);
+                                addMessage(response, ChatMessage.TYPE_SERVER);
+                            } catch (Exception e) {
+                                String fallbackResponse = chatbotManager.getLocalResponse(userMessage);
+                                addMessage(fallbackResponse, ChatMessage.TYPE_BOT);
+                            }
                         }
 
                         @Override
@@ -119,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (serverClient != null) {
-            serverClient.shutdown();
-        }
+        // Client class doesn't have shutdown method, so removed the call
     }
 }
