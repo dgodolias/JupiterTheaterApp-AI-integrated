@@ -1,0 +1,19 @@
+Extract discount/promotion information from the user's message, which may be in Greek or English.
+
+IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
+- Show names (translate if possible, otherwise transliterate)
+- Dates and age information
+
+Return a valid JSON object with these fields:
+- show_name: Name(s) of the show(s) the user is interested in (array of strings)
+- no_of_people: Number of people for the discount (number)
+- age: Age(s) or age ranges mentioned (array of strings like "15", ">60", "<18").
+- date: Date(s) or date ranges mentioned (array of strings)
+
+For dates, convert Greek month names to English and use the format "DD Month" or "DD/MM".
+For age ranges, use operators like ">60" (over 60), "<18" (under 18), etc.
+
+PVALUES RULE: If a field (e.g. "age") has a "pvalues" list in its template and that list is NOT empty, the extracted "value"(s) for that field MUST be from that "pvalues" list. If "pvalues" is empty, determine value(s) freely.
+
+Only include information that is explicitly mentioned in the message.
+CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.

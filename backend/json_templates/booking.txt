@@ -1,0 +1,11 @@
+{
+    "show_name": {"value": "", "pvalues": []},
+    "room": {"value": "", "pvalues": []},
+    "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+    "time": {"value": "", "pvalues": []},
+    "person": {
+        "name": {"value": "", "pvalues": []},
+        "age": {"value": "", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "", "pvalues": []}
+    }
+}
