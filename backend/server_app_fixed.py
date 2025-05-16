@@ -27,8 +27,7 @@ def get_dummy_category():
 def process_client_request(client_message):
     """Processes the client's message and returns a structured response."""
     print(f"Received message: {client_message}")
-    
-    # Use dummy responses if the flag is enabled
+      # Use dummy responses if the flag is enabled
     if DUMMY_RESPONSES:
         category = get_dummy_category()
         print(f"Using DUMMY response. Categorized as: {category}")
@@ -86,7 +85,13 @@ def process_client_request(client_message):
             print(f"Extracted review info: {review_info}")
         elif category == "ΕΞΟΔΟΣ":
             response_data["details"] = "Client requested to close connection."
-    
+            # For a server, "ΕΞΟΔΟΣ" might mean the client wants to disconnect
+            # The server itself typically keeps running.
+        else:
+            response_data["error"] = "Unknown category or unable to process request."
+            print(f"Unknown category or error processing: {category}")
+            # Consider if you have fallback mechanisms for unknown categories
+
     return response_data
 
 def get_local_ip():
@@ -155,10 +160,29 @@ def start_server(host=None, port=65432):
 
 if __name__ == "__main__":
     # Ensure the current working directory allows imports from sibling modules
+    # This might be needed if running the script directly from a different location
+    # or if the project structure isn't automatically on PYTHONPATH
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
     
+    # If your modules (message_categorizer, information_extractor) are in the parent
+    # directory or a specific 'src' directory, adjust sys.path accordingly.
+    # For example, if they are in the parent directory:
+    # project_root = os.path.dirname(current_dir)
+    # if project_root not in sys.path:
+    #     sys.path.insert(0, project_root)
+
+    # Import necessary modules after path adjustment if needed
+    import os # Re-import if used in __main__ after path adjustments
+    from message_categorizer import categorize_prompt
+    from information_extractor import (
+        extract_show_info,
+        extract_booking_info,
+        extract_cancellation_info,
+        extract_discount_info,
+        extract_review_info
+    )
     # Option to specify port via command line
     port = 65432  # Default port
     if len(sys.argv) > 1:

@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 public class Client {
     public static void main(String[] args) {
-        String hostname = "127.0.0.1";
+        String hostname = "192.168.1.18";
         int port = 65432;
         // Use default charset for console input
         BufferedReader consoleReader = null; 
