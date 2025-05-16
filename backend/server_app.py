@@ -3,6 +3,7 @@ import json
 import sys
 import os
 import random
+import signal  # Import signal module for handling Ctrl+C and other signals
 from message_categorizer import categorize_prompt
 from information_extractor import (
     extract_show_info,
@@ -134,24 +135,55 @@ def start_server(host=None, port=65432):
     """Starts the TCP server to listen for client connections."""
     if host is None:
         host = get_local_ip()
-        
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    # Create server socket outside the with block so we can reference it in signal handlers
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    # Flag to track server state
+    server_running = True
+    
+    # Define signal handler function
+    def signal_handler(sig, frame):
+        nonlocal server_running
+        print(f"\nReceived interrupt signal {sig}. Shutting down server...")
+        server_running = False
+        # Close the server socket
         try:
-            s.bind((host, port))
-        except socket.error as e:
-            print(f"Error binding server to {host}:{port} - {e}")
-            sys.exit(1)
-            
-        s.listen()
-        print(f"Jupiter Theater Server listening on {host}:{port}")
+            server_socket.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            # Socket might already be closed
+            pass
+        server_socket.close()
+        print("Server socket closed.")
+        sys.exit(0)
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)  # Handle Ctrl+C
+    signal.signal(signal.SIGTERM, signal_handler)  # Handle termination signal
+    
+    try:
+        server_socket.bind((host, port))
+    except socket.error as e:
+        print(f"Error binding server to {host}:{port} - {e}")
+        sys.exit(1)
         
-        while True:
+    server_socket.listen()
+    print(f"Jupiter Theater Server listening on {host}:{port}")
+    print("Press Ctrl+C to stop the server")
+    
+    while server_running:
+        try:
+            # Set a timeout so the server can check for the running flag
+            server_socket.settimeout(1.0)
             try:
-                conn, addr = s.accept()
+                conn, addr = server_socket.accept()
+                # Reset timeout for normal operation
+                server_socket.settimeout(None)
+                
                 with conn:
                     print(f"Connected by {addr}")
-                    while True:
+                    while server_running:
                         print(f"Waiting for message from {addr}...")
                         data = conn.recv(4096)  # Increased buffer size
                         if not data:
@@ -172,18 +204,28 @@ def start_server(host=None, port=65432):
                             print(f"Error sending data to {addr}: {e}")
                             break
                     print(f"Connection with {addr} closed.")
-            except KeyboardInterrupt:
-                print("\nServer shutting down...")
-                break
-            except Exception as e:
-                print(f"An unexpected error occurred in the server loop: {e}")
-                # Optionally, decide if the server should continue or exit
-                # For robustness, it might try to continue accepting new connections
+            except socket.timeout:
+                # This is expected due to the timeout we set
+                continue
+        except KeyboardInterrupt:
+            print("\nServer shutting down from KeyboardInterrupt...")
+            server_running = False
+            break
+        except Exception as e:
+            print(f"An unexpected error occurred in the server loop: {e}")
+            # Continue running to accept new connections unless server_running was changed
+    
+    # Ensure socket is closed before exiting
+    try:
+        server_socket.close()
+        print("Server socket closed.")
+    except Exception as e:
+        print(f"Error closing server socket: {e}")
 
 if __name__ == "__main__":
     # Ensure the current working directory allows imports from sibling modules
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    if current_dir not in sys.path:
+    if (current_dir not in sys.path):
         sys.path.insert(0, current_dir)
     
     # Option to specify port via command line
