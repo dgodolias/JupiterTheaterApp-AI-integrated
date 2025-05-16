@@ -58,16 +58,16 @@ public class Client {
             while (isRunning.get()) {
                 try {
                     if (!isConnected.get()) {
-                        Log.d(TAG, "Connecting to server at " + serverHost + ":" + serverPort);
+                        Log.d(TAG, "Attempting to connect to " + serverHost + ":" + serverPort);
                         socket = new Socket(serverHost, serverPort);
-                        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
-                        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+                        out = new PrintWriter(new OutputStreamWriter(
+                                socket.getOutputStream(), StandardCharsets.UTF_8), true);
+                        in = new BufferedReader(new InputStreamReader(
+                                socket.getInputStream(), StandardCharsets.UTF_8));
                         isConnected.set(true);
                         Log.d(TAG, "Connected to server successfully");
                     }
-
-                    // Keep the thread alive but don't do anything
-                    // The server will keep the connection until timeout
+                    // Sleep to avoid tight loop
                     Thread.sleep(5000);
                 } catch (IOException e) {
                     Log.e(TAG, "Connection error", e);
@@ -76,7 +76,7 @@ public class Client {
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException ie) {
-                        Log.d(TAG, "Reconnect sleep interrupted", ie);
+                        Log.d(TAG, "Connection sleep interrupted", ie);
                     }
                 } catch (InterruptedException e) {
                     Log.d(TAG, "Connection thread interrupted", e);
@@ -87,9 +87,41 @@ public class Client {
     }
 
     /**
-     * Sends a message to the server using the persistent connection
+     * Sends a CATEGORISE message to the server
      */
-    public void sendMessage(String userMessage, ServerResponseCallback callback) {
+    public void categorizeMessage(String userMessage, ServerResponseCallback callback) {
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("type", "CATEGORISE");
+            jsonRequest.put("category", "");
+            jsonRequest.put("message", userMessage);
+            sendJsonRequest(jsonRequest, callback);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON request", e);
+            mainHandler.post(() -> callback.onError("Error formatting request: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Sends an EXTRACT message to the server
+     */
+    public void extractFromMessage(String category, String userMessage, ServerResponseCallback callback) {
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("type", "EXTRACT");
+            jsonRequest.put("category", category);
+            jsonRequest.put("message", userMessage);
+            sendJsonRequest(jsonRequest, callback);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON request", e);
+            mainHandler.post(() -> callback.onError("Error formatting request: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Sends the JSON request to the server
+     */
+    private void sendJsonRequest(JSONObject jsonRequest, ServerResponseCallback callback) {
         if (!isConnected.get()) {
             mainHandler.post(() -> callback.onError("Not connected to server. Attempting to reconnect..."));
             connect();
@@ -99,12 +131,10 @@ public class Client {
         new Thread(() -> {
             try {
                 if (out != null && socket != null && !socket.isClosed()) {
-                    // Remove any embedded newlines
-                    String cleanMessage = userMessage.replaceAll("\\r?\\n", " ");
-
-                    // Send message to server
-                    out.println(cleanMessage);
-                    Log.d(TAG, "Sent to server: " + cleanMessage);
+                    // Send JSON request to server
+                    String requestStr = jsonRequest.toString();
+                    out.println(requestStr);
+                    Log.d(TAG, "Sent to server: " + requestStr);
 
                     // Receive response from server
                     if (in != null) {
@@ -141,9 +171,6 @@ public class Client {
                                 closeConnection();
                             }
                         });
-                    } else {
-                        mainHandler.post(() -> callback.onError("Input stream is not available"));
-                        closeConnection();
                     }
                 } else {
                     mainHandler.post(() -> callback.onError("Connection to server lost. Reconnecting..."));
@@ -157,6 +184,14 @@ public class Client {
                 mainHandler.post(() -> callback.onError("Error: " + e.getMessage()));
             }
         }).start();
+    }
+
+    /**
+     * Legacy method for compatibility with existing code
+     */
+    public void sendMessage(String userMessage, ServerResponseCallback callback) {
+        // By default, use the categorize function
+        categorizeMessage(userMessage, callback);
     }
 
     /**
