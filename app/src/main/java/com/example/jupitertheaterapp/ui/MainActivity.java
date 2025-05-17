@@ -48,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(new ArrayList<>());
         messagesRecyclerView.setAdapter(chatAdapter);
 
-        chatbotManager = new ChatbotManager(this); // Pass context to constructor        // Initialize client with chatbotManager
-        client = new Client(chatbotManager);
+        chatbotManager = new ChatbotManager(this); // Pass context to constructor
 
-        // Print the conversation tree structure to the log for debugging
-        chatbotManager.printTree();
+        // Initialize client with chatbotManager
+        client = new Client(chatbotManager);
 
         // Display initial message
         addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);
@@ -98,12 +97,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Add long press listener to show debug info
-        sendButton.setOnLongClickListener(v -> {
-            displayTreeStructure();
-            return true;
-        });
-
         // Properly handle keyboard visibility with WindowInsets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
@@ -133,19 +126,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Client class doesn't have shutdown method, so removed the call
-    }
-
-    /**
-     * Displays the conversation tree structure in a dialog.
-     * This is useful for debugging purposes.
-     */
-    public void displayTreeStructure() {
-        String treeStructure = chatbotManager.getTreeAsString();
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Conversation Tree Structure")
-                .setMessage(treeStructure)
-                .setPositiveButton("OK", null)
-                .create()
-                .show();
     }
 }
