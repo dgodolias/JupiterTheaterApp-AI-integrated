@@ -3,6 +3,7 @@ package com.example.jupitertheaterapp.core;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.jupitertheaterapp.model.ChatMessage;
 import com.example.jupitertheaterapp.model.ChatbotNode;
 import com.example.jupitertheaterapp.model.ConversationState;
 import com.example.jupitertheaterapp.model.MsgTemplate;
@@ -248,16 +249,12 @@ public class ChatbotManager {
                 "Δεν κατάλαβα την ερώτησή σας.");
         nodeMap.put("root", rootNode);
         currentNode = rootNode;
-    }
-
-    public String getInitialMessage() {
+    }    public String getInitialMessage() {
         if (rootNode != null) {
-            return rootNode.getMessage();
+            return rootNode.getSystemMessage().getMessage();
         }
         return "Γεια σας! Πώς μπορώ να σας βοηθήσω;";
-    }
-
-    public String getResponseForNodeId(String nodeId) {
+    }public String getResponseForNodeId(String nodeId) {
         Log.d(TAG, "Getting response for node ID: " + nodeId);
 
         ChatbotNode node = nodeMap.get(nodeId);
@@ -267,15 +264,23 @@ public class ChatbotManager {
         }
 
         currentNode = node;
-        return node.getMessage();
-    }
-
-    public String getLocalResponse(String userInput) {
+        // Return system message from the node
+        return node.getSystemMessage().getMessage();
+    }public String getLocalResponse(String userInput) {
         try {
+            // Create JSON request using the current node (for debugging/consistency)
+            JSONObject jsonRequest = currentNode.createRequestJson(userInput);
+            Log.d(TAG, "Local response using JSON request: " + jsonRequest.toString());
+            
+            // Update the current node with the user message
+            currentNode.setUserMessage(userInput);
+            
+            // Process the request locally - find the next node
             ChatbotNode nextNode = chooseNextNode(userInput);
             if (nextNode != null) {
                 currentNode = nextNode;
-                return nextNode.getMessage();
+                // Now the system message is what we want to return
+                return nextNode.getSystemMessage().getMessage();
             } else {
                 return currentNode.getFallback();
             }
@@ -410,19 +415,36 @@ public class ChatbotManager {
                 indent, connector, node.getId(), node.getType(), currentMarker);
         Log.d(TAG, display); 
         
-        // Print message_1 preview (truncated if too long)
+        // Print system message preview (truncated if too long)
+        ChatMessage sysMsg = node.getSystemMessage();
+        String sysMsgType = (sysMsg.getType() == ChatMessage.TYPE_BOT) ? "BOT" : "SERVER";
+        String sysMsgPreview = sysMsg.getMessage();
+        if (sysMsgPreview.length() > 40) {
+            sysMsgPreview = sysMsgPreview.substring(0, 37) + "...";
+        }
+        Log.d(TAG, indent + "    ├── System [" + sysMsgType + "]: " + sysMsgPreview);
+        
+        // Print user message if available
+        if (node.getUserMessage() != null) {
+            String userMsgPreview = node.getUserMessage().getMessage();
+            if (userMsgPreview.length() > 40) {
+                userMsgPreview = userMsgPreview.substring(0, 37) + "...";
+            }
+            Log.d(TAG, indent + "    ├── User: " + userMsgPreview);
+        }
+        
+        // For backward compatibility, also print message_1 and message_2
         String message1Preview = node.getMessage();
         if (message1Preview.length() > 40) {
             message1Preview = message1Preview.substring(0, 37) + "...";
         }
-        Log.d(TAG, indent + "    ├── Message 1: " + message1Preview);
+        Log.d(TAG, indent + "    ├── Legacy Msg1: " + message1Preview);
         
-        // Print message_2 preview (truncated if too long)
         String message2Preview = node.getMessage2();
         if (message2Preview.length() > 40) {
             message2Preview = message2Preview.substring(0, 37) + "...";
         }
-        Log.d(TAG, indent + "    ├── Message 2: " + message2Preview);
+        Log.d(TAG, indent + "    ├── Legacy Msg2: " + message2Preview);
 
         // Print template info if available
         MsgTemplate template = node.getMessageTemplate();
@@ -493,12 +515,23 @@ public class ChatbotManager {
         String prefix = indent.toString() + "└── ";
         String display = String.format("%s[ID: %s, Type: %s]%s",
                 prefix, node.getId(), node.getType(), currentMarker);
-        sb.append(display).append("\n"); // Add message preview (truncated if too long)
-        String messagePreview = node.getMessage();
-        if (messagePreview.length() > 40) {
-            messagePreview = messagePreview.substring(0, 37) + "...";
+        sb.append(display).append("\n");        // Add system message preview (truncated if too long)
+        ChatMessage sysMsg = node.getSystemMessage();
+        String sysMsgType = (sysMsg.getType() == ChatMessage.TYPE_BOT) ? "BOT" : "SERVER";
+        String sysMsgPreview = sysMsg.getMessage();
+        if (sysMsgPreview.length() > 40) {
+            sysMsgPreview = sysMsgPreview.substring(0, 37) + "...";
         }
-        sb.append(indent).append("    ├── Message: ").append(messagePreview).append("\n");
+        sb.append(indent).append("    ├── System [").append(sysMsgType).append("]: ").append(sysMsgPreview).append("\n");
+        
+        // Add user message if available
+        if (node.getUserMessage() != null) {
+            String userMsgPreview = node.getUserMessage().getMessage();
+            if (userMsgPreview.length() > 40) {
+                userMsgPreview = userMsgPreview.substring(0, 37) + "...";
+            }
+            sb.append(indent).append("    ├── User: ").append(userMsgPreview).append("\n");
+        }
 
         // Add template info if available
         MsgTemplate template = node.getMessageTemplate();

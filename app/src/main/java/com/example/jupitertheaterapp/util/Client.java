@@ -92,35 +92,20 @@ package com.example.jupitertheaterapp.util;
           */
          public void sendMessage(String userMessage, ServerResponseCallback callback) {
              try {
-                 // Get current node from ChatbotManager and convert to JSONObject
+                 // Get current node from ChatbotManager
                  ChatbotNode node = chatbotManager.getCurrentNode();
-                 JSONObject currentNode = nodeToJson(node);
-
-                 if (currentNode != null && currentNode.has("type")) {
-                     String type = currentNode.getString("type");
-
-                     if ("CATEGORISE".equals(type)) {
-                         // If at root, we want to categorize the message
-                         categorizeMessage(userMessage, callback);
-                     } else if ("EXTRACT".equals(type)) {
-                         // For EXTRACT nodes, we need the parent node's ID as category
-                         String parentId = getParentNodeId(currentNode);
-                         extractFromMessage(parentId, userMessage, callback);
-                     } else {
-                         // Default to categorize
-                         categorizeMessage(userMessage, callback);
-                     }
-                 } else {
-                     // Default to categorize if node doesn't have type
-                     categorizeMessage(userMessage, callback);
-                 }
-             } catch (JSONException e) {
-                 Log.e(TAG, "Error reading node type", e);
+                 
+                 // Use the node's createRequestJson method to generate the JSON object
+                 JSONObject jsonRequest = node.createRequestJson(userMessage);
+                 
+                 // Send the request directly
+                 sendJsonRequest(jsonRequest, callback);
+                 
+             } catch (Exception e) {
+                 Log.e(TAG, "Error creating or sending request", e);
                  mainHandler.post(() -> callback.onError("Error processing message: " + e.getMessage()));
              }
-         }
-
-         /**
+         }/**
           * Converts a ChatbotNode to a JSONObject
           */
          private JSONObject nodeToJson(ChatbotNode node) {
@@ -128,9 +113,14 @@ package com.example.jupitertheaterapp.util;
              try {
                  json.put("id", node.getId());
                  json.put("type", node.getType());
-                 json.put("message", node.getMessage());
+                 json.put("message", node.getMessage());           // Using primary message
+                 json.put("message_1", node.getMessage());         // Including message_1 explicitly
+                 json.put("message_2", node.getMessage2());        // Including message_2 explicitly
                  json.put("content", node.getContent());
                  json.put("fallback", node.getFallback());
+                 
+                 // Print the JSON object for debugging
+                 System.out.println("NODE CONVERTED TO JSON: " + json.toString());
              } catch (JSONException e) {
                  Log.e(TAG, "Error converting node to JSON", e);
              }
@@ -160,39 +150,7 @@ package com.example.jupitertheaterapp.util;
                  Log.e(TAG, "Error getting parent node ID", e);
                  return "";
              }
-         }
-
-         /**
-          * Sends a CATEGORISE message to the server
-          */
-         public void categorizeMessage(String userMessage, ServerResponseCallback callback) {
-             JSONObject jsonRequest = new JSONObject();
-             try {
-                 jsonRequest.put("type", "CATEGORISE");
-                 jsonRequest.put("category", "");
-                 jsonRequest.put("message", userMessage);
-                 sendJsonRequest(jsonRequest, callback);
-             } catch (JSONException e) {
-                 Log.e(TAG, "Error creating JSON request", e);
-                 mainHandler.post(() -> callback.onError("Error formatting request: " + e.getMessage()));
-             }
-         }
-
-         /**
-          * Sends an EXTRACT message to the server
-          */
-         public void extractFromMessage(String category, String userMessage, ServerResponseCallback callback) {
-             JSONObject jsonRequest = new JSONObject();
-             try {
-                 jsonRequest.put("type", "EXTRACT");
-                 jsonRequest.put("category", category);
-                 jsonRequest.put("message", userMessage);
-                 sendJsonRequest(jsonRequest, callback);
-             } catch (JSONException e) {
-                 Log.e(TAG, "Error creating JSON request", e);
-                 mainHandler.post(() -> callback.onError("Error formatting request: " + e.getMessage()));
-             }
-         }
+         }         // Methods categorizeMessage and extractFromMessage have been replaced by using ChatbotNode.createRequestJson
 
          /**
           * Sends the JSON request to the server
@@ -206,27 +164,32 @@ package com.example.jupitertheaterapp.util;
 
              new Thread(() -> {
                  try {
-                     if (out != null && socket != null && !socket.isClosed()) {
-                         // Send JSON request to server
+                     if (out != null && socket != null && !socket.isClosed()) {                         // Send JSON request to server
                          String requestStr = jsonRequest.toString();
                          out.println(requestStr);
                          Log.d(TAG, "Sent to server: " + requestStr);
-
-                         // Receive response from server
+                         // Add detailed JSON print for debugging
+                         System.out.println("JSON SENT TO SERVER: " + requestStr);                         // Receive response from server
                          if (in != null) {
                              final String serverResponse = in.readLine();
                              Log.d(TAG, "Received from server: " + serverResponse);
+                             // Add detailed JSON print for debugging
+                             System.out.println("JSON RECEIVED FROM SERVER: " + serverResponse);
 
                              // Post callback to main thread
                              mainHandler.post(() -> {
-                                 if (serverResponse != null) {
-                                     try {
+                                 if (serverResponse != null) {                                     try {
                                          // Parse the JSON response
                                          JSONObject jsonResponse = new JSONObject(serverResponse);
-
+                                         
+                                         // Debug all fields in the JSON response
+                                         System.out.println("PARSING SERVER RESPONSE: " + jsonResponse.toString());
+                                         System.out.println("JSON FIELDS: " + jsonResponse.keys());
+                                         
                                          // Extract the category field
                                          if (jsonResponse.has("category")) {
                                              String category = jsonResponse.getString("category");
+                                             System.out.println("CATEGORY FROM SERVER: " + category);
 
                                              // Check if category is a valid node ID
                                              if (isValidNodeId(category)) {

@@ -122,10 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
         // For testing, enable server responses (remove this line to use local responses)
         // chatbotManager.setUseServerForResponses(true);
-    }
-
-    private void addMessage(String message, int type) {
-        chatAdapter.addMessage(new ChatMessage(message, type));
+    }    private void addMessage(String message, int type) {
+        // Use factory method to create proper message subtype
+        ChatMessage chatMessage = ChatMessage.createMessage(message, type);
+        chatAdapter.addMessage(chatMessage);
         messagesRecyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
     }
 
