@@ -51,9 +51,7 @@ public class ChatbotManager {
             Log.e(TAG, "Error parsing conversation tree JSON", e);
             createMinimalStructure();
         }
-    }
-
-    private ChatbotNode convertJsonToNodeStructure(JSONObject jsonNode) throws JSONException {
+    }    private ChatbotNode convertJsonToNodeStructure(JSONObject jsonNode) throws JSONException {
         String id = jsonNode.getString("id");
         String type = jsonNode.getString("type");
         String message = jsonNode.getString("message");
@@ -61,6 +59,17 @@ public class ChatbotManager {
         String fallback = jsonNode.optString("fallback", "I didn't understand that.");
 
         ChatbotNode node = new ChatbotNode(id, type, message, content, fallback);
+        
+        // Try to assign the appropriate MsgTemplate based on the node's ID
+        try {
+            MsgTemplate template = MsgTemplate.createTemplate(id);
+            node.setMessageTemplate(template);
+            Log.d(TAG, "Assigned template to node: " + id);
+        } catch (IllegalArgumentException e) {
+            // No template available for this node ID; that's ok
+            Log.d(TAG, "No template available for node: " + id);
+        }
+        
         nodeMap.put(id, node);
 
         if (jsonNode.has("children")) {
@@ -84,9 +93,7 @@ public class ChatbotManager {
         }
 
         return node;
-    }
-
-    // Called after all nodes are created to resolve string references
+    }    // Called after all nodes are created to resolve string references
     private void resolveNodeReferences() {
         for (ChatbotNode node : nodeMap.values()) {
             List<String> pendingIds = node.getPendingChildIds();
@@ -97,6 +104,41 @@ public class ChatbotManager {
                 }
             }
             node.clearPendingChildIds();
+        }
+        
+        // Second pass to propagate templates from parents to children
+        propagateTemplatesToChildren(rootNode);
+    }
+    
+    /**
+     * Propagates templates from parent nodes to their children.
+     * The root node is exempt from receiving templates.
+     * 
+     * @param node The current node to process
+     */
+    private void propagateTemplatesToChildren(ChatbotNode node) {
+        if (node == null) return;
+        
+        MsgTemplate template = node.getMessageTemplate();
+        
+        // Propagate template to children if it exists
+        if (template != null) {
+            for (ChatbotNode child : node.getChildren()) {
+                // Skip if child is the root node
+                if (child.getId().equals("root")) continue;
+                
+                // Set the parent's template to the child
+                child.setMessageTemplate(template);
+                Log.d(TAG, "Propagated template from " + node.getId() + " to child: " + child.getId());
+            }
+        }
+        
+        // Continue recursively for all children
+        for (ChatbotNode child : node.getChildren()) {
+            // Skip processing already visited root node to prevent circular reference issues
+            if (child.getId().equals("root")) continue;
+            
+            propagateTemplatesToChildren(child);
         }
     }
 
@@ -157,9 +199,7 @@ public class ChatbotManager {
             Log.e(TAG, "Error getting local response", e);
             return "Συγγνώμη, προέκυψε ένα σφάλμα.";
         }
-    }
-
-    public ChatbotNode chooseNextNode(String userInput) {
+    }    public ChatbotNode chooseNextNode(String userInput) {
         if (!currentNode.hasChildren()) {
             return rootNode;
         }
@@ -276,14 +316,18 @@ public class ChatbotManager {
         String currentMarker = (node == currentNode) ? " [CURRENT]" : "";
         String display = String.format("%s%s [ID: %s, Type: %s]%s", 
                 indent, connector, node.getId(), node.getType(), currentMarker);
-        Log.d(TAG, display);
-
-        // Print message preview (truncated if too long)
+        Log.d(TAG, display);        // Print message preview (truncated if too long)
         String messagePreview = node.getMessage();
         if (messagePreview.length() > 40) {
             messagePreview = messagePreview.substring(0, 37) + "...";
         }
         Log.d(TAG, indent + "    ├── Message: " + messagePreview);
+        
+        // Print template info if available
+        MsgTemplate template = node.getMessageTemplate();
+        if (template != null) {
+            Log.d(TAG, indent + "    ├── Template: " + template.getClass().getSimpleName());
+        }
 
         // Print children count
         int childCount = node.getChildren().size();
@@ -346,14 +390,18 @@ public class ChatbotManager {
         String prefix = indent.toString() + "└── ";
         String display = String.format("%s[ID: %s, Type: %s]%s", 
                 prefix, node.getId(), node.getType(), currentMarker);
-        sb.append(display).append("\n");
-
-        // Add message preview (truncated if too long)
+        sb.append(display).append("\n");        // Add message preview (truncated if too long)
         String messagePreview = node.getMessage();
         if (messagePreview.length() > 40) {
             messagePreview = messagePreview.substring(0, 37) + "...";
         }
         sb.append(indent).append("    ├── Message: ").append(messagePreview).append("\n");
+        
+        // Add template info if available
+        MsgTemplate template = node.getMessageTemplate();
+        if (template != null) {
+            sb.append(indent).append("    ├── Template: ").append(template.getClass().getSimpleName()).append("\n");
+        }
 
         // Add children count
         int childCount = node.getChildren().size();

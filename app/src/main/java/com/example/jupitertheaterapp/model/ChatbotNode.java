@@ -3,7 +3,6 @@ package com.example.jupitertheaterapp.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import com.example.jupitertheaterapp.model.MsgTemplate;
 
 public class ChatbotNode {
     private String id;
@@ -15,11 +14,7 @@ public class ChatbotNode {
     private ChatbotNode parent;
     private List<String> pendingChildIds; // For resolving references
     private Random random = new Random();
-<<<<<<< HEAD
     private MsgTemplate msgTemplate;
-=======
-    private MsgTemplate messageTemplate;
->>>>>>> main
 
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
         this.id = id;
@@ -97,12 +92,12 @@ public class ChatbotNode {
     public boolean isCategoriseNode() {
         return "CATEGORISE".equals(type);
     }
+
+    public void setMessageTemplate(MsgTemplate msgTemplate) {
+        this.msgTemplate = msgTemplate;
+    }
     
     public MsgTemplate getMessageTemplate() {
-        return messageTemplate;
-    }
-
-    public void setMessageTemplate(MsgTemplate messageTemplate) {
-        this.messageTemplate = messageTemplate;
+        return msgTemplate;
     }
 }
