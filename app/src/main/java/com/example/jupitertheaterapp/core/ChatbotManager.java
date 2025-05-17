@@ -23,24 +23,22 @@ import java.util.Set;
 
 public class ChatbotManager {
     private static final String TAG = "ChatbotManager";
-    private static final String CONVERSATION_FILE = "conversation_tree.json";
-
-    private JSONObject jsonTree; // Keep for reference    private ChatbotNode rootNode;
+    private static final String CONVERSATION_FILE = "conversation_tree.json";    private JSONObject jsonTree; // Keep for reference
+    private ChatbotNode rootNode; // Root node of conversation tree
     private Map<String, ChatbotNode> nodeMap;
     private ChatbotNode currentNode;
     private Random random = new Random();
     private boolean useServerForResponses = true;
-    private ConversationState conversationState;    
-    private ChatbotNode rootNode;
-    
+    private ConversationState conversationState;
+
     public ChatbotManager(Context context) {
         nodeMap = new HashMap<>();
         conversationState = ConversationState.getInstance();
-        Log.d(TAG,"Conversation State: ");
-        Log.d(TAG,conversationState.getCurrentStateAsString());
+        Log.d(TAG, "Conversation State: ");
+        Log.d(TAG, conversationState.getCurrentStateAsString());
         loadConversationTree(context);
     }
-    
+
     private void loadConversationTree(Context context) {
         try {
             String jsonString = readJSONFromAsset(context, CONVERSATION_FILE);
@@ -61,12 +59,67 @@ public class ChatbotManager {
     }    private ChatbotNode convertJsonToNodeStructure(JSONObject jsonNode) throws JSONException {
         String id = jsonNode.getString("id");
         String type = jsonNode.getString("type");
-        String message = jsonNode.getString("message");
         String content = jsonNode.optString("content", "");
         String fallback = jsonNode.optString("fallback", "I didn't understand that.");
 
-        ChatbotNode node = new ChatbotNode(id, type, message, content, fallback);
+        Log.d(TAG, "Processing node: " + id + ", type: " + type);
         
+        // Log the children array for this node
+        if (jsonNode.has("children")) {
+            Object childrenObj = jsonNode.get("children");
+            if (childrenObj instanceof JSONArray) {
+                JSONArray childArray = (JSONArray) childrenObj;
+                Log.d(TAG, "Node " + id + " has " + childArray.length() + " children in JSON");
+                
+                for (int i = 0; i < childArray.length(); i++) {
+                    Object childObj = childArray.get(i);
+                    if (childObj instanceof JSONObject) {
+                        JSONObject childJson = (JSONObject) childObj;
+                        Log.d(TAG, "  Child " + i + " is object with ID: " + childJson.optString("id", "unknown"));
+                    } else if (childObj instanceof String) {
+                        String childId = (String) childObj;
+                        Log.d(TAG, "  Child " + i + " is string reference to: " + childId);
+                    } else {
+                        Log.d(TAG, "  Child " + i + " is unknown type: " + childObj.getClass().getName());
+                    }
+                }
+            } else {
+                Log.d(TAG, "Node " + id + " has children but not in JSONArray format");
+            }
+        } else {
+            Log.d(TAG, "Node " + id + " has no children in JSON");
+        }
+
+        ChatbotNode node;
+
+        // Check if we have the new dual message format
+        if (jsonNode.has("message_1") && jsonNode.has("message_2")) {
+            String message1 = jsonNode.getString("message_1");
+            String message2 = jsonNode.getString("message_2");
+            
+            Log.d(TAG, "Node " + id + " has dual messages: message_1=" + message1.substring(0, Math.min(20, message1.length())) + "...");
+            
+            // Use the constructor that accepts both message formats
+            node = new ChatbotNode(id, type, message1, message2, content, fallback);
+        } else {
+            // Fall back to the original format
+            String message;
+            if (jsonNode.has("message_1")) {
+                message = jsonNode.getString("message_1");
+                Log.d(TAG, "Node " + id + " has only message_1");
+            } else if (jsonNode.has("message")) {
+                // For backward compatibility with old JSON format
+                message = jsonNode.getString("message");
+                Log.d(TAG, "Node " + id + " has only message (old format)");
+            } else {
+                // Default message if neither format is present
+                message = "No message available.";
+                Log.d(TAG, "Node " + id + " has no message fields");
+            }
+            
+            node = new ChatbotNode(id, type, message, content, fallback);
+        }
+
         // Try to assign the appropriate MsgTemplate based on the node's ID
         try {
             MsgTemplate template = MsgTemplate.createTemplate(id);
@@ -76,9 +129,12 @@ public class ChatbotManager {
             // No template available for this node ID; that's ok
             Log.d(TAG, "No template available for node: " + id);
         }
-        
+
+        // Add node to the map - important to do this before processing children
+        // to handle circular references
         nodeMap.put(id, node);
 
+        // Process children after creating the node
         if (jsonNode.has("children")) {
             Object childrenObj = jsonNode.get("children");
             if (childrenObj instanceof JSONArray) {
@@ -100,23 +156,40 @@ public class ChatbotManager {
         }
 
         return node;
-    }    // Called after all nodes are created to resolve string references
+    }// Called after all nodes are created to resolve string references
     private void resolveNodeReferences() {
+        Log.d(TAG, "Starting to resolve node references. Node map size: " + nodeMap.size());
+        
+        // First, log all nodes in the map
+        for (String key : nodeMap.keySet()) {
+            ChatbotNode mapNode = nodeMap.get(key);
+            Log.d(TAG, "Node in map: " + key + ", children: " + mapNode.getChildren().size() + 
+                  ", pending children: " + mapNode.getPendingChildIds().size());
+        }
+        
+        // Now process the pending children
         for (ChatbotNode node : nodeMap.values()) {
             List<String> pendingIds = node.getPendingChildIds();
+            Log.d(TAG, "Resolving " + pendingIds.size() + " pending child IDs for node: " + node.getId());
+            
             for (String id : pendingIds) {
                 ChatbotNode referencedNode = nodeMap.get(id);
                 if (referencedNode != null) {
                     node.addChild(referencedNode);
+                    Log.d(TAG, "  Added child " + id + " to parent " + node.getId());
+                } else {
+                    Log.e(TAG, "  Failed to find node with ID: " + id + " for parent: " + node.getId());
                 }
             }
             node.clearPendingChildIds();
         }
         
+        Log.d(TAG, "After resolving references, root node has " + rootNode.getChildren().size() + " children");
+
         // Second pass to propagate templates from parents to children
         propagateTemplatesToChildren(rootNode);
     }
-    
+
     /**
      * Propagates templates from parent nodes to their children.
      * The root node is exempt from receiving templates.
@@ -124,27 +197,31 @@ public class ChatbotManager {
      * @param node The current node to process
      */
     private void propagateTemplatesToChildren(ChatbotNode node) {
-        if (node == null) return;
-        
+        if (node == null)
+            return;
+
         MsgTemplate template = node.getMessageTemplate();
-        
+
         // Propagate template to children if it exists
         if (template != null) {
             for (ChatbotNode child : node.getChildren()) {
                 // Skip if child is the root node
-                if (child.getId().equals("root")) continue;
-                
+                if (child.getId().equals("root"))
+                    continue;
+
                 // Set the parent's template to the child
                 child.setMessageTemplate(template);
                 Log.d(TAG, "Propagated template from " + node.getId() + " to child: " + child.getId());
             }
         }
-        
+
         // Continue recursively for all children
         for (ChatbotNode child : node.getChildren()) {
-            // Skip processing already visited root node to prevent circular reference issues
-            if (child.getId().equals("root")) continue;
-            
+            // Skip processing already visited root node to prevent circular reference
+            // issues
+            if (child.getId().equals("root"))
+                continue;
+
             propagateTemplatesToChildren(child);
         }
     }
@@ -167,8 +244,8 @@ public class ChatbotManager {
 
     private void createMinimalStructure() {
         rootNode = new ChatbotNode("root", "CATEGORISE",
-            "Γεια σας! Πώς μπορώ να σας βοηθήσω;", "",
-            "Δεν κατάλαβα την ερώτησή σας.");
+                "Γεια σας! Πώς μπορώ να σας βοηθήσω;", "",
+                "Δεν κατάλαβα την ερώτησή σας.");
         nodeMap.put("root", rootNode);
         currentNode = rootNode;
     }
@@ -206,7 +283,9 @@ public class ChatbotManager {
             Log.e(TAG, "Error getting local response", e);
             return "Συγγνώμη, προέκυψε ένα σφάλμα.";
         }
-    }    public ChatbotNode chooseNextNode(String userInput) {
+    }
+
+    public ChatbotNode chooseNextNode(String userInput) {
         if (!currentNode.hasChildren()) {
             return rootNode;
         }
@@ -269,14 +348,19 @@ public class ChatbotManager {
             return node.getParent().getId();
         }
         return "";
-    }    /**
+    }
+
+    /**
      * Prints the entire conversation tree structure to the log.
      * This is useful for debugging and visualizing the chatbot tree.
      */
     public void printTree() {
         Log.d(TAG, "Printing Conversation Tree Structure:");
-        Log.d(TAG, "======================================");
-        if (rootNode != null) {
+        Log.d(TAG, "======================================");        if (rootNode != null) {
+            Log.d(TAG, "Root node has " + rootNode.getChildren().size() + " children");
+            for (ChatbotNode child : rootNode.getChildren()) {
+                Log.d(TAG, "Root child: " + child.getId());
+            }
             printNodeTree(rootNode, 0, new HashSet<String>());
         } else {
             Log.d(TAG, "Tree is empty (rootNode is null)");
@@ -285,18 +369,21 @@ public class ChatbotManager {
     }
 
     /**
-     * Helper method to recursively print a node and its children with proper indentation.
+     * Helper method to recursively print a node and its children with proper
+     * indentation.
      * Handles circular references by keeping track of visited nodes.
      * 
-     * @param node The node to print
-     * @param depth The current depth in the tree (for indentation)
+     * @param node    The node to print
+     * @param depth   The current depth in the tree (for indentation)
      * @param visited Set of already visited node IDs to prevent infinite recursion
      */
     private void printNodeTree(ChatbotNode node, int depth, Set<String> visited) {
-        if (node == null) return;
-        
+        if (node == null)
+            return;
+
         // Check if this node was already visited to prevent infinite recursion
-        if (visited.contains(node.getId())) {            StringBuilder indent = new StringBuilder();
+        if (visited.contains(node.getId())) {
+            StringBuilder indent = new StringBuilder();
             for (int i = 0; i < depth; i++) {
                 indent.append("    ");
             }
@@ -304,7 +391,7 @@ public class ChatbotManager {
             Log.d(TAG, indent.toString());
             return;
         }
-        
+
         // Add this node to visited set
         visited.add(node.getId());
 
@@ -317,19 +404,26 @@ public class ChatbotManager {
             } else {
                 connector.append("    ");
             }
-        }
-
-        // Print current node details
+        }        // Print current node details
         String currentMarker = (node == currentNode) ? " [CURRENT]" : "";
-        String display = String.format("%s%s [ID: %s, Type: %s]%s", 
+        String display = String.format("%s%s [ID: %s, Type: %s]%s",
                 indent, connector, node.getId(), node.getType(), currentMarker);
-        Log.d(TAG, display);        // Print message preview (truncated if too long)
-        String messagePreview = node.getMessage();
-        if (messagePreview.length() > 40) {
-            messagePreview = messagePreview.substring(0, 37) + "...";
-        }
-        Log.d(TAG, indent + "    ├── Message: " + messagePreview);
+        Log.d(TAG, display); 
         
+        // Print message_1 preview (truncated if too long)
+        String message1Preview = node.getMessage();
+        if (message1Preview.length() > 40) {
+            message1Preview = message1Preview.substring(0, 37) + "...";
+        }
+        Log.d(TAG, indent + "    ├── Message 1: " + message1Preview);
+        
+        // Print message_2 preview (truncated if too long)
+        String message2Preview = node.getMessage2();
+        if (message2Preview.length() > 40) {
+            message2Preview = message2Preview.substring(0, 37) + "...";
+        }
+        Log.d(TAG, indent + "    ├── Message 2: " + message2Preview);
+
         // Print template info if available
         MsgTemplate template = node.getMessageTemplate();
         if (template != null) {
@@ -362,17 +456,19 @@ public class ChatbotManager {
     }
 
     /**
-     * Helper method to recursively build a string representation of a node and its children.
+     * Helper method to recursively build a string representation of a node and its
+     * children.
      * Handles circular references by keeping track of visited nodes.
      * 
-     * @param node The node to process
-     * @param depth The current depth in the tree (for indentation)
+     * @param node    The node to process
+     * @param depth   The current depth in the tree (for indentation)
      * @param visited Set of already visited node IDs to prevent infinite recursion
-     * @param sb StringBuilder to accumulate the result
+     * @param sb      StringBuilder to accumulate the result
      */
     private void getNodeTreeAsString(ChatbotNode node, int depth, Set<String> visited, StringBuilder sb) {
-        if (node == null) return;
-        
+        if (node == null)
+            return;
+
         // Check if this node was already visited to prevent infinite recursion
         if (visited.contains(node.getId())) {
             StringBuilder indent = new StringBuilder();
@@ -383,7 +479,7 @@ public class ChatbotManager {
             sb.append(indent).append("\n");
             return;
         }
-        
+
         // Add this node to visited set
         visited.add(node.getId());
 
@@ -395,15 +491,15 @@ public class ChatbotManager {
         // Build current node details
         String currentMarker = (node == currentNode) ? " [CURRENT]" : "";
         String prefix = indent.toString() + "└── ";
-        String display = String.format("%s[ID: %s, Type: %s]%s", 
+        String display = String.format("%s[ID: %s, Type: %s]%s",
                 prefix, node.getId(), node.getType(), currentMarker);
-        sb.append(display).append("\n");        // Add message preview (truncated if too long)
+        sb.append(display).append("\n"); // Add message preview (truncated if too long)
         String messagePreview = node.getMessage();
         if (messagePreview.length() > 40) {
             messagePreview = messagePreview.substring(0, 37) + "...";
         }
         sb.append(indent).append("    ├── Message: ").append(messagePreview).append("\n");
-        
+
         // Add template info if available
         MsgTemplate template = node.getMessageTemplate();
         if (template != null) {
@@ -424,6 +520,7 @@ public class ChatbotManager {
 
     /**
      * Detects and returns a list of nodes that have circular references.
+     * 
      * @return List of node IDs that have circular references
      */
     public List<String> detectCircularReferences() {
@@ -440,8 +537,9 @@ public class ChatbotManager {
     }
 
     private void checkNodeForCircularReferences(ChatbotNode node, Set<String> visited, List<String> circularRefNodes) {
-        if (node == null) return;
-        
+        if (node == null)
+            return;
+
         for (ChatbotNode child : node.getChildren()) {
             if (visited.contains(child.getId())) {
                 if (!circularRefNodes.contains(node.getId())) {
