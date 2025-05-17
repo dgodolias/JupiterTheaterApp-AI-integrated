@@ -14,6 +14,7 @@ public class ChatbotNode {
     private ChatbotNode parent;
     private List<String> pendingChildIds; // For resolving references
     private Random random = new Random();
+    private MsgTemplate msgTemplate;
 
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
         this.id = id;
