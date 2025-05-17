@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.jupitertheaterapp.model.ChatbotNode;
+import com.example.jupitertheaterapp.model.ConversationState;
 import com.example.jupitertheaterapp.model.MsgTemplate;
 
 import org.json.JSONArray;
@@ -24,17 +25,23 @@ public class ChatbotManager {
     private static final String TAG = "ChatbotManager";
     private static final String CONVERSATION_FILE = "conversation_tree.json";
 
-    private JSONObject jsonTree; // Keep for reference
-    private ChatbotNode rootNode;
+    private JSONObject jsonTree; // Keep for reference    private ChatbotNode rootNode;
     private Map<String, ChatbotNode> nodeMap;
     private ChatbotNode currentNode;
     private Random random = new Random();
     private boolean useServerForResponses = true;
-
+    private ConversationState conversationState;    
+    private ChatbotNode rootNode;
+    
     public ChatbotManager(Context context) {
         nodeMap = new HashMap<>();
+        conversationState = ConversationState.getInstance();
+        Log.d(TAG,"Conversation State: ");
+        Log.d(TAG,conversationState.getCurrentStateAsString());
         loadConversationTree(context);
-    }    private void loadConversationTree(Context context) {
+    }
+    
+    private void loadConversationTree(Context context) {
         try {
             String jsonString = readJSONFromAsset(context, CONVERSATION_FILE);
             if (jsonString != null) {
