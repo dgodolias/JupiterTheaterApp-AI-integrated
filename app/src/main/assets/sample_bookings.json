@@ -1,0 +1,64 @@
+{
+  "bookings": [
+    {
+      "show_name": {"value": "Ο Μάγος του Οζ", "pvalues": []},
+      "room": {"value": "Αίθουσα Απόλλων", "pvalues": ["Αίθουσα Απόλλων", "Αίθουσα Ζευς", "Αίθουσα Αθηνά"]},
+      "day": {"value": "Παρασκευή", "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]},
+      "time": {"value": "19:30", "pvalues": ["18:00", "19:00", "19:30", "20:00", "21:00"]},
+      "person": {
+        "name": {"value": "Ελένη Παπαδοπούλου", "pvalues": []},
+        "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "A12", "pvalues": []}
+      },
+      "reservation_id": {"value": "RES12345", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Αντιγόνη", "pvalues": []},
+      "room": {"value": "Αίθουσα Αθηνά", "pvalues": ["Αίθουσα Απόλλων", "Αίθουσα Ζευς", "Αίθουσα Αθηνά"]},
+      "day": {"value": "Σάββατο", "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]},
+      "time": {"value": "20:00", "pvalues": ["18:00", "19:00", "19:30", "20:00", "21:00"]},
+      "person": {
+        "name": {"value": "Γιώργος Αντωνιάδης", "pvalues": []},
+        "age": {"value": "granny > 65", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "B5", "pvalues": []}
+      },
+      "reservation_id": {"value": "RES23456", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Η Γυναίκα της Ζάκυνθος", "pvalues": []},
+      "room": {"value": "Αίθουσα Ζευς", "pvalues": ["Αίθουσα Απόλλων", "Αίθουσα Ζευς", "Αίθουσα Αθηνά"]},
+      "day": {"value": "Κυριακή", "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]},
+      "time": {"value": "19:00", "pvalues": ["18:00", "19:00", "19:30", "20:00", "21:00"]},
+      "person": {
+        "name": {"value": "Αλέξανδρος Μαρκόπουλος", "pvalues": []},
+        "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "C8", "pvalues": []}
+      },
+      "reservation_id": {"value": "RES34567", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Τα Μάτια της Νύχτας", "pvalues": []},
+      "room": {"value": "Αίθουσα Απόλλων", "pvalues": ["Αίθουσα Απόλλων", "Αίθουσα Ζευς", "Αίθουσα Αθηνά"]},
+      "day": {"value": "Τετάρτη", "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]},
+      "time": {"value": "21:00", "pvalues": ["18:00", "19:00", "19:30", "20:00", "21:00"]},
+      "person": {
+        "name": {"value": "Μαρία Νικολάου", "pvalues": []},
+        "age": {"value": "child < 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "D15", "pvalues": []}
+      },
+      "reservation_id": {"value": "RES45678", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Ο Γλάρος", "pvalues": []},
+      "room": {"value": "Αίθουσα Αθηνά", "pvalues": ["Αίθουσα Απόλλων", "Αίθουσα Ζευς", "Αίθουσα Αθηνά"]},
+      "day": {"value": "Πέμπτη", "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]},
+      "time": {"value": "19:30", "pvalues": ["18:00", "19:00", "19:30", "20:00", "21:00"]},
+      "person": {
+        "name": {"value": "Κατερίνα Παπαδάκη", "pvalues": []},
+        "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "seat": {"value": "F3", "pvalues": []}
+      },
+      "reservation_id": {"value": "RES56789", "pvalues": []}
+    }
+  ]
+}

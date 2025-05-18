@@ -1,0 +1,44 @@
+{
+  "discounts": [
+    {
+      "show_name": {"value": "Ο Μάγος του Οζ", "pvalues": []},
+      "no_of_people": {"value": 3, "pvalues": []},
+      "age": {"value": "child < 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+      "date": {"value": "2025-05-23", "pvalues": []},
+      "discount_percentage": {"value": 25, "pvalues": []},
+      "code": {"value": "ΠΑΙΔΙ25", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Αντιγόνη", "pvalues": []},
+      "no_of_people": {"value": 2, "pvalues": []},
+      "age": {"value": "granny > 65", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+      "date": {"value": "2025-05-24", "pvalues": []},
+      "discount_percentage": {"value": 30, "pvalues": []},
+      "code": {"value": "ΗΛΙΚΙΑ30", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Η Γυναίκα της Ζάκυνθος", "pvalues": []},
+      "no_of_people": {"value": 5, "pvalues": []},
+      "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+      "date": {"value": "2025-05-25", "pvalues": []},
+      "discount_percentage": {"value": 20, "pvalues": []},
+      "code": {"value": "ΟΜΑΔΑ20", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Τα Μάτια της Νύχτας", "pvalues": []},
+      "no_of_people": {"value": 4, "pvalues": []},
+      "age": {"value": "child < 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+      "date": {"value": "2025-05-21", "pvalues": []},
+      "discount_percentage": {"value": 15, "pvalues": []},
+      "code": {"value": "ΤΕΤΑΡΤΗ15", "pvalues": []}
+    },
+    {
+      "show_name": {"value": "Ο Γλάρος", "pvalues": []},
+      "no_of_people": {"value": 10, "pvalues": []},
+      "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+      "date": {"value": "2025-05-22", "pvalues": []},
+      "discount_percentage": {"value": 40, "pvalues": []},
+      "code": {"value": "ΣΧΟΛΕΙΟ40", "pvalues": []}
+    }
+  ]
+}

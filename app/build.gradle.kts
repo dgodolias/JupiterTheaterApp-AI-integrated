@@ -32,11 +32,19 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Gson dependencies for JSON serialization
+    implementation(libs.gson)
+
+    // Room dependencies
+    implementation(libs.room.common.jvm)
+    implementation(libs.room.runtime.android)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

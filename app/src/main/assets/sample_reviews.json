@@ -1,0 +1,39 @@
+{
+  "reviews": [
+    {
+      "reservation_number": {"value": "RES12345", "pvalues": []},
+      "passcode": {"value": "PASS1234", "pvalues": []},
+      "stars": {"value": 4, "pvalues": [1, 2, 3, 4, 5]},
+      "review": {"value": "Εξαιρετική παράσταση με καλή σκηνοθεσία και εντυπωσιακά σκηνικά. Οι ηθοποιοί έδωσαν τον καλύτερό τους εαυτό.", "pvalues": []},
+      "show_name": {"value": "Ο Μάγος του Οζ", "pvalues": []}
+    },
+    {
+      "reservation_number": {"value": "RES23456", "pvalues": []},
+      "passcode": {"value": "PASS2345", "pvalues": []},
+      "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
+      "review": {"value": "Καταπληκτική ερμηνεία της Αντιγόνης. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς.", "pvalues": []},
+      "show_name": {"value": "Αντιγόνη", "pvalues": []}
+    },
+    {
+      "reservation_number": {"value": "RES34567", "pvalues": []},
+      "passcode": {"value": "PASS3456", "pvalues": []},
+      "stars": {"value": 3, "pvalues": [1, 2, 3, 4, 5]},
+      "review": {"value": "Καλή παράσταση, αλλά λίγο αργός ρυθμός. Ο πρωταγωνιστής ήταν εξαιρετικός, όμως οι υπόλοιποι ηθοποιοί υστερούσαν.", "pvalues": []},
+      "show_name": {"value": "Η Γυναίκα της Ζάκυνθος", "pvalues": []}
+    },
+    {
+      "reservation_number": {"value": "RES45678", "pvalues": []},
+      "passcode": {"value": "PASS4567", "pvalues": []},
+      "stars": {"value": 4, "pvalues": [1, 2, 3, 4, 5]},
+      "review": {"value": "Πολύ καλή ατμόσφαιρα και σκηνοθεσία. Το σενάριο ήταν καθηλωτικό και η υπόθεση γεμάτη ανατροπές.", "pvalues": []},
+      "show_name": {"value": "Τα Μάτια της Νύχτας", "pvalues": []}
+    },
+    {
+      "reservation_number": {"value": "RES56789", "pvalues": []},
+      "passcode": {"value": "PASS5678", "pvalues": []},
+      "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
+      "review": {"value": "Φανταστική απόδοση του κλασικού έργου. Η ηθοποιός που υποδύθηκε τη Νίνα ήταν εκπληκτική, πραγματικά εμπνευσμένη ερμηνεία.", "pvalues": []},
+      "show_name": {"value": "Ο Γλάρος", "pvalues": []}
+    }
+  ]
+}
