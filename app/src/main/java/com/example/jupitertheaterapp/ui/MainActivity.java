@@ -96,11 +96,22 @@ public class MainActivity extends AppCompatActivity {
                     addMessage(response, ChatMessage.TYPE_BOT);
                 }
             }
-        });
-
-        // Add long press listener to show debug info
+        });        // Add long press listener to show debug info
         sendButton.setOnLongClickListener(v -> {
-            displayTreeStructure();
+            // Show a dialog to choose what to display
+            String[] options = {"Full Tree Structure", "Conversation Node List"};
+            
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Debug Display Options")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        displayTreeStructure();
+                    } else if (which == 1) {
+                        displayConversationNodeList();
+                    }
+                })
+                .show();
+            
             return true;
         });
 
@@ -144,6 +155,20 @@ public class MainActivity extends AppCompatActivity {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Conversation Tree Structure")
                 .setMessage(treeStructure)
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    /**
+     * Displays the conversation as a list of nodes with system and user messages.
+     * This shows only the conversation path that has been traversed, not the entire tree.
+     */
+    public void displayConversationNodeList() {
+        String nodeList = chatbotManager.getConversationNodeList();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Conversation Node List")
+                .setMessage(nodeList)
                 .setPositiveButton("OK", null)
                 .create()
                 .show();

@@ -107,11 +107,11 @@ package com.example.jupitertheaterapp.util;
              }
          }/**
           * Converts a ChatbotNode to a JSONObject
-          */
-         private JSONObject nodeToJson(ChatbotNode node) {
+          */         private JSONObject nodeToJson(ChatbotNode node) {
              JSONObject json = new JSONObject();
              try {
                  json.put("id", node.getId());
+                 json.put("category", node.getCategory());         // Include category field
                  json.put("type", node.getType());
                  json.put("message", node.getMessage());           // Using primary message
                  json.put("message_1", node.getMessage());         // Including message_1 explicitly
@@ -125,32 +125,36 @@ package com.example.jupitertheaterapp.util;
                  Log.e(TAG, "Error converting node to JSON", e);
              }
              return json;
-         }
-
-         /**
-          * Gets the appropriate category ID for a node.
-          * If the parent is root, we use the current node's ID.
-          * Otherwise, we use the parent's ID.
+         }         /**
+          * Gets the appropriate category for a node.
+          * If the parent is root, we use the current node's category.
+          * Otherwise, we use the parent's category.
           */
-         private String getParentNodeId(JSONObject node) {
+         private String getParentNodeCategory(JSONObject node) {
              try {
                  String currentId = node.getString("id");
+                 String currentCategory = node.optString("category", "");
 
                  // Get the parent node ID from ChatbotManager
                  String parentId = chatbotManager.getParentNodeId(currentId);
 
-                 // If parent is "root" or empty, use the current node's ID
+                 // If parent is "root" or empty, use the current node's category
                  if ("root".equals(parentId) || parentId.isEmpty()) {
-                     return currentId;
+                     return currentCategory;
                  }
 
-                 // Otherwise use the parent's ID
-                 return parentId;
+                 // Otherwise get the parent node and use its category
+                 ChatbotNode parentNode = chatbotManager.getNodeById(parentId);
+                 if (parentNode != null) {
+                     return parentNode.getCategory();
+                 }
+                 
+                 return currentCategory;
              } catch (JSONException e) {
-                 Log.e(TAG, "Error getting parent node ID", e);
+                 Log.e(TAG, "Error getting parent node category", e);
                  return "";
              }
-         }         // Methods categorizeMessage and extractFromMessage have been replaced by using ChatbotNode.createRequestJson
+         }// Methods categorizeMessage and extractFromMessage have been replaced by using ChatbotNode.createRequestJson
 
          /**
           * Sends the JSON request to the server
@@ -185,17 +189,16 @@ package com.example.jupitertheaterapp.util;
                                          // Debug all fields in the JSON response
                                          System.out.println("PARSING SERVER RESPONSE: " + jsonResponse.toString());
                                          System.out.println("JSON FIELDS: " + jsonResponse.keys());
-                                         
-                                         // Extract the category field
+                                           // Extract the category field
                                          if (jsonResponse.has("category")) {
                                              String category = jsonResponse.getString("category");
                                              System.out.println("CATEGORY FROM SERVER: " + category);
 
-                                             // Check if category is a valid node ID
+                                             // Check if category is a valid category
                                              if (isValidNodeId(category)) {
                                                  callback.onServerResponse(category);
                                              } else {
-                                                 callback.onError("Category '" + category + "' is not a valid node ID");
+                                                 callback.onError("Category '" + category + "' is not a valid category");
                                              }
                                          } else {
                                              callback.onError("Server response missing 'category' field");
@@ -258,13 +261,12 @@ package com.example.jupitertheaterapp.util;
              }
              closeConnection();
              Log.d(TAG, "Client disconnected");
-         }
+         }         private boolean isValidNodeId(String category) {
+             // These are now categories, not IDs
+             String[] validCategories = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
 
-         private boolean isValidNodeId(String nodeId) {
-             String[] validIds = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
-
-             for (String id : validIds) {
-                 if (id.equals(nodeId)) {
+             for (String validCategory : validCategories) {
+                 if (validCategory.equals(category)) {
                      return true;
                  }
              }

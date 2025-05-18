@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class ChatbotNode {
-    private String id;
+    private String id; // Now in lowercase format like "kratisi", "kratisi1", etc.
+    private String category; // New field for template matching like "ΚΡΑΤΗΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", etc.
     private String type; // CATEGORISE or EXTRACT
     // Legacy message fields - kept for backward compatibility
     private String message; 
@@ -25,13 +26,12 @@ public class ChatbotNode {
     private ChatbotNode parent;
     private List<String> pendingChildIds; // For resolving references
     private Random random = new Random();
-    private MsgTemplate msgTemplate;
-
-    /**
+    private MsgTemplate msgTemplate;    /**
      * Legacy constructor for backward compatibility
      */
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
         this.id = id;
+        this.category = id; // Initialize category with id for backward compatibility
         this.type = type;
         // Legacy fields
         this.message = message;
@@ -47,13 +47,12 @@ public class ChatbotNode {
         this.fallback = fallback;
         this.children = new ArrayList<>();
         this.pendingChildIds = new ArrayList<>();
-    }
-
-    /**
+    }    /**
      * Legacy constructor with separate message_1 and message_2 fields
      */
     public ChatbotNode(String id, String type, String message_1, String message_2, String content, String fallback) {
         this.id = id;
+        this.category = id; // Initialize category with id for backward compatibility
         this.type = type;
         // Legacy fields
         this.message = message_1; // For backward compatibility
@@ -70,13 +69,13 @@ public class ChatbotNode {
         this.children = new ArrayList<>();
         this.pendingChildIds = new ArrayList<>();
     }
-    
-    /**
+      /**
      * New constructor that explicitly takes system and user messages
      */
     public ChatbotNode(String id, String type, ChatMessage systemMessage, ChatMessage userMessage, 
                       String content, String fallback) {
         this.id = id;
+        this.category = id; // Initialize category with id for backward compatibility
         this.type = type;
         
         // Set new fields
@@ -108,10 +107,16 @@ public class ChatbotNode {
 
     public void clearPendingChildIds() {
         pendingChildIds.clear();
-    }
-
-    public String getId() {
+    }    public String getId() {
         return id;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getType() {
@@ -241,20 +246,18 @@ public class ChatbotNode {
                 System.out.println("CREATED CATEGORISE REQUEST: " + jsonRequest.toString());
             } else if ("EXTRACT".equals(type)) {
                 jsonRequest.put("type", "EXTRACT");
-                
-                // Get parent ID as category or use a random one if no parent
-                String category;
+                  // Get parent category or use a random one if no parent
+                String requestCategory;
                 if (parent != null) {
-                    category = parent.getId();
+                    requestCategory = parent.getCategory();
                 } else {
-                    // If no parent, use a random category
-                    category = categories[random.nextInt(categories.length)];
+                    // If no parent, use this node's category or a random one as fallback
+                    requestCategory = this.category != null ? this.category : categories[random.nextInt(categories.length)];
                 }
-                
-                jsonRequest.put("category", category);
+                  jsonRequest.put("category", requestCategory);
                 jsonRequest.put("message", userMessage);
                 System.out.println("CREATED EXTRACT REQUEST: " + jsonRequest.toString());
-                System.out.println("CATEGORY FOR EXTRACT: " + category);
+                System.out.println("CATEGORY FOR EXTRACT: " + requestCategory);
             } else {
                 // Default to CATEGORISE with random values as fallback
                 jsonRequest.put("type", random.nextBoolean() ? "CATEGORISE" : "EXTRACT");

@@ -59,11 +59,12 @@ public class ChatbotManager {
         }
     }    private ChatbotNode convertJsonToNodeStructure(JSONObject jsonNode) throws JSONException {
         String id = jsonNode.getString("id");
+        String category = jsonNode.optString("category", id);
         String type = jsonNode.getString("type");
         String content = jsonNode.optString("content", "");
         String fallback = jsonNode.optString("fallback", "I didn't understand that.");
 
-        Log.d(TAG, "Processing node: " + id + ", type: " + type);
+        Log.d(TAG, "Processing node: " + id + ", category: " + category + ", type: " + type);
         
         // Log the children array for this node
         if (jsonNode.has("children")) {
@@ -119,16 +120,14 @@ public class ChatbotManager {
             }
             
             node = new ChatbotNode(id, type, message, content, fallback);
-        }
-
-        // Try to assign the appropriate MsgTemplate based on the node's ID
+        }        // Try to assign the appropriate MsgTemplate based on the node's category
         try {
-            MsgTemplate template = MsgTemplate.createTemplate(id);
+            MsgTemplate template = MsgTemplate.createTemplate(category);
             node.setMessageTemplate(template);
-            Log.d(TAG, "Assigned template to node: " + id);
+            Log.d(TAG, "Assigned template to node: " + id + " with category: " + category);
         } catch (IllegalArgumentException e) {
-            // No template available for this node ID; that's ok
-            Log.d(TAG, "No template available for node: " + id);
+            // No template available for this node category; that's ok
+            Log.d(TAG, "No template available for node: " + id + " with category: " + category);
         }
 
         // Add node to the map - important to do this before processing children
@@ -189,9 +188,7 @@ public class ChatbotManager {
 
         // Second pass to propagate templates from parents to children
         propagateTemplatesToChildren(rootNode);
-    }
-
-    /**
+    }    /**
      * Propagates templates from parent nodes to their children.
      * The root node is exempt from receiving templates.
      * 
@@ -212,7 +209,7 @@ public class ChatbotManager {
 
                 // Set the parent's template to the child
                 child.setMessageTemplate(template);
-                Log.d(TAG, "Propagated template from " + node.getId() + " to child: " + child.getId());
+                Log.d(TAG, "Propagated template from " + node.getCategory() + " to child: " + child.getCategory());
             }
         }
 
@@ -241,31 +238,38 @@ public class ChatbotManager {
             return null;
         }
         return json;
-    }
-
-    private void createMinimalStructure() {
+    }    private void createMinimalStructure() {
         rootNode = new ChatbotNode("root", "CATEGORISE",
                 "Γεια σας! Πώς μπορώ να σας βοηθήσω;", "",
                 "Δεν κατάλαβα την ερώτησή σας.");
+        rootNode.setCategory("root"); // Set category explicitly
         nodeMap.put("root", rootNode);
         currentNode = rootNode;
-    }    public String getInitialMessage() {
+    }public String getInitialMessage() {
         if (rootNode != null) {
             return rootNode.getSystemMessage().getMessage();
         }
         return "Γεια σας! Πώς μπορώ να σας βοηθήσω;";
-    }public String getResponseForNodeId(String nodeId) {
-        Log.d(TAG, "Getting response for node ID: " + nodeId);
+    }public String getResponseForNodeId(String category) {
+        Log.d(TAG, "Getting response for category: " + category);
 
-        ChatbotNode node = nodeMap.get(nodeId);
-        if (node == null) {
-            Log.e(TAG, "Node ID not found: " + nodeId);
+        // Find node by category
+        ChatbotNode foundNode = null;
+        for (ChatbotNode node : nodeMap.values()) {
+            if (category.equals(node.getCategory())) {
+                foundNode = node;
+                break;
+            }
+        }
+        
+        if (foundNode == null) {
+            Log.e(TAG, "Node with category not found: " + category);
             return "Συγγνώμη, δεν βρέθηκε απάντηση.";
         }
 
-        currentNode = node;
+        currentNode = foundNode;
         // Return system message from the node
-        return node.getSystemMessage().getMessage();
+        return foundNode.getSystemMessage().getMessage();
     }public String getLocalResponse(String userInput) {
         try {
             // Create JSON request using the current node (for debugging/consistency)
@@ -305,12 +309,11 @@ public class ChatbotManager {
 
         // Simple selection - could be improved with NLP
         int idx = random.nextInt(children.size());
-        ChatbotNode nextNode = children.get(idx);
-        // Assign messageTemplate for nextNode based on previous node's ID
+        ChatbotNode nextNode = children.get(idx);        // Assign messageTemplate for nextNode based on previous node's category
         try {
-            nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getId()));
+            nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getCategory()));
         } catch (IllegalArgumentException e) {
-            // No template available for this previous node ID; skip
+            // No template available for this previous node category; skip
         }
         return nextNode;
     }
@@ -321,10 +324,20 @@ public class ChatbotManager {
             childrenInfo.append(child.getId()).append(", ");
         }
         Log.d(TAG, childrenInfo.toString());
-    }
-
-    public String findNodeResponseById(String nodeId) {
-        ChatbotNode node = nodeMap.get(nodeId);
+    }    public String findNodeResponseById(String nodeIdOrCategory) {
+        // First try to get by direct ID
+        ChatbotNode node = nodeMap.get(nodeIdOrCategory);
+        
+        // If not found, try to find by category
+        if (node == null) {
+            for (ChatbotNode n : nodeMap.values()) {
+                if (nodeIdOrCategory.equals(n.getCategory())) {
+                    node = n;
+                    break;
+                }
+            }
+        }
+        
         if (node != null) {
             return node.getMessage();
         }
@@ -345,14 +358,21 @@ public class ChatbotManager {
 
     public ChatbotNode getCurrentNode() {
         return currentNode;
-    }
-
-    public String getParentNodeId(String nodeId) {
+    }    public String getParentNodeId(String nodeId) {
         ChatbotNode node = nodeMap.get(nodeId);
         if (node != null && node.getParent() != null) {
             return node.getParent().getId();
         }
         return "";
+    }
+    
+    /**
+     * Gets a node by its ID
+     * @param nodeId The ID of the node to retrieve
+     * @return The ChatbotNode with the given ID, or null if not found
+     */
+    public ChatbotNode getNodeById(String nodeId) {
+        return nodeMap.get(nodeId);
     }
 
     /**
@@ -411,9 +431,9 @@ public class ChatbotManager {
             }
         }        // Print current node details
         String currentMarker = (node == currentNode) ? " [CURRENT]" : "";
-        String display = String.format("%s%s [ID: %s, Type: %s]%s",
-                indent, connector, node.getId(), node.getType(), currentMarker);
-        Log.d(TAG, display); 
+        String display = String.format("%s%s [ID: %s, Category: %s, Type: %s]%s",
+                indent, connector, node.getId(), node.getCategory(), node.getType(), currentMarker);
+        Log.d(TAG, display);
         
         // Print system message preview (truncated if too long)
         ChatMessage sysMsg = node.getSystemMessage();
@@ -508,13 +528,11 @@ public class ChatbotManager {
         StringBuilder indent = new StringBuilder();
         for (int i = 0; i < depth; i++) {
             indent.append("    ");
-        }
-
-        // Build current node details
+        }        // Build current node details
         String currentMarker = (node == currentNode) ? " [CURRENT]" : "";
         String prefix = indent.toString() + "└── ";
-        String display = String.format("%s[ID: %s, Type: %s]%s",
-                prefix, node.getId(), node.getType(), currentMarker);
+        String display = String.format("%s[ID: %s, Category: %s, Type: %s]%s",
+                prefix, node.getId(), node.getCategory(), node.getType(), currentMarker);
         sb.append(display).append("\n");        // Add system message preview (truncated if too long)
         ChatMessage sysMsg = node.getSystemMessage();
         String sysMsgType = (sysMsg.getType() == ChatMessage.TYPE_BOT) ? "BOT" : "SERVER";
@@ -584,5 +602,87 @@ public class ChatbotManager {
                 checkNodeForCircularReferences(child, newVisited, circularRefNodes);
             }
         }
+    }
+
+    /**
+     * Gets the current conversation as a list of nodes, each with system and user messages.
+     * This shows only the conversation path that has been traversed, not the entire tree.
+     * 
+     * @return A string representation of the conversation nodes
+     */
+    public String getConversationNodeList() {
+        StringBuilder result = new StringBuilder();
+        result.append("Conversation Node List:\n");
+        result.append("======================================\n");
+        
+        // Get the path from root node to current node
+        List<ChatbotNode> conversationPath = getPathToCurrentNode();
+        
+        // Display each node in the path
+        for (int i = 0; i < conversationPath.size(); i++) {
+            ChatbotNode node = conversationPath.get(i);
+            result.append("NODE ").append(i + 1).append(":\n");
+            
+            // Node details (ID, Category, Type)
+            result.append("- ID: ").append(node.getId()).append("\n");
+            result.append("- Category: ").append(node.getCategory()).append("\n");
+            result.append("- Type: ").append(node.getType()).append("\n");
+            
+            // System message details (including message_1 and message_2)
+            result.append("- System Message: ").append(node.getSystemMessage().getMessage()).append("\n");
+            result.append("- Message_1: ").append(node.getMessage()).append("\n");
+            result.append("- Message_2: ").append(node.getMessage2()).append("\n");
+            
+            // User message if available
+            if (node.getUserMessage() != null) {
+                result.append("- User Response: ").append(node.getUserMessage().getMessage()).append("\n");
+            } else {
+                result.append("- User Response: [No response yet]\n");
+            }
+            
+            // Template if available
+            if (node.getMessageTemplate() != null) {
+                result.append("- Template: ").append(node.getMessageTemplate().getClass().getSimpleName()).append("\n");
+            }
+            
+            // Add a separator between nodes
+            result.append("--------------------------------------\n");
+        }
+        
+        result.append("======================================\n");
+        return result.toString();
+    }
+    
+    /**
+     * Finds the path from root node to the current node.
+     * 
+     * @return A list of nodes representing the conversation path
+     */
+    private List<ChatbotNode> getPathToCurrentNode() {
+        List<ChatbotNode> path = new ArrayList<>();
+        List<ChatbotNode> visitedNodes = new ArrayList<>();
+        
+        // If we're still at the root node or no conversation happened yet
+        if (currentNode == rootNode || currentNode == null) {
+            path.add(rootNode);
+            return path;
+        }
+        
+        // Add the current node as we know it's part of the path
+        path.add(currentNode);
+        
+        // Try to find the path by working backward from the current node
+        // This assumes each node has a reference to its parent
+        ChatbotNode node = currentNode;
+        while (node != null && node.getParent() != null && !visitedNodes.contains(node.getParent())) {
+            visitedNodes.add(node);  // Mark this node as visited to avoid cycles
+            node = node.getParent();
+            path.add(0, node);  // Add to the beginning of the path
+        }
+        
+        // If we couldn't find a path backward or it's incomplete,
+        // use the conversation history from another source if available
+        
+        return path;
     }
 }
