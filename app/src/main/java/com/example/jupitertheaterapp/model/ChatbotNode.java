@@ -284,14 +284,19 @@ public class ChatbotNode {
         
         return path;
     }    /**
-     * Choose the next node in the conversation based on the current state and user input
+     * Choose the next node in the conversation based on the current state and user message
      * Uses the conversation path and category matching to make more context-aware decisions
      * 
-     * @param userInput The user's message or server response
      * @return The next node in the conversation
      */
-    public ChatbotNode chooseNextNode(String userInput) {
-        System.out.println("DEBUG: Choosing next node with input: " + userInput);
+    public ChatbotNode chooseNextNode() {
+        // Get the user message from this node
+        String userMessageText = "";
+        if (userMessage != null) {
+            userMessageText = userMessage.getMessage();
+        }
+        
+        System.out.println("DEBUG: Choosing next node with user message: " + userMessageText);
         System.out.println("DEBUG: Current node ID: " + this.id + ", Category: " + this.category);
         
         // If no children, there's nowhere to go
@@ -304,9 +309,11 @@ public class ChatbotNode {
         System.out.println("DEBUG: Available child nodes for matching:");
         for (ChatbotNode child : getChildren()) {
             System.out.println("DEBUG:   - ID: " + child.getId() + ", Category: " + child.getCategory());
-        }        // Since server handles all node selection logic, we just need to match the exact category
+        }        
+        
+        // Since server handles all node selection logic, we just need to match the exact category
         // from server response to our node categories
-        System.out.println("DEBUG: Looking for exact category match with server response: " + userInput);
+        System.out.println("DEBUG: Looking for exact category match with server response: " + userMessageText);
         
         // These are the valid categories that can be returned by the server
         String[] validCategories = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
@@ -314,29 +321,72 @@ public class ChatbotNode {
         // First check if this input is a valid category from the server
         boolean isValidServerCategory = false;
         for (String validCategory : validCategories) {
-            if (userInput.equals(validCategory)) {
+            if (userMessageText.equals(validCategory)) {
                 isValidServerCategory = true;
                 System.out.println("DEBUG: Confirmed valid server category: " + validCategory);
                 break;
             }
         }
-        
-        // Find the child with matching category or null if none found
+          // Find the child with matching category or null if none found
         if (isValidServerCategory) {
-            for (ChatbotNode child : getChildren()) {
-                System.out.println("DEBUG: Comparing server category '" + userInput + 
-                                  "' with child category '" + child.getCategory() + "'");
-                if (userInput.equals(child.getCategory())) {
-                    System.out.println("DEBUG: Found exact category match with child: " + child.getCategory() + 
-                                      " (ID: " + child.getId() + ")");
-                    return child;
+            System.out.println("DEBUG: Checking each category explicitly for: '" + userMessageText + "'");
+            
+            // Explicit category checking for each main category
+            if (userMessageText.equals("ΚΡΑΤΗΣΗ")) {
+                System.out.println("DEBUG: Found ΚΡΑΤΗΣΗ category match");
+                // Find child with ΚΡΑΤΗΣΗ category
+                for (ChatbotNode child : getChildren()) {
+                    if ("ΚΡΑΤΗΣΗ".equals(child.getCategory())) {
+                        System.out.println("DEBUG: Returning ΚΡΑΤΗΣΗ node: " + child.getId());
+                        return child;
+                    }
+                }
+            } 
+            else if (userMessageText.equals("ΑΚΥΡΩΣΗ")) {
+                System.out.println("DEBUG: Found ΑΚΥΡΩΣΗ category match");
+                // Find child with ΑΚΥΡΩΣΗ category
+                for (ChatbotNode child : getChildren()) {
+                    if ("ΑΚΥΡΩΣΗ".equals(child.getCategory())) {
+                        System.out.println("DEBUG: Returning ΑΚΥΡΩΣΗ node: " + child.getId());
+                        return child;
+                    }
+                }
+            }
+            else if (userMessageText.equals("ΠΛΗΡΟΦΟΡΙΕΣ")) {
+                System.out.println("DEBUG: Found ΠΛΗΡΟΦΟΡΙΕΣ category match");
+                // Find child with ΠΛΗΡΟΦΟΡΙΕΣ category
+                for (ChatbotNode child : getChildren()) {
+                    if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(child.getCategory())) {
+                        System.out.println("DEBUG: Returning ΠΛΗΡΟΦΟΡΙΕΣ node: " + child.getId());
+                        return child;
+                    }
+                }
+            }
+            else if (userMessageText.equals("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ")) {
+                System.out.println("DEBUG: Found ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ category match");
+                // Find child with ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ category
+                for (ChatbotNode child : getChildren()) {
+                    if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(child.getCategory())) {
+                        System.out.println("DEBUG: Returning ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ node: " + child.getId());
+                        return child;
+                    }
+                }
+            }
+            else if (userMessageText.equals("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ")) {
+                System.out.println("DEBUG: Found ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category match");
+                // Find child with ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category
+                for (ChatbotNode child : getChildren()) {
+                    if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(child.getCategory())) {
+                        System.out.println("DEBUG: Returning ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ node: " + child.getId());
+                        return child;
+                    }
                 }
             }
         }
         
-        System.out.println("DEBUG: No exact category match found for server response: " + userInput);
+        System.out.println("DEBUG: No exact category match found for server response: " + userMessageText);
         return null;
-    }    // NLP and keyword matching methods have been removed since node selection is handled by the server
+    }// NLP and keyword matching methods have been removed since node selection is handled by the server
     
     
 }

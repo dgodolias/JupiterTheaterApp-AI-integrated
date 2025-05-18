@@ -284,7 +284,7 @@ public class ChatbotManager {
             currentNode.setUserMessage(userInput);
             
             // Process the request locally - find the next node using the node's own logic
-            ChatbotNode nextNode = currentNode.chooseNextNode(userInput);
+            ChatbotNode nextNode = currentNode.chooseNextNode();
             if (nextNode != null) {
                 // Apply the message template from the current node to the next node
                 try {
