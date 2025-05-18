@@ -269,10 +269,16 @@ public class ChatbotManager {
         if (foundNode == null) {
             Log.e(TAG, "Node with category not found: " + category);
             return "Συγγνώμη, δεν βρέθηκε απάντηση.";
+        }        currentNode = foundNode;
+        
+        // Check if we have a processed template in message_2
+        if (foundNode.getMessage2() != null && !foundNode.getMessage2().isEmpty() && 
+            !foundNode.getMessage2().equals(foundNode.getMessage())) {
+            Log.d(TAG, "Using template-filled message_2: " + foundNode.getMessage2());
+            return foundNode.getMessage2();
         }
-
-        currentNode = foundNode;
-        // Return system message from the node
+        
+        // Fallback to normal system message
         return foundNode.getSystemMessage().getMessage();
     }public String getLocalResponse(String userInput) {
         try {

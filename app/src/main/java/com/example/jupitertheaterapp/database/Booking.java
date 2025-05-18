@@ -1,8 +1,11 @@
-package main.java.com.example.jupitertheaterapp.database;
+package com.example.jupitertheaterapp.database;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
+import com.example.jupitertheaterapp.database.Converters;
+import com.example.jupitertheaterapp.database.FieldValue;
 
 /**
  * Booking entity class for theater reservations

@@ -379,5 +379,48 @@ public class ChatbotNode {
         return null;
     }// NLP and keyword matching methods have been removed since node selection is handled by the server
     
-    
+    /**
+     * Updates message_2 by processing it as a template with data from the node's MsgTemplate.
+     * If message_2 is empty or null, it will use the provided defaultTemplate instead.
+     * 
+     * @param serverResponseJson JSON string containing server response data
+     * @param defaultTemplate Default template to use if message_2 is empty
+     * @return true if template was successfully applied, false otherwise
+     */
+    public boolean applyTemplateToMessage2(String serverResponseJson, String defaultTemplate) {
+        if (msgTemplate == null) {
+            System.out.println("WARNING: No template found for node " + id);
+            return false;
+        }
+        
+        try {
+            // Parse the JSON response from the server
+            if (!msgTemplate.valuesFromJson(serverResponseJson)) {
+                return false;
+            }
+            
+            // Choose the template (either message_2 if it exists or the default)
+            String templateStr = (message_2 != null && !message_2.isEmpty()) 
+                ? message_2 
+                : defaultTemplate;
+                
+            if (templateStr == null || templateStr.isEmpty()) {
+                System.out.println("WARNING: No template string available for node " + id);
+                return false;
+            }
+            
+            // Process the template with values from our template object
+            String processedMessage = msgTemplate.processTemplate(templateStr);
+            
+            // Update message_2 with the processed template
+            message_2 = processedMessage;
+            
+            System.out.println("TEMPLATE APPLIED: " + message_2);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Error applying template: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

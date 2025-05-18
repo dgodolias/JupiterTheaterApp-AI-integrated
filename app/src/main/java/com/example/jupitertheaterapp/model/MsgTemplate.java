@@ -11,17 +11,35 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class MsgTemplate {
-    // Factory pattern implementation
     private static final Map<String, Supplier<MsgTemplate>> templateMap = new HashMap<>();
     
     static {
-        // Register all template types with their corresponding IDs
         templateMap.put("ΠΛΗΡΟΦΟΡΙΕΣ", ShowInfoTemplate::new);
         templateMap.put("ΚΡΑΤΗΣΗ", BookingTemplate::new);
         templateMap.put("ΑΚΥΡΩΣΗ", CancellationTemplate::new);
         templateMap.put("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", DiscountTemplate::new);
         templateMap.put("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", ReviewTemplate::new);
-        // Add more mappings as needed
+    }
+    
+    /**
+     * Processes a template string by replacing variable placeholders with actual values
+     * @param templateString Template string with variables in <variable_name> format
+     * @return Processed string with all variables replaced with their values
+     */
+    public abstract String processTemplate(String templateString);
+    
+    /**
+     * Helper method to replace a template variable with its value
+     * @param template The template string
+     * @param variableName Variable name without brackets
+     * @param value Value to replace the variable with
+     * @return Template with the variable replaced
+     */
+    protected String replaceTemplateVariable(String template, String variableName, String value) {
+        if (value == null || value.isEmpty()) {
+            value = "[unknown " + variableName + "]";
+        }
+        return template.replace("<" + variableName + ">", value);
     }
     
     /**
@@ -35,7 +53,6 @@ public abstract class MsgTemplate {
         if (supplier != null) {
             return supplier.get();
         }
-        // Return a default template or throw an exception
         throw new IllegalArgumentException("Unknown template type: " + id);
     }
     
@@ -60,9 +77,8 @@ public abstract class MsgTemplate {
      * @return true if population was successful, false otherwise
      */
     protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;
-    
-    /**
-     * Helper method to extract string value from a field object
+      /**
+     * Helper methods for JSON extraction
      */
     protected String extractStringValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
@@ -71,9 +87,6 @@ public abstract class MsgTemplate {
         return "";
     }
     
-    /**
-     * Helper method to extract integer value from a field object
-     */
     protected int extractIntValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
             return fieldObject.getInt("value");
@@ -81,9 +94,6 @@ public abstract class MsgTemplate {
         return 0;
     }
     
-    /**
-     * Helper method to extract string list from a field object with array value
-     */
     protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
         List<String> values = new ArrayList<>();
         if (fieldObject.has("value")) {
@@ -95,9 +105,6 @@ public abstract class MsgTemplate {
         return values;
     }
 
-    /**
-     * Helper method to extract possible values as strings
-     */
     protected List<String> extractPossibleStringValues(JSONObject fieldObject) throws JSONException {
         List<String> pValues = new ArrayList<>();
         if (fieldObject.has("pvalues")) {
@@ -108,9 +115,7 @@ public abstract class MsgTemplate {
         }
         return pValues;
     }
-      /**
-     * Helper method to extract possible values as integers
-     */
+    
     protected List<Integer> extractPossibleIntValues(JSONObject fieldObject) throws JSONException {
         List<Integer> pValues = new ArrayList<>();
         if (fieldObject.has("pvalues")) {
@@ -136,7 +141,6 @@ class ShowInfoTemplate extends MsgTemplate {
     private List<String> duration;
     private List<String> stars;
     
-    // Possible values lists
     private List<String> possibleDays;
     private List<Integer> possibleStarRatings;
     
@@ -200,46 +204,46 @@ class ShowInfoTemplate extends MsgTemplate {
         }
     }
 
+    @Override
+    public String processTemplate(String templateString) {
+        for (String n : name) {
+            templateString = replaceTemplateVariable(templateString, "name", n);
+        }
+        for (String d : day) {
+            templateString = replaceTemplateVariable(templateString, "day", d);
+        }
+        for (String t : topic) {
+            templateString = replaceTemplateVariable(templateString, "topic", t);
+        }
+        for (String ti : time) {
+            templateString = replaceTemplateVariable(templateString, "time", ti);
+        }
+        for (String c : cast) {
+            templateString = replaceTemplateVariable(templateString, "cast", c);
+        }
+        for (String r : room) {
+            templateString = replaceTemplateVariable(templateString, "room", r);
+        }
+        for (String du : duration) {
+            templateString = replaceTemplateVariable(templateString, "duration", du);
+        }
+        for (String s : stars) {
+            templateString = replaceTemplateVariable(templateString, "stars", s);
+        }
+        return templateString;
+    }
+
     // Getters and setters
-    public List<String> getName() {
-        return name;
-    }
-
-    public List<String> getDay() {
-        return day;
-    }
-
-    public List<String> getTopic() {
-        return topic;
-    }
-
-    public List<String> getTime() {
-        return time;
-    }
-
-    public List<String> getCast() {
-        return cast;
-    }
-
-    public List<String> getRoom() {
-        return room;
-    }
-
-    public List<String> getDuration() {
-        return duration;
-    }
-
-    public List<String> getStars() {
-        return stars;
-    }
-
-    public List<String> getPossibleDays() {
-        return possibleDays;
-    }
-
-    public List<Integer> getPossibleStarRatings() {
-        return possibleStarRatings;
-    }
+    public List<String> getName() { return name; }
+    public List<String> getDay() { return day; }
+    public List<String> getTopic() { return topic; }
+    public List<String> getTime() { return time; }
+    public List<String> getCast() { return cast; }
+    public List<String> getRoom() { return room; }
+    public List<String> getDuration() { return duration; }
+    public List<String> getStars() { return stars; }
+    public List<String> getPossibleDays() { return possibleDays; }
+    public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
 }
 
 /**
@@ -252,7 +256,6 @@ class BookingTemplate extends MsgTemplate {
     private String time;
     private Person person;
     
-    // Possible values
     private List<String> possibleDays;
     
     public BookingTemplate() {
@@ -311,6 +314,18 @@ class BookingTemplate extends MsgTemplate {
         }
     }
 
+    @Override
+    public String processTemplate(String templateString) {
+        templateString = replaceTemplateVariable(templateString, "show_name", showName);
+        templateString = replaceTemplateVariable(templateString, "room", room);
+        templateString = replaceTemplateVariable(templateString, "day", day);
+        templateString = replaceTemplateVariable(templateString, "time", time);
+        templateString = replaceTemplateVariable(templateString, "person_name", person.getName());
+        templateString = replaceTemplateVariable(templateString, "person_age", person.getAge());
+        templateString = replaceTemplateVariable(templateString, "person_seat", person.getSeat());
+        return templateString;
+    }
+
     // Person inner class for booking
     public static class Person {
         private String name;
@@ -326,63 +341,25 @@ class BookingTemplate extends MsgTemplate {
         }
 
         // Getters and setters
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getAge() {
-            return age;
-        }
-
-        public void setAge(String age) {
-            this.age = age;
-        }
-
-        public String getSeat() {
-            return seat;
-        }
-
-        public void setSeat(String seat) {
-            this.seat = seat;
-        }
-
-        public List<String> getPossibleAgeCategories() {
-            return possibleAgeCategories;
-        }
-
-        public void setPossibleAgeCategories(List<String> possibleAgeCategories) {
-            this.possibleAgeCategories = possibleAgeCategories;
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getAge() { return age; }
+        public void setAge(String age) { this.age = age; }
+        public String getSeat() { return seat; }
+        public void setSeat(String seat) { this.seat = seat; }
+        public List<String> getPossibleAgeCategories() { return possibleAgeCategories; }
+        public void setPossibleAgeCategories(List<String> possibleAgeCategories) { 
+            this.possibleAgeCategories = possibleAgeCategories; 
         }
     }
     
-    // Getters and setters
-    public String getShowName() {
-        return showName;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public List<String> getPossibleDays() {
-        return possibleDays;
-    }
+    // Getters
+    public String getShowName() { return showName; }
+    public String getRoom() { return room; }
+    public String getDay() { return day; }
+    public String getTime() { return time; }
+    public Person getPerson() { return person; }
+    public List<String> getPossibleDays() { return possibleDays; }
 }
 
 /**
@@ -415,14 +392,16 @@ class CancellationTemplate extends MsgTemplate {
         }
     }
     
-    // Getters and setters
-    public String getReservationNumber() {
-        return reservationNumber;
+    @Override
+    public String processTemplate(String templateString) {
+        templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
+        templateString = replaceTemplateVariable(templateString, "passcode", passcode);
+        return templateString;
     }
-
-    public String getPasscode() {
-        return passcode;
-    }
+    
+    // Getters
+    public String getReservationNumber() { return reservationNumber; }
+    public String getPasscode() { return passcode; }
 }
 
 /**
@@ -433,8 +412,6 @@ class DiscountTemplate extends MsgTemplate {
     private int numberOfPeople;
     private List<String> age;
     private List<String> date;
-    
-    // Possible values
     private List<String> possibleAgeCategories;
     
     public DiscountTemplate() {
@@ -473,26 +450,27 @@ class DiscountTemplate extends MsgTemplate {
         }
     }
     
-    // Getters and setters
-    public List<String> getShowName() {
-        return showName;
+    @Override
+    public String processTemplate(String templateString) {
+        for (String s : showName) {
+            templateString = replaceTemplateVariable(templateString, "show_name", s);
+        }
+        templateString = replaceTemplateVariable(templateString, "no_of_people", String.valueOf(numberOfPeople));
+        for (String a : age) {
+            templateString = replaceTemplateVariable(templateString, "age", a);
+        }
+        for (String d : date) {
+            templateString = replaceTemplateVariable(templateString, "date", d);
+        }
+        return templateString;
     }
-
-    public int getNumberOfPeople() {
-        return numberOfPeople;
-    }
-
-    public List<String> getAge() {
-        return age;
-    }
-
-    public List<String> getDate() {
-        return date;
-    }
-
-    public List<String> getPossibleAgeCategories() {
-        return possibleAgeCategories;
-    }
+    
+    // Getters
+    public List<String> getShowName() { return showName; }
+    public int getNumberOfPeople() { return numberOfPeople; }
+    public List<String> getAge() { return age; }
+    public List<String> getDate() { return date; }
+    public List<String> getPossibleAgeCategories() { return possibleAgeCategories; }
 }
 
 /**
@@ -503,8 +481,6 @@ class ReviewTemplate extends MsgTemplate {
     private String passcode;
     private int stars;
     private String review;
-    
-    // Possible values
     private List<Integer> possibleStarRatings;
     
     public ReviewTemplate() {
@@ -543,24 +519,19 @@ class ReviewTemplate extends MsgTemplate {
         }
     }
     
-    // Getters and setters
-    public String getReservationNumber() {
-        return reservationNumber;
+    @Override
+    public String processTemplate(String templateString) {
+        templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
+        templateString = replaceTemplateVariable(templateString, "passcode", passcode);
+        templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
+        templateString = replaceTemplateVariable(templateString, "review", review);
+        return templateString;
     }
-
-    public String getPasscode() {
-        return passcode;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public String getReview() {
-        return review;
-    }
-
-    public List<Integer> getPossibleStarRatings() {
-        return possibleStarRatings;
-    }
+    
+    // Getters
+    public String getReservationNumber() { return reservationNumber; }
+    public String getPasscode() { return passcode; }
+    public int getStars() { return stars; }
+    public String getReview() { return review; }
+    public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
 }

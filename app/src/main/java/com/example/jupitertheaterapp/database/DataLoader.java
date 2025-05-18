@@ -1,4 +1,4 @@
-package main.java.com.example.jupitertheaterapp.database;
+package com.example.jupitertheaterapp.database;
 
 import android.content.Context;
 import android.util.Log;
