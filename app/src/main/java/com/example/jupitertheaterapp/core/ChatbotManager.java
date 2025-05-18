@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 public class ChatbotManager {
@@ -28,7 +27,6 @@ public class ChatbotManager {
     private ChatbotNode rootNode; // Root node of conversation tree
     private Map<String, ChatbotNode> nodeMap;
     private ChatbotNode currentNode;
-    private Random random = new Random();
     private boolean useServerForResponses = true;
     private ConversationState conversationState;
 
@@ -279,9 +277,16 @@ public class ChatbotManager {
             // Update the current node with the user message
             currentNode.setUserMessage(userInput);
             
-            // Process the request locally - find the next node
-            ChatbotNode nextNode = chooseNextNode(userInput);
+            // Process the request locally - find the next node using the node's own logic
+            ChatbotNode nextNode = currentNode.chooseNextNode(userInput);
             if (nextNode != null) {
+                // Apply the message template from the current node to the next node
+                try {
+                    nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getCategory()));
+                } catch (IllegalArgumentException e) {
+                    // No template available for this node category; that's ok
+                }
+                
                 currentNode = nextNode;
                 // Now the system message is what we want to return
                 return nextNode.getSystemMessage().getMessage();
@@ -292,30 +297,18 @@ public class ChatbotManager {
             Log.e(TAG, "Error getting local response", e);
             return "Συγγνώμη, προέκυψε ένα σφάλμα.";
         }
-    }
-
-    public ChatbotNode chooseNextNode(String userInput) {
-        if (!currentNode.hasChildren()) {
-            return rootNode;
-        }
-
-        List<ChatbotNode> children = currentNode.getChildren();
-        if (children.isEmpty()) {
-            return rootNode;
-        }
-
-        // Log available children for debugging
-        logAvailableChildren(children);
-
-        // Simple selection - could be improved with NLP
-        int idx = random.nextInt(children.size());
-        ChatbotNode nextNode = children.get(idx);        // Assign messageTemplate for nextNode based on previous node's category
-        try {
-            nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getCategory()));
-        } catch (IllegalArgumentException e) {
-            // No template available for this previous node category; skip
-        }
-        return nextNode;
+    }    /**
+     * This method has been moved to ChatbotNode class.
+     * The ChatbotNode.chooseNextNode() method is now responsible for
+     * selecting the next conversation node based on user input and conversation context.
+     * 
+     * @deprecated Use ChatbotNode.chooseNextNode() instead for history-based node selection
+     */
+    @Deprecated
+    private ChatbotNode legacyChooseNextNode(String userInput) {
+        // This is kept for backward compatibility but not used.
+        // We now use currentNode.chooseNextNode(userInput) from the node class
+        return currentNode.getChildren().isEmpty() ? rootNode : currentNode.getChildren().get(0);
     }
 
     private void logAvailableChildren(List<ChatbotNode> children) {
@@ -652,15 +645,15 @@ public class ChatbotManager {
         result.append("======================================\n");
         return result.toString();
     }
-    
-    /**
+      /**
      * Finds the path from root node to the current node.
+     * Uses parent references to build the path, ensuring we can track the full conversation.
      * 
      * @return A list of nodes representing the conversation path
      */
     private List<ChatbotNode> getPathToCurrentNode() {
         List<ChatbotNode> path = new ArrayList<>();
-        List<ChatbotNode> visitedNodes = new ArrayList<>();
+        Set<String> visitedNodeIds = new HashSet<>();
         
         // If we're still at the root node or no conversation happened yet
         if (currentNode == rootNode || currentNode == null) {
@@ -670,18 +663,25 @@ public class ChatbotManager {
         
         // Add the current node as we know it's part of the path
         path.add(currentNode);
+        visitedNodeIds.add(currentNode.getId());
         
         // Try to find the path by working backward from the current node
-        // This assumes each node has a reference to its parent
         ChatbotNode node = currentNode;
-        while (node != null && node.getParent() != null && !visitedNodes.contains(node.getParent())) {
-            visitedNodes.add(node);  // Mark this node as visited to avoid cycles
-            node = node.getParent();
-            path.add(0, node);  // Add to the beginning of the path
+        while (node != null && node.getParent() != null) {
+            ChatbotNode parent = node.getParent();
+            
+            // Check for cycles
+            if (visitedNodeIds.contains(parent.getId())) {
+                break;  // Stop if we detect a cycle
+            }
+            
+            // Add the parent to the beginning of the path
+            path.add(0, parent);
+            visitedNodeIds.add(parent.getId());
+            
+            // Move up to the parent
+            node = parent;
         }
-        
-        // If we couldn't find a path backward or it's incomplete,
-        // use the conversation history from another source if available
         
         return path;
     }

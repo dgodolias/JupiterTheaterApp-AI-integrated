@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ChatbotNode {
     private String id; // Now in lowercase format like "kratisi", "kratisi1", etc.
@@ -23,10 +22,8 @@ public class ChatbotNode {
     private String content;
     private String fallback;
     private List<ChatbotNode> children;
-    private ChatbotNode parent;
-    private List<String> pendingChildIds; // For resolving references
-    private Random random = new Random();
-    private MsgTemplate msgTemplate;    /**
+    private ChatbotNode parent;    private List<String> pendingChildIds; // For resolving references
+    private MsgTemplate msgTemplate;/**
      * Legacy constructor for backward compatibility
      */
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
@@ -191,13 +188,16 @@ public class ChatbotNode {
 
     public List<ChatbotNode> getChildren() {
         return children;
-    }
-
-    public ChatbotNode getRandomChild() {
+    }    /**
+     * Gets the first child of this node
+     * This replaces the random selection with a deterministic approach
+     * @return The first child node, or null if no children
+     */
+    public ChatbotNode getFirstChild() {
         if (children.isEmpty()) {
             return null;
         }
-        return children.get(random.nextInt(children.size()));
+        return children.get(0);
     }
 
     public ChatbotNode getParent() {
@@ -223,11 +223,10 @@ public class ChatbotNode {
     public MsgTemplate getMessageTemplate() {
         return msgTemplate;
     }
-    
-    /**
+      /**
      * Creates a JSON object for server communication based on the node type.
      * For CATEGORISE nodes, creates a JSON with type=CATEGORISE, empty category, and the given message.
-     * For EXTRACT nodes, creates a JSON with type=EXTRACT, category from parent node ID, and the given message.
+     * For EXTRACT nodes, creates a JSON with type=EXTRACT, category from parent node or current category, and the given message.
      * 
      * @param userMessage The user's message to include in the request
      * @return JSONObject formatted for server communication
@@ -235,10 +234,6 @@ public class ChatbotNode {
     public JSONObject createRequestJson(String userMessage) {
         JSONObject jsonRequest = new JSONObject();
         try {
-            // Get random categories to use when needed
-            String[] categories = {"ΚΡΑΤΗΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΩΡΑΡΙΟ", "ΤΙΜΕΣ", "ΠΡΟΓΡΑΜΜΑ"};
-            Random random = new Random();
-            
             if ("CATEGORISE".equals(type)) {
                 jsonRequest.put("type", "CATEGORISE");
                 jsonRequest.put("category", ""); // Empty for CATEGORISE requests
@@ -246,30 +241,22 @@ public class ChatbotNode {
                 System.out.println("CREATED CATEGORISE REQUEST: " + jsonRequest.toString());
             } else if ("EXTRACT".equals(type)) {
                 jsonRequest.put("type", "EXTRACT");
-                  // Get parent category or use a random one if no parent
+                // Get parent category or use current category
                 String requestCategory;
                 if (parent != null) {
                     requestCategory = parent.getCategory();
                 } else {
-                    // If no parent, use this node's category or a random one as fallback
-                    requestCategory = this.category != null ? this.category : categories[random.nextInt(categories.length)];
+                    // If no parent, use this node's category
+                    requestCategory = this.category;
                 }
-                  jsonRequest.put("category", requestCategory);
+                jsonRequest.put("category", requestCategory);
                 jsonRequest.put("message", userMessage);
                 System.out.println("CREATED EXTRACT REQUEST: " + jsonRequest.toString());
                 System.out.println("CATEGORY FOR EXTRACT: " + requestCategory);
             } else {
-                // Default to CATEGORISE with random values as fallback
-                jsonRequest.put("type", random.nextBoolean() ? "CATEGORISE" : "EXTRACT");
-                
-                if (jsonRequest.getString("type").equals("EXTRACT")) {
-                    // For EXTRACT, we need a category
-                    jsonRequest.put("category", categories[random.nextInt(categories.length)]);
-                } else {
-                    // For CATEGORISE, empty category
-                    jsonRequest.put("category", "");
-                }
-                
+                // Default to CATEGORISE as fallback
+                jsonRequest.put("type", "CATEGORISE");
+                jsonRequest.put("category", "");
                 jsonRequest.put("message", userMessage);
                 System.out.println("CREATED DEFAULT REQUEST: " + jsonRequest.toString());
             }
@@ -278,4 +265,134 @@ public class ChatbotNode {
         }
         return jsonRequest;
     }
+    
+    /**
+     * Gets the conversation path from the root node to this node
+     * @return List of nodes in the conversation path (from root to this node)
+     */
+    public List<ChatbotNode> getConversationPath() {
+        List<ChatbotNode> path = new ArrayList<>();
+        
+        // Add the current node as the first element
+        path.add(0, this);
+        
+        // Traverse backwards to build the path
+        ChatbotNode current = this;
+        while (current.getParent() != null) {
+            current = current.getParent();
+            path.add(0, current); // Add to the beginning of the list
+        }
+        
+        return path;
+    }    /**
+     * Choose the next node in the conversation based on the current state and user input
+     * Uses the conversation path and category matching to make more context-aware decisions
+     * 
+     * @param userInput The user's message
+     * @return The next node in the conversation
+     */
+    public ChatbotNode chooseNextNode(String userInput) {
+        System.out.println("DEBUG: Choosing next node with input: " + userInput);
+        System.out.println("DEBUG: Current node ID: " + this.id + ", Category: " + this.category);
+        
+        // If no children, there's nowhere to go
+        if (!hasChildren()) {
+            System.out.println("DEBUG: No children found for node " + this.id);
+            return null;
+        }
+        
+        System.out.println("DEBUG: Children count: " + this.children.size());
+        for (ChatbotNode child : getChildren()) {
+            System.out.println("DEBUG: Child node - ID: " + child.getId() + ", Category: " + child.getCategory());
+        }
+        
+        // For the root node, use keyword matching to find the most relevant category
+        if (getId().equals("root")) {
+            System.out.println("DEBUG: Processing root node logic");
+            
+            // First, try direct text match with child categories
+            for (ChatbotNode child : getChildren()) {
+                if (userInput.toLowerCase().contains(child.getCategory().toLowerCase())) {
+                    System.out.println("DEBUG: Direct match found with category: " + child.getCategory());
+                    return child;
+                }
+            }
+            
+            // If no direct match found, try to match by category keywords
+            ChatbotNode matchedNode = findNodeByCategoryKeywords(userInput);
+            if (matchedNode != null) {
+                System.out.println("DEBUG: Keyword match found with category: " + matchedNode.getCategory());
+                return matchedNode;
+            }
+            
+            System.out.println("DEBUG: No matching node found for: " + userInput);
+            return null;
+        }
+        
+        // For non-root nodes with server response (like "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ")
+        // Try exact category matching first
+        for (ChatbotNode child : getChildren()) {
+            if (userInput.equalsIgnoreCase(child.getCategory())) {
+                System.out.println("DEBUG: Exact category match found: " + child.getCategory());
+                return child;
+            }
+        }
+        
+        // If no exact match, try partial matching
+        ChatbotNode bestMatch = null;
+        for (ChatbotNode child : getChildren()) {
+            if (userInput.toLowerCase().contains(child.getCategory().toLowerCase()) || 
+                child.getCategory().toLowerCase().contains(userInput.toLowerCase())) {
+                System.out.println("DEBUG: Partial category match found: " + child.getCategory());
+                bestMatch = child;
+                break;
+            }
+        }
+        
+        System.out.println("DEBUG: Returning " + (bestMatch != null ? "matched node: " + bestMatch.getCategory() : "null"));
+        return bestMatch;
+    }
+    
+    /**
+     * Finds a child node that matches the given input by keywords in categories
+     * 
+     * @param input The user input or server response to match
+     * @return The matching child node or null if no match found
+     */
+    private ChatbotNode findNodeByCategoryKeywords(String input) {
+        System.out.println("DEBUG: Looking for keyword matches in: " + input);
+        
+        // Define common keywords for different categories
+        // Add your category-keyword mappings here
+        if (input.toLowerCase().contains("προσφορ") || input.toLowerCase().contains("εκπτωσ")) {
+            for (ChatbotNode child : getChildren()) {
+                if (child.getCategory().toLowerCase().contains("προσφορ") || 
+                    child.getCategory().toLowerCase().contains("εκπτωσ")) {
+                    return child;
+                }
+            }
+        }
+        
+        if (input.toLowerCase().contains("πληροφορ") || input.toLowerCase().contains("ερωτησ")) {
+            for (ChatbotNode child : getChildren()) {
+                if (child.getCategory().toLowerCase().contains("πληροφορ")) {
+                    return child;
+                }
+            }
+        }
+        
+        if (input.toLowerCase().contains("κρατησ") || input.toLowerCase().contains("θεσ")) {
+            for (ChatbotNode child : getChildren()) {
+                if (child.getCategory().toLowerCase().contains("κρατησ")) {
+                    return child;
+                }
+            }
+        }
+        
+        // Add more category keyword mappings as needed
+        
+        return null;
+    }
+    
+    
 }
