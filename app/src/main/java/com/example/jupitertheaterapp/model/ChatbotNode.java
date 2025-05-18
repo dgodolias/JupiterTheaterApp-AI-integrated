@@ -232,30 +232,21 @@ public class ChatbotNode {
      */
     public JSONObject createRequestJson(String userMessage) {
         JSONObject jsonRequest = new JSONObject();
-        try {
-            if ("CATEGORISE".equals(type)) {
+        try {            if ("CATEGORISE".equals(type)) {
                 jsonRequest.put("type", "CATEGORISE");
-                jsonRequest.put("category", ""); // Empty for CATEGORISE requests
+                jsonRequest.put("category", this.category); // Use this node's category instead of empty string
                 jsonRequest.put("message", userMessage);
-                System.out.println("CREATED CATEGORISE REQUEST: " + jsonRequest.toString());
-            } else if ("EXTRACT".equals(type)) {
+                System.out.println("CREATED CATEGORISE REQUEST: " + jsonRequest.toString());} else if ("EXTRACT".equals(type)) {
                 jsonRequest.put("type", "EXTRACT");
-                // Get parent category or use current category
-                String requestCategory;
-                if (parent != null) {
-                    requestCategory = parent.getCategory();
-                } else {
-                    // If no parent, use this node's category
-                    requestCategory = this.category;
-                }
+                // Always use this node's category, not parent's
+                String requestCategory = this.category;
                 jsonRequest.put("category", requestCategory);
                 jsonRequest.put("message", userMessage);
                 System.out.println("CREATED EXTRACT REQUEST: " + jsonRequest.toString());
-                System.out.println("CATEGORY FOR EXTRACT: " + requestCategory);
-            } else {
+                System.out.println("CATEGORY FOR EXTRACT: " + requestCategory);            } else {
                 // Default to CATEGORISE as fallback
                 jsonRequest.put("type", "CATEGORISE");
-                jsonRequest.put("category", "");
+                jsonRequest.put("category", this.category); // Use this node's category
                 jsonRequest.put("message", userMessage);
                 System.out.println("CREATED DEFAULT REQUEST: " + jsonRequest.toString());
             }

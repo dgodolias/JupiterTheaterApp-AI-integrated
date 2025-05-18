@@ -1,7 +1,7 @@
 {
   "root": {
     "id": "root",
-    "category": "root",
+    "category": "-",
     "type": "CATEGORISE",
     "message_1": "Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;",
     "message_2": "ΓΕΙΑ ΣΑΣ! ΚΑΛΩΣΗΡΘΑΤΕ ΣΤΟ ΘΕΑΤΡΟ JUPITER. ΠΩΣ ΜΠΟΡΩ ΝΑ ΣΑΣ ΒΟΗΘΗΣΩ;",
