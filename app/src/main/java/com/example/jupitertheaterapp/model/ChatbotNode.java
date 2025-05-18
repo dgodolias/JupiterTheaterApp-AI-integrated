@@ -23,12 +23,12 @@ public class ChatbotNode {
     private String fallback;
     private List<ChatbotNode> children;
     private ChatbotNode parent;    private List<String> pendingChildIds; // For resolving references
-    private MsgTemplate msgTemplate;/**
+    private MsgTemplate msgTemplate;    /**
      * Legacy constructor for backward compatibility
      */
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
         this.id = id;
-        this.category = id; // Initialize category with id for backward compatibility
+        this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
         // Legacy fields
         this.message = message;
@@ -49,7 +49,7 @@ public class ChatbotNode {
      */
     public ChatbotNode(String id, String type, String message_1, String message_2, String content, String fallback) {
         this.id = id;
-        this.category = id; // Initialize category with id for backward compatibility
+        this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
         // Legacy fields
         this.message = message_1; // For backward compatibility
@@ -65,14 +65,13 @@ public class ChatbotNode {
         this.fallback = fallback;
         this.children = new ArrayList<>();
         this.pendingChildIds = new ArrayList<>();
-    }
-      /**
+    }      /**
      * New constructor that explicitly takes system and user messages
      */
     public ChatbotNode(String id, String type, ChatMessage systemMessage, ChatMessage userMessage, 
                       String content, String fallback) {
         this.id = id;
-        this.category = id; // Initialize category with id for backward compatibility
+        this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
         
         // Set new fields
@@ -288,7 +287,7 @@ public class ChatbotNode {
      * Choose the next node in the conversation based on the current state and user input
      * Uses the conversation path and category matching to make more context-aware decisions
      * 
-     * @param userInput The user's message
+     * @param userInput The user's message or server response
      * @return The next node in the conversation
      */
     public ChatbotNode chooseNextNode(String userInput) {
@@ -301,98 +300,43 @@ public class ChatbotNode {
             return null;
         }
         
-        System.out.println("DEBUG: Children count: " + this.children.size());
+        System.out.println("DEBUG: Available children count: " + this.children.size());
+        System.out.println("DEBUG: Available child nodes for matching:");
         for (ChatbotNode child : getChildren()) {
-            System.out.println("DEBUG: Child node - ID: " + child.getId() + ", Category: " + child.getCategory());
-        }
+            System.out.println("DEBUG:   - ID: " + child.getId() + ", Category: " + child.getCategory());
+        }        // Since server handles all node selection logic, we just need to match the exact category
+        // from server response to our node categories
+        System.out.println("DEBUG: Looking for exact category match with server response: " + userInput);
         
-        // For the root node, use keyword matching to find the most relevant category
-        if (getId().equals("root")) {
-            System.out.println("DEBUG: Processing root node logic");
-            
-            // First, try direct text match with child categories
-            for (ChatbotNode child : getChildren()) {
-                if (userInput.toLowerCase().contains(child.getCategory().toLowerCase())) {
-                    System.out.println("DEBUG: Direct match found with category: " + child.getCategory());
-                    return child;
-                }
-            }
-            
-            // If no direct match found, try to match by category keywords
-            ChatbotNode matchedNode = findNodeByCategoryKeywords(userInput);
-            if (matchedNode != null) {
-                System.out.println("DEBUG: Keyword match found with category: " + matchedNode.getCategory());
-                return matchedNode;
-            }
-            
-            System.out.println("DEBUG: No matching node found for: " + userInput);
-            return null;
-        }
+        // These are the valid categories that can be returned by the server
+        String[] validCategories = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
         
-        // For non-root nodes with server response (like "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ")
-        // Try exact category matching first
-        for (ChatbotNode child : getChildren()) {
-            if (userInput.equalsIgnoreCase(child.getCategory())) {
-                System.out.println("DEBUG: Exact category match found: " + child.getCategory());
-                return child;
-            }
-        }
-        
-        // If no exact match, try partial matching
-        ChatbotNode bestMatch = null;
-        for (ChatbotNode child : getChildren()) {
-            if (userInput.toLowerCase().contains(child.getCategory().toLowerCase()) || 
-                child.getCategory().toLowerCase().contains(userInput.toLowerCase())) {
-                System.out.println("DEBUG: Partial category match found: " + child.getCategory());
-                bestMatch = child;
+        // First check if this input is a valid category from the server
+        boolean isValidServerCategory = false;
+        for (String validCategory : validCategories) {
+            if (userInput.equals(validCategory)) {
+                isValidServerCategory = true;
+                System.out.println("DEBUG: Confirmed valid server category: " + validCategory);
                 break;
             }
         }
         
-        System.out.println("DEBUG: Returning " + (bestMatch != null ? "matched node: " + bestMatch.getCategory() : "null"));
-        return bestMatch;
-    }
-    
-    /**
-     * Finds a child node that matches the given input by keywords in categories
-     * 
-     * @param input The user input or server response to match
-     * @return The matching child node or null if no match found
-     */
-    private ChatbotNode findNodeByCategoryKeywords(String input) {
-        System.out.println("DEBUG: Looking for keyword matches in: " + input);
-        
-        // Define common keywords for different categories
-        // Add your category-keyword mappings here
-        if (input.toLowerCase().contains("προσφορ") || input.toLowerCase().contains("εκπτωσ")) {
+        // Find the child with matching category or null if none found
+        if (isValidServerCategory) {
             for (ChatbotNode child : getChildren()) {
-                if (child.getCategory().toLowerCase().contains("προσφορ") || 
-                    child.getCategory().toLowerCase().contains("εκπτωσ")) {
+                System.out.println("DEBUG: Comparing server category '" + userInput + 
+                                  "' with child category '" + child.getCategory() + "'");
+                if (userInput.equals(child.getCategory())) {
+                    System.out.println("DEBUG: Found exact category match with child: " + child.getCategory() + 
+                                      " (ID: " + child.getId() + ")");
                     return child;
                 }
             }
         }
         
-        if (input.toLowerCase().contains("πληροφορ") || input.toLowerCase().contains("ερωτησ")) {
-            for (ChatbotNode child : getChildren()) {
-                if (child.getCategory().toLowerCase().contains("πληροφορ")) {
-                    return child;
-                }
-            }
-        }
-        
-        if (input.toLowerCase().contains("κρατησ") || input.toLowerCase().contains("θεσ")) {
-            for (ChatbotNode child : getChildren()) {
-                if (child.getCategory().toLowerCase().contains("κρατησ")) {
-                    return child;
-                }
-            }
-        }
-        
-        // Add more category keyword mappings as needed
-        
+        System.out.println("DEBUG: No exact category match found for server response: " + userInput);
         return null;
-    }
+    }    // NLP and keyword matching methods have been removed since node selection is handled by the server
     
     
 }

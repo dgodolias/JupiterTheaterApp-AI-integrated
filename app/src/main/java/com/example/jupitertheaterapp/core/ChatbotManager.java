@@ -98,9 +98,11 @@ public class ChatbotManager {
             String message2 = jsonNode.getString("message_2");
             
             Log.d(TAG, "Node " + id + " has dual messages: message_1=" + message1.substring(0, Math.min(20, message1.length())) + "...");
-            
-            // Use the constructor that accepts both message formats
+              // Use the constructor that accepts both message formats
             node = new ChatbotNode(id, type, message1, message2, content, fallback);
+              // Explicitly set the category after node creation to ensure it's properly used
+            node.setCategory(category);
+            Log.d(TAG, "Set category for node " + id + " to: " + category);
         } else {
             // Fall back to the original format
             String message;
@@ -115,10 +117,14 @@ public class ChatbotManager {
                 // Default message if neither format is present
                 message = "No message available.";
                 Log.d(TAG, "Node " + id + " has no message fields");
-            }
-            
+            }            
             node = new ChatbotNode(id, type, message, content, fallback);
-        }        // Try to assign the appropriate MsgTemplate based on the node's category
+        }
+          // Explicitly set the category from JSON to ensure it's properly used
+        node.setCategory(category);
+        Log.d(TAG, "Set category for node " + id + " to: " + category);
+        
+        // Try to assign the appropriate MsgTemplate based on the node's category
         try {
             MsgTemplate template = MsgTemplate.createTemplate(category);
             node.setMessageTemplate(template);
