@@ -12,9 +12,16 @@ public abstract class ChatMessage {
     public static final int TYPE_SERVER = 2;  // Server message type
 
     protected int type;
+    protected String category; // Adding category field to base class
 
     public ChatMessage(int type) {
         this.type = type;
+        this.category = "-"; // Default category
+    }
+
+    public ChatMessage(int type, String category) {
+        this.type = type;
+        this.category = category;
     }
 
     public abstract String getMessage();
@@ -22,12 +29,21 @@ public abstract class ChatMessage {
     public int getType() {
         return type;
     }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     // Returns true if message is from system (bot or server)
     public boolean isSystemMessage() {
         return type == TYPE_BOT || type == TYPE_SERVER;
     }
-      /**
+    
+    /**
      * Creates appropriate message subtype based on the type
      */
     public static ChatMessage createMessage(String message, int type) {
@@ -44,12 +60,12 @@ public abstract class ChatMessage {
 
 /**
  * Represents a message from the system (either bot or server)
+ * Only contains details and error fields as specified
  */
 class SystemMessage extends ChatMessage {
-    private String category;
     private JSONObject details;
     private String error;
-    private String message; // Single message field instead of message1/message2
+    private String message; // Used internally for getMessage method
     
     public SystemMessage(String message, int type) {
         super(type);
@@ -67,27 +83,19 @@ class SystemMessage extends ChatMessage {
     
     // Constructor for server responses with JSON
     public SystemMessage(JSONObject jsonResponse, int type) {
-        super(type);
-        try {
-            // Extract data from jsonResponse
-            this.category = jsonResponse.optString("category", "");
-            this.error = jsonResponse.optString("error", null);
-            this.details = jsonResponse.optJSONObject("details");
-            // Set a default message based on category
-            this.message = "Server response for category: " + this.category;
-        } catch (Exception e) {
-            this.message = "Error parsing server response";
-            e.printStackTrace();
-        }
+        super(type, jsonResponse.optString("category", "-"));
+        this.error = jsonResponse.optString("error", null);
+        this.details = jsonResponse.optJSONObject("details");
+        // Set a default message based on category
+        this.message = "Server response for category: " + this.category;
     }
-    
-    // Constructor accepting server response as a JSON string
+      // Constructor accepting server response as a JSON string
     public SystemMessage(String jsonString, int type, boolean isJson) {
         super(type);
         if (isJson) {
             try {
                 JSONObject jsonResponse = new JSONObject(jsonString);
-                this.category = jsonResponse.optString("category", "");
+                this.category = jsonResponse.optString("category", "-");
                 this.error = jsonResponse.optString("error", null);
                 this.details = jsonResponse.optJSONObject("details");
                 // Set a default message based on category
@@ -99,22 +107,11 @@ class SystemMessage extends ChatMessage {
         } else {
             this.message = jsonString;
         }
-    }
-    
-    @Override
+    }      @Override
     public String getMessage() {
         return message;
     }
-    
-    public void setMessage(String message) {
-        this.message = message;
-    }
-      
-    public String getCategory() {
-        return category;
-    }
-    
-    public JSONObject getDetails() {
+      public JSONObject getDetails() {
         return details;
     }
     
@@ -122,8 +119,8 @@ class SystemMessage extends ChatMessage {
         return error;
     }
     
-    public void setCategory(String category) {
-        this.category = category;
+    public void setMessage(String message) {
+        this.message = message;
     }
     
     public void setDetails(JSONObject details) {
@@ -133,15 +130,14 @@ class SystemMessage extends ChatMessage {
     public void setError(String error) {
         this.error = error;
     }
-    
-    /**
+      /**
      * Gets the JSON representation of this message
      * @return A JSONObject containing all the message data
      */
     public JSONObject toJsonObject() {
         JSONObject json = new JSONObject();
         try {
-            json.put("category", category != null ? category : "");
+            json.put("category", category != null ? category : "-");
             
             if (details != null) {
                 json.put("details", details);
@@ -150,8 +146,6 @@ class SystemMessage extends ChatMessage {
             if (error != null && !error.isEmpty()) {
                 json.put("error", error);
             }
-            
-            json.put("message", getMessage());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -190,14 +184,11 @@ class SystemMessage extends ChatMessage {
      */
     public static SystemMessage createBotMessage(String message) {
         return new SystemMessage(message, TYPE_BOT);
-    }
-
-    //toString method to get the message and the super class fields
+    }    //toString method to get the message and the super class fields
     @Override
     public String toString() {
         return "SystemMessage{" +
-                "message='" + message + '\'' +
-                ", category='" + category + '\'' +
+                "category='" + category + '\'' +
                 ", details=" + details +
                 ", error='" + error + '\'' +
                 ", type=" + type +
@@ -208,6 +199,7 @@ class SystemMessage extends ChatMessage {
 
 /**
  * Represents a message from the user
+ * Only contains type and message fields as specified
  */
 class UserMessage extends ChatMessage {
     private String message;
@@ -224,5 +216,30 @@ class UserMessage extends ChatMessage {
     
     public void setMessage(String message) {
         this.message = message;
+    }
+    
+    /**
+     * Gets the JSON representation of this message
+     * @return A JSONObject containing all the message data
+     */
+    public JSONObject toJsonObject() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", getType() == TYPE_USER ? "USER" : "CATEGORISE");
+            json.put("category", category);
+            json.put("message", getMessage());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+    
+    @Override
+    public String toString() {
+        return "UserMessage{" +
+                "category='" + category + '\'' +
+                "type=" + type +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

@@ -306,6 +306,21 @@ class ShowInfoTemplate extends MsgTemplate {
     public List<String> getStars() { return stars; }
     public List<String> getPossibleDays() { return possibleDays; }
     public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
+
+    //tostring
+    @Override
+    public String toString() {
+        return "ShowInfoTemplate{" +
+                "name=" + name +
+                ", day=" + day +
+                ", topic=" + topic +
+                ", time=" + time +
+                ", cast=" + cast +
+                ", room=" + room +
+                ", duration=" + duration +
+                ", stars=" + stars +
+                '}';
+    }
 }
 
 /**
@@ -422,6 +437,20 @@ class BookingTemplate extends MsgTemplate {
     public String getTime() { return time; }
     public Person getPerson() { return person; }
     public List<String> getPossibleDays() { return possibleDays; }
+
+    //tostring
+    @Override
+
+    public String toString() {
+        return "BookingTemplate{" +
+                "showName='" + showName + '\'' +
+                ", room='" + room + '\'' +
+                ", day='" + day + '\'' +
+                ", time='" + time + '\'' +
+                ", person=" + person +
+                '}';
+    }
+
 }
 
 /**
@@ -464,6 +493,16 @@ class CancellationTemplate extends MsgTemplate {
     // Getters
     public String getReservationNumber() { return reservationNumber; }
     public String getPasscode() { return passcode; }
+
+    //tostring
+    @Override
+    public String toString() {
+        return "CancellationTemplate{" +
+                "reservationNumber='" + reservationNumber + '\'' +
+                ", passcode='" + passcode + '\'' +
+                '}';
+    }
+
 }
 
 /**
@@ -533,6 +572,18 @@ class DiscountTemplate extends MsgTemplate {
     public List<String> getAge() { return age; }
     public List<String> getDate() { return date; }
     public List<String> getPossibleAgeCategories() { return possibleAgeCategories; }
+
+    //tostring
+    @Override
+    public String toString() {
+        return "DiscountTemplate{" +
+                "showName=" + showName +
+                ", numberOfPeople=" + numberOfPeople +
+                ", age=" + age +
+                ", date=" + date +
+                ", possibleAgeCategories=" + possibleAgeCategories +
+                '}';
+    }
 }
 
 /**
@@ -596,4 +647,16 @@ class ReviewTemplate extends MsgTemplate {
     public int getStars() { return stars; }
     public String getReview() { return review; }
     public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
+
+    //tostring
+    @Override
+    public String toString() {
+        return "ReviewTemplate{" +
+                "reservationNumber='" + reservationNumber + '\'' +
+                ", passcode='" + passcode + '\'' +
+                ", stars=" + stars +
+                ", review='" + review + '\'' +
+                ", possibleStarRatings=" + possibleStarRatings +
+                '}';
+    }
 }

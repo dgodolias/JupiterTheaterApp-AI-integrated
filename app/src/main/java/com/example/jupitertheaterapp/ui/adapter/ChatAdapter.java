@@ -42,12 +42,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                     .inflate(R.layout.item_message_left, parent, false);
         }
         return new MessageViewHolder(view);
-    }
-
-    @Override
+    }    @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
+        
+        // Set the message text
         holder.messageTextView.setText(message.getMessage());
+        
+        // Ensure padding is consistent
+        holder.messageTextView.setPadding(10, 10, 10, 10);
 
         // Apply animation
         Animation animation = AnimationUtils.loadAnimation(

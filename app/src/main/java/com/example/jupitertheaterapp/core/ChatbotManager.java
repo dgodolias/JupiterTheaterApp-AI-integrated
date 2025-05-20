@@ -768,26 +768,44 @@ public class ChatbotManager {
                         ChatbotNode nextNode = currentNode.chooseNextNode();
                         if (nextNode != null) {
                             // Update the current node to the next one
-                            currentNode = nextNode;                        // Update the system message with the JSON response
+                            currentNode = nextNode;                            // Update the system message with the JSON response
                             boolean success = currentNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);                            Log.d(TAG, "System message updated: " + success + " for node: " + currentNode.getId());
 
-                            // Get the processed message to display
-                            String response = currentNode.getSystemMessage().getMessage();
+                            // Get both message1 and message2 from the node
+                            String message1 = currentNode.getMessage();
+                            String message2 = currentNode.getMessage2();
+                            
+                            // Combine message1 and message2 with a newline between them
+                            String combinedMessage = message1;
+                            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
+                                combinedMessage += "\n" + message2;
+                            }
+                            
                             int messageType = currentNode.getSystemMessage().getType();
 
                             // Debug logging
                             Log.d(TAG, "Using system message from node: " + currentNode.getId());
+                            Log.d(TAG, "Combined message: " + combinedMessage);
 
-                            responseCallback.onResponseReceived(response, messageType);
+                            responseCallback.onResponseReceived(combinedMessage, messageType);
                         } else {
                             // No matching node - use getResponseForNodeId as fallback
                             Log.d(TAG, "No matching node found for category: " + category + ", using fallback");                            // Create a temporary ChatbotNode to handle the message
                             ChatbotNode tempNode = new ChatbotNode("temp", "CATEGORISE", "", "", "", "");
                             tempNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);
                             
-                            // Use the message from the temporary node
-                            String response = tempNode.getSystemMessage().getMessage();
-                            responseCallback.onResponseReceived(response, ChatMessage.TYPE_SERVER);
+                            // Get both message1 and message2 from the temp node
+                            String message1 = tempNode.getMessage();
+                            String message2 = tempNode.getMessage2();
+                            
+                            // Combine message1 and message2 with a newline between them
+                            String combinedMessage = message1;
+                            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
+                                combinedMessage += "\n" + message2;
+                            }
+                            
+                            Log.d(TAG, "Combined fallback message: " + combinedMessage);
+                            responseCallback.onResponseReceived(combinedMessage, ChatMessage.TYPE_SERVER);
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Error processing server response", e);

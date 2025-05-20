@@ -528,102 +528,134 @@ public class ChatbotNode {
      * @param jsonResponse The JSON response from the server as a string
      * @param messageType The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
-     */
-    public boolean updateSystemMessageWithJson(String jsonResponse, int messageType) {
+     */    public boolean updateSystemMessageWithJson(String jsonResponse, int messageType) {
         try {
-            // Create a new SystemMessage with the JSON
-            this.systemMessage = ChatMessage.createMessage(jsonResponse, messageType);
+            // First, parse the JSON to extract category, error, and details
+            JSONObject jsonObj = new JSONObject(jsonResponse);
+            boolean hasDetails = jsonObj.has("details") && !jsonObj.isNull("details");
+            String category = jsonObj.optString("category", "unknown");
+            String errorMessage = jsonObj.has("error") && !jsonObj.isNull("error") ? jsonObj.getString("error") : null;
             
-            try {
-                // Parse the JSON to check if details is null
-                JSONObject jsonObj = new JSONObject(jsonResponse);
-                boolean hasDetails = jsonObj.has("details") && !jsonObj.isNull("details");
-                String category = jsonObj.optString("category", "unknown");
-                
-                // Set the category for this node
-                if (!category.isEmpty()) {
-                    this.category = category;
-                }
-                
-                // Create a basic message for message1
-                String basicMessage = "Server response for category: " + category;
+            // Set the category for this node
+            if (!category.isEmpty()) {
+                this.category = category;
+            }
+            
+            // Create a SystemMessage with the JSON response
+            SystemMessage sysMsg = new SystemMessage(jsonResponse, messageType, true);
+            sysMsg.setCategory(category);
+            
+            // Override the default message in SystemMessage with our original message
+            // This ensures systemMessage.getMessage() returns the proper template message
+            if (this.message1 != null && !this.message1.isEmpty()) {
+                sysMsg.setMessage(this.message1);
+            }
+            
+            // Update the systemMessage reference
+            this.systemMessage = sysMsg;
+            
+            // Preserve the original message1 (from conversation_tree.json)
+            // Only set a default if it doesn't already have a value
+            String basicMessage = this.message1;
+            if (basicMessage == null || basicMessage.isEmpty()) {
+                basicMessage = "Information about " + category;
                 this.message1 = basicMessage;
                 
-                // Only try to apply template if we have details or error
-                if (hasDetails || (jsonObj.has("error") && !jsonObj.isNull("error"))) {
-                    // Create or get template based on category from the response
-                    if (msgTemplate == null) {
-                        try {
-                            System.out.println("Creating template for category: " + category);
-                            msgTemplate = MsgTemplate.createTemplate(category);
-                        } catch (IllegalArgumentException e) {
-                            System.err.println("Failed to create template for category " + category + ": " + e.getMessage());
-                            // Create a default message
+                // Also update the SystemMessage
+                sysMsg.setMessage(basicMessage);
+            }
+            
+            // Only try to apply template if we have details or error
+            if (hasDetails || errorMessage != null) {
+                // Create or get template based on category from the response
+                if (msgTemplate == null) {
+                    try {
+                        System.out.println("Creating template for category: " + category);
+                        msgTemplate = MsgTemplate.createTemplate(category);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Failed to create template for category " + category + ": " + e.getMessage());
+                        // If we can't create a template, preserve message2 or use message1 as fallback
+                        if (this.message2 == null || this.message2.isEmpty()) {
                             this.message2 = basicMessage;
-                            return true;
                         }
+                        return true;
                     }
+                }
+                
+                // Apply template to the message2 field in the node
+                if (msgTemplate.valuesFromJson(jsonResponse)) {
+                    // Use message2 from the node if it exists as the template
+                    // This uses the message_2 from conversation_tree.json with placeholders
+                    String templateStr = this.message2;
                     
-                    // Apply template to the message2 field in the node
-                    if (msgTemplate.valuesFromJson(jsonResponse)) {
-                        // Choose appropriate template string based on category
-                        String templateStr = "Information for <category>: <details>";
-                        
-                        if (systemMessage instanceof SystemMessage) {
-                            SystemMessage sysMsg = (SystemMessage) systemMessage;
-                            if (sysMsg.getError() != null && !sysMsg.getError().isEmpty()) {
-                                templateStr = "Error: <e>";
-                            } else {
-                                // Create a more specific template based on category
-                                switch (category) {
-                                    case "ΚΡΑΤΗΣΗ":
-                                        templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
-                                        break;
-                                    case "ΑΚΥΡΩΣΗ":
-                                        templateStr = "Cancellation information for reservation <reservation_number>.";
-                                        break;
-                                    case "ΠΛΗΡΟΦΟΡΙΕΣ":
-                                        templateStr = "Information about show <n> on <day> at <time> in <room>.";
-                                        break;
-                                    case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-                                        templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
-                                        break;
-                                    case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-                                        templateStr = "Discount information for show <show_name> on <date>.";
-                                        break;
-                                    default:
-                                        // Use the default template
-                                        break;
-                                }
+                    // If message2 is empty or null, handle error specifically or use fallback templates based on category
+                    if (templateStr == null || templateStr.isEmpty()) {
+                        // Handle error case specifically with proper error message
+                        if (errorMessage != null && !errorMessage.isEmpty()) {
+                            // Use actual error message instead of placeholder
+                            templateStr = "Error: " + errorMessage;
+                        } else {
+                            // Create a more specific template based on category
+                            switch (category) {
+                                case "ΚΡΑΤΗΣΗ":
+                                    templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
+                                    break;
+                                case "ΑΚΥΡΩΣΗ":
+                                    templateStr = "Cancellation information for reservation <reservation_number>.";
+                                    break;
+                                case "ΠΛΗΡΟΦΟΡΙΕΣ":
+                                    templateStr = "Information about show <n> on <day> at <time> in <room>.";
+                                    break;
+                                case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+                                    templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
+                                    break;
+                                case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+                                    templateStr = "Discount information for show <show_name> on <date>.";
+                                    break;
+                                default:
+                                    templateStr = "Information for <category>: <details>";
+                                    break;
                             }
                         }
-                        
-                        // Process the template with values from our template object
-                        String processedMessage = msgTemplate.processTemplate(templateStr);
-                        this.message2 = processedMessage;
-                        
-                        System.out.println("TEMPLATE APPLIED: " + processedMessage);
-                        return true;
-                    } else {
-                        System.out.println("Failed to parse JSON for template values");
-                        this.message2 = basicMessage;
-                        return true;
                     }
+                    
+                    // Process the template with values from our template object
+                    String processedMessage = msgTemplate.processTemplate(templateStr);
+                    this.message2 = processedMessage;
+                    
+                    System.out.println("TEMPLATE APPLIED: " + processedMessage);
+                    return true;
                 } else {
-                    // If no details, just use the message as is without applying a template
-                    System.out.println("No details in JSON response, skipping template application");
-                    
-                    // Create a default message for this category
-                    String defaultMessage = "Information about " + category;
-                    this.message1 = defaultMessage;
-                    this.message2 = defaultMessage;
-                    
+                    System.out.println("Failed to parse JSON for template values");
+                    // Keep the original message2 if it exists, otherwise use message1
+                    if (this.message2 == null || this.message2.isEmpty()) {
+                        this.message2 = basicMessage;
+                    }
                     return true;
                 }
-            } catch (JSONException e) {
-                System.err.println("Error parsing JSON: " + e.getMessage());
-                return false;
+            } else {
+                // If no details or error, just use the message as is without applying a template
+                System.out.println("No details in JSON response, skipping template application");
+                
+                // Preserve existing message1 and message2
+                if (this.message2 == null || this.message2.isEmpty()) {
+                    this.message2 = basicMessage;
+                }
+                
+                return true;
             }
+        } catch (JSONException e) {
+            System.err.println("Error parsing JSON: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Try to preserve existing messages when processing fails
+            if (this.message1 != null && !this.message1.isEmpty()) {
+                if (this.message2 == null || this.message2.isEmpty()) {
+                    this.message2 = this.message1;
+                }
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             System.err.println("Error updating system message with JSON: " + e.getMessage());
             e.printStackTrace();
