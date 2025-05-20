@@ -18,7 +18,6 @@ import com.example.jupitertheaterapp.R;
 import com.example.jupitertheaterapp.core.ChatbotManager;
 import com.example.jupitertheaterapp.model.ChatMessage;
 import com.example.jupitertheaterapp.ui.adapter.ChatAdapter;
-import com.example.jupitertheaterapp.util.Client;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private ChatAdapter chatAdapter;
     private LinearLayout inputLayout;
-    private Client client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +44,12 @@ public class MainActivity extends AppCompatActivity {
         // Set up RecyclerView
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatAdapter = new ChatAdapter(new ArrayList<>());
-        messagesRecyclerView.setAdapter(chatAdapter);
-
-        chatbotManager = new ChatbotManager(this); // Pass context to constructor        // Initialize client with chatbotManager
-        client = new Client(chatbotManager);
+        messagesRecyclerView.setAdapter(chatAdapter);        // Create the chatbot manager (now handles its own client)
+        chatbotManager = new ChatbotManager(this);
 
         // Print the conversation tree structure to the log for debugging
-        chatbotManager.printTree();
-
-        // Display initial message
-        addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);
-
-        // Set up send button click listener
-        sendButton.setOnClickListener(v -> {
+        // chatbotManager.printTree();        // Display initial message
+        addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);        sendButton.setOnClickListener(v -> {
             String userMessage = userInputEditText.getText().toString().trim();
             if (!userMessage.isEmpty()) {
                 // Display user message
@@ -67,73 +58,62 @@ public class MainActivity extends AppCompatActivity {
                 // Clear input field
                 userInputEditText.setText("");
 
-                if (chatbotManager.shouldUseServer()) {
-                    // Get response from server
-                    client.sendMessage(userMessage, new Client.ServerResponseCallback() {
-                        @Override
-                        public void onServerResponse(String nodeId) {
-                            // Get the full response for the node ID
-                            try {
-                                String response = chatbotManager.getResponseForNodeId(nodeId);
-                                addMessage(response, ChatMessage.TYPE_SERVER);
-                            } catch (Exception e) {
-                                String fallbackResponse = chatbotManager.getLocalResponse(userMessage);
-                                addMessage(fallbackResponse, ChatMessage.TYPE_BOT);
-                            }
-                        }
+                // For debugging, print the current node before processing
+                chatbotManager.printCurrentNode();
 
-                        @Override
-                        public void onError(String errorMessage) {
-                            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                            // Fallback to local response
-                            String fallbackResponse = chatbotManager.getLocalResponse(userMessage);
-                            addMessage(fallbackResponse, ChatMessage.TYPE_BOT);
-                        }
-                    });
-                } else {
-                    // Get local response
-                    String response = chatbotManager.getLocalResponse(userMessage);
-                    addMessage(response, ChatMessage.TYPE_BOT);
-                }
+                // Get response from chatbot manager (handles both local and server logic internally)
+                chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {
+                    @Override
+                    public void onResponseReceived(String response, int messageType) {
+                        // Add the response to the chat
+                        addMessage(response, messageType);
+                        
+                        // For debugging, print the node after processing
+                        chatbotManager.printCurrentNode();
+                    }
+                });
             }
-        });        // Add long press listener to show debug info
+        });// Add long press listener to show debug info
         sendButton.setOnLongClickListener(v -> {
             // Show a dialog to choose what to display
-            String[] options = {"Full Tree Structure", "Conversation Node List"};
-            
+            String[] options = { "Full Tree Structure", "Conversation Node List" };
+
             new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Debug Display Options")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        displayTreeStructure();
-                    } else if (which == 1) {
-                        displayConversationNodeList();
-                    }
-                })
-                .show();
-            
+                    .setTitle("Debug Display Options")
+                    .setItems(options, (dialog, which) -> {                        if (which == 0) {
+                            displayTreeStructure();
+                        } else if (which == 1) {
+                            displayConversationNodeList();
+                        }
+                    })
+                    .show();
+
             return true;
         });
 
         // Properly handle keyboard visibility with WindowInsets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
+            Insets insets = windowInsets
+                    .getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
 
             // Update the padding of the content view
             v.setPadding(insets.left, insets.top, insets.right, 0);
 
             // Update the margin of the input layout to stay above keyboard
-            androidx.constraintlayout.widget.ConstraintLayout.LayoutParams params =
-                    (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams) inputLayout.getLayoutParams();
+            androidx.constraintlayout.widget.ConstraintLayout.LayoutParams params = (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams) inputLayout
+                    .getLayoutParams();
             params.bottomMargin = insets.bottom;
             inputLayout.setLayoutParams(params);
 
             return WindowInsetsCompat.CONSUMED;
         });
 
-        // For testing, enable server responses (remove this line to use local responses)
+        // For testing, enable server responses (remove this line to use local
+        // responses)
         // chatbotManager.setUseServerForResponses(true);
-    }    private void addMessage(String message, int type) {
+    }
+
+    private void addMessage(String message, int type) {
         // Use factory method to create proper message subtype
         ChatMessage chatMessage = ChatMessage.createMessage(message, type);
         chatAdapter.addMessage(chatMessage);
@@ -162,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Displays the conversation as a list of nodes with system and user messages.
-     * This shows only the conversation path that has been traversed, not the entire tree.
+     * This shows only the conversation path that has been traversed, not the entire
+     * tree.
      */
     public void displayConversationNodeList() {
         String nodeList = chatbotManager.getConversationNodeList();

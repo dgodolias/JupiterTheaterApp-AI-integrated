@@ -192,19 +192,28 @@ public class Client {
                             if (serverResponse != null) {                                     try {
                                     // Parse the JSON response
                                     JSONObject jsonResponse = new JSONObject(serverResponse);
-                                      // Debug all fields in the JSON response
-                                    System.out.println("PARSING SERVER RESPONSE: " + jsonResponse.toString());
-                                    System.out.println("JSON FIELDS: " + jsonResponse.keys());                                         // Save the server response to apply templates to message_2 fields
-                                         ChatbotNode currentNode = chatbotManager.getCurrentNode();
-                                         if (currentNode != null && jsonResponse.length() > 1) {
-                                             System.out.println("APPLYING TEMPLATE TO NODE: " + currentNode.getId());
-                                             
-                                             // Get the appropriate default template based on the node's category
-                                             String defaultTemplate = getDefaultTemplateForCategory(currentNode.getCategory());
-                                                 
-                                             // Apply the server response data to the node's message_2 template
-                                             currentNode.applyTemplateToMessage2(serverResponse, defaultTemplate);
-                                         }
+                                      // Debug all fields in the JSON response                                    System.out.println("PARSING SERVER RESPONSE: " + jsonResponse.toString());
+                                    System.out.println("JSON FIELDS: " + jsonResponse.keys());                                         
+                                    
+                                    // Save the server response to apply templates to message_2 fields
+                                    ChatbotNode currentNode = chatbotManager.getCurrentNode();
+                                    if (currentNode != null) {
+                                        System.out.println("APPLYING TEMPLATE TO NODE: " + currentNode.getId() + " (" + currentNode.getType() + ")");
+                                        
+                                        // Get the appropriate default template based on the node's category
+                                        String defaultTemplate = getDefaultTemplateForCategory(currentNode.getCategory());
+                                        
+                                        // For EXTRACT requests or responses with template data
+                                        if (currentNode.getType().equals("EXTRACT") || serverResponse.contains("value")) {
+                                            System.out.println("Processing template data for " + currentNode.getCategory());
+                                            
+                                            // Apply the server response data to the node's message_2 template
+                                            boolean success = currentNode.applyTemplateToMessage2(serverResponse, defaultTemplate);
+                                            System.out.println("Template application " + (success ? "succeeded" : "failed"));
+                                        } else {
+                                            System.out.println("No template data or not an EXTRACT node");
+                                        }
+                                    }
                                       
                                     // Extract the category field
                                     if (jsonResponse.has("category")) {
