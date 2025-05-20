@@ -54,9 +54,7 @@ public abstract class MsgTemplate {
             return supplier.get();
         }
         throw new IllegalArgumentException("Unknown template type: " + id);
-    }
-    
-    /**
+    }      /**
      * Fills the template fields from a JSON string
      * @param jsonString JSON string to parse
      * @return true if parsing was successful, false otherwise
@@ -64,10 +62,34 @@ public abstract class MsgTemplate {
     public boolean valuesFromJson(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
+            
+            // Check for error first
+            if (jsonObject.has("error") && !jsonObject.isNull("error")) {
+                String error = jsonObject.getString("error");
+                System.out.println("Server returned error: " + error);
+                // Still return true since we might want to show the error message
+                return true;
+            }
+            
+            // Try to populate from details section if it exists and is not null
+            if (jsonObject.has("details") && !jsonObject.isNull("details")) {
+                return populateFromDetails(jsonObject);
+            }
+            
+            // If there are no details or details is null, still return true
+            // This allows messages without details to be shown properly
+            if (jsonObject.has("details") && jsonObject.isNull("details")) {
+                System.out.println("Details is null, skipping template population");
+                return true;
+            }
+            
+            // Fall back to populating from the entire object
             return populateFromJsonObject(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
+            System.out.println("Error parsing JSON: " + e.getMessage());
+            // Return true anyway so the message can still be shown
+            return true;
         }
     }
     
@@ -76,8 +98,48 @@ public abstract class MsgTemplate {
      * @param jsonObject JSONObject to extract values from
      * @return true if population was successful, false otherwise
      */
-    protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;
+    protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;    /**
+     * Extracts details from a JSON response
+     * @param jsonObject The JSON object containing the response
+     * @return JSONObject with the extracted details or null if not found or null
+     */
+    protected JSONObject extractDetails(JSONObject jsonObject) throws JSONException {
+        if (jsonObject.has("details") && !jsonObject.isNull("details")) {
+            Object detailsObj = jsonObject.get("details");
+            if (detailsObj instanceof JSONObject) {
+                return (JSONObject) detailsObj;
+            } else {
+                System.out.println("Details is not a JSONObject: " + detailsObj);
+                return null;
+            }
+        }
+        return null;
+    }
       /**
+     * Populates the template from the details section of the response
+     * @param jsonObject The complete JSON response object
+     * @return true if successfully populated, false otherwise
+     */
+    protected boolean populateFromDetails(JSONObject jsonObject) throws JSONException {
+        try {
+            // Check if details exist and are not null
+            if (jsonObject.has("details") && !jsonObject.isNull("details")) {
+                JSONObject details = jsonObject.getJSONObject("details");
+                return populateFromJsonObject(details);
+            }
+            
+            // If no details or details is null, just return true without trying to populate
+            // This allows the message to be shown even without template data
+            System.out.println("No details found in JSON, skipping template population");
+            return true;
+        } catch (JSONException e) {
+            System.out.println("Error extracting details: " + e.getMessage());
+            // Just return true since we can still show a message even without details
+            return true;
+        }
+    }
+    
+    /**
      * Helper methods for JSON extraction
      */
     protected String extractStringValue(JSONObject fieldObject) throws JSONException {

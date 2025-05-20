@@ -10,36 +10,32 @@ public class ChatbotNode {
     private String id; // Now in lowercase format like "kratisi", "kratisi1", etc.
     private String category; // New field for template matching like "ΚΡΑΤΗΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", etc.
     private String type; // CATEGORISE or EXTRACT
-    // Legacy message fields - kept for backward compatibility
-    private String message;
-    private String message_1;
-    private String message_2;
 
-    // New message fields for back-and-forth interaction
     private ChatMessage systemMessage; // Message from the system (bot or server)
     private ChatMessage userMessage; // Message from the user (can be null for root node)
+    
+    // Node-specific message fields that were previously in SystemMessage
+    private String message1; // Primary message
+    private String message2; // Alternative/formatted message for display
 
     private String content;
     private String fallback;
     private List<ChatbotNode> children;
     private ChatbotNode parent;
     private List<String> pendingChildIds; // For resolving references
-    private MsgTemplate msgTemplate;
-
-    /**
+    private MsgTemplate msgTemplate;    /**
      * Legacy constructor for backward compatibility
      */
     public ChatbotNode(String id, String type, String message, String content, String fallback) {
         this.id = id;
         this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
-        // Legacy fields
-        this.message = message;
-        this.message_1 = message;
-        this.message_2 = message;
 
-        // New fields
+        // Create system message with default content
         this.systemMessage = new SystemMessage(message, ChatMessage.TYPE_BOT);
+        // Store message content in the node fields
+        this.message1 = message;
+        this.message2 = message;
         // User message can be null for system-initiated nodes
         this.userMessage = null;
 
@@ -50,19 +46,18 @@ public class ChatbotNode {
     }
 
     /**
-     * Legacy constructor with separate message_1 and message_2 fields
+     * Constructor with separate message_1 and message_2 fields
      */
     public ChatbotNode(String id, String type, String message_1, String message_2, String content, String fallback) {
         this.id = id;
         this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
-        // Legacy fields
-        this.message = message_1; // For backward compatibility
-        this.message_1 = message_1;
-        this.message_2 = message_2;
 
-        // New fields
+        // Create system message with default content (message_1)
         this.systemMessage = new SystemMessage(message_1, ChatMessage.TYPE_BOT);
+        // Store message content in the node fields
+        this.message1 = message_1;
+        this.message2 = message_2;
         // User message can be null for system-initiated nodes
         this.userMessage = null;
 
@@ -70,10 +65,8 @@ public class ChatbotNode {
         this.fallback = fallback;
         this.children = new ArrayList<>();
         this.pendingChildIds = new ArrayList<>();
-    }
-
-    /**
-     * New constructor that explicitly takes system and user messages
+    }    /**
+     * Constructor that explicitly takes system and user messages
      */
     public ChatbotNode(String id, String type, ChatMessage systemMessage, ChatMessage userMessage,
             String content, String fallback) {
@@ -81,14 +74,26 @@ public class ChatbotNode {
         this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
 
-        // Set new fields
+        // Set messages
         this.systemMessage = systemMessage;
         this.userMessage = userMessage;
-
-        // Set legacy fields for backward compatibility
-        this.message = systemMessage.getMessage();
-        this.message_1 = systemMessage.getMessage();
-        this.message_2 = systemMessage.getMessage();
+        
+        // Set message fields with default values
+        if (systemMessage != null) {
+            this.message1 = systemMessage.getMessage();
+            this.message2 = systemMessage.getMessage();
+            
+            // If it's a SystemMessage, we can check for JSON data and apply template
+            if (systemMessage instanceof SystemMessage) {
+                JSONObject details = ((SystemMessage) systemMessage).getDetails();
+                if (details != null) {
+                    // Apply template later if needed
+                }
+            }
+        } else {
+            this.message1 = "";
+            this.message2 = "";
+        }
 
         this.content = content;
         this.fallback = fallback;
@@ -126,28 +131,37 @@ public class ChatbotNode {
 
     public String getType() {
         return type;
-    }
-
-    public String getMessage() {
-        // Default to message_1 if available for backward compatibility
-        return message_1 != null ? message_1 : message;
+    }    public String getMessage() {
+        // Return message1 from the node directly
+        return message1 != null ? message1 : "";
     }
 
     /**
      * Gets message_2 (the alternative message format, often all caps)
      */
     public String getMessage2() {
-        return message_2 != null ? message_2 : getMessage();
+        // Return message2 from the node directly
+        return message2 != null ? message2 : "";
+    }
+    
+    /**
+     * Sets the first message
+     */
+    public void setMessage1(String message1) {
+        this.message1 = message1;
+    }
+    
+    /**
+     * Sets the second message
+     */
+    public void setMessage2(String message2) {
+        this.message2 = message2;
     }
 
     /**
      * Gets the system message associated with this node
      */
     public ChatMessage getSystemMessage() {
-        // If systemMessage hasn't been set yet, create it from legacy fields
-        if (systemMessage == null) {
-            systemMessage = new SystemMessage(getMessage(), ChatMessage.TYPE_BOT);
-        }
         return systemMessage;
     }
 
@@ -156,9 +170,6 @@ public class ChatbotNode {
      */
     public void setSystemMessage(ChatMessage systemMessage) {
         this.systemMessage = systemMessage;
-        // Update legacy fields for compatibility
-        this.message = systemMessage.getMessage();
-        this.message_1 = systemMessage.getMessage();
     }
 
     /**
@@ -399,45 +410,80 @@ public class ChatbotNode {
         System.out.println("DEBUG: No exact category match found for server response: " + userMessageText);
         return null;
     }// NLP and keyword matching methods have been removed since node selection is
-     // handled by the server
-
-    /**
-     * Updates message_2 by processing it as a template with data from the node's
-     * MsgTemplate.
-     * If message_2 is empty or null, it will use the provided defaultTemplate
-     * instead.
-     * 
-     * @param serverResponseJson JSON string containing server response data
-     * @param defaultTemplate    Default template to use if message_2 is empty
-     * @return true if template was successfully applied, false otherwise
-     */
+     // handled by the server /**
     public boolean applyTemplateToMessage2(String serverResponseJson, String defaultTemplate) {
+        if (!(systemMessage instanceof SystemMessage)) {
+            System.err.println("Cannot apply template - systemMessage is not an instance of SystemMessage");
+            return false;
+        }
+        
+        SystemMessage sysMsg = (SystemMessage) systemMessage;
+        
+        // Create or get template based on category from the response
         if (msgTemplate == null) {
-            System.out.println("WARNING: No template found for node " + id);
-            // Create a template based on the node's category
             try {
-                msgTemplate = MsgTemplate.createTemplate(category);
-                System.out.println("Created new template for category: " + category);
+                // Use the category from the SystemMessage (from server response) if available
+                String templateCategory = sysMsg.getCategory();
+                if (templateCategory == null || templateCategory.isEmpty()) {
+                    templateCategory = this.category;  // Fall back to node category
+                }
+                
+                System.out.println("Creating template for category: " + templateCategory);
+                msgTemplate = MsgTemplate.createTemplate(templateCategory);
             } catch (Exception e) {
                 System.err.println("Failed to create template for category " + category + ": " + e.getMessage());
+                e.printStackTrace();
                 return false;
             }
         }
 
         try {
-            System.out.println("Applying template for category: " + category);
-            System.out.println("Server response: " + serverResponseJson);
-
+            System.out.println("Applying template for category: " + sysMsg.getCategory());
+            
             // Parse the JSON response from the server
             if (!msgTemplate.valuesFromJson(serverResponseJson)) {
                 System.out.println("Failed to parse server response JSON for template values");
                 return false;
             }
 
-            // Choose the template (either message_2 if it exists or the default)
-            String templateStr = (message_2 != null && !message_2.isEmpty() && message_2.contains("<"))
-                    ? message_2
-                    : defaultTemplate;
+            String templateStr;
+            
+            // If there's an error in the server response, prioritize showing that
+            if (sysMsg.getError() != null && !sysMsg.getError().isEmpty()) {
+                templateStr = "Error: <error>";
+            }
+            // If message2 already has placeholders, use it as the template
+            else if (message2 != null && !message2.isEmpty() && message2.contains("<")) {
+                templateStr = message2;
+            }
+            // Otherwise use the provided default template
+            else {
+                templateStr = defaultTemplate;
+                
+                // If we have details, create a more specific template based on category
+                if (sysMsg.getDetails() != null) {
+                    switch (sysMsg.getCategory()) {
+                        case "ΚΡΑΤΗΣΗ":
+                            templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
+                            break;
+                        case "ΑΚΥΡΩΣΗ":
+                            templateStr = "Cancellation information for reservation <reservation_number>.";
+                            break;
+                        case "ΠΛΗΡΟΦΟΡΙΕΣ":
+                            templateStr = "Information about show <name> on <day> at <time> in <room>.";
+                            break;
+                        case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+                            templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
+                            break;
+                        case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+                            templateStr = "Discount information for show <show_name> on <date>.";
+                            break;
+                        default:
+                            // Use the provided default
+                            break;
+                    }
+                }
+            }
 
             if (templateStr == null || templateStr.isEmpty()) {
                 System.out.println("WARNING: No template string available for node " + id);
@@ -447,42 +493,141 @@ public class ChatbotNode {
             System.out.println("Using template string: " + templateStr);
 
             // Process the template with values from our template object
-            String processedMessage = msgTemplate.processTemplate(templateStr);
+            String processedMessage = msgTemplate.processTemplate(templateStr);            // Update the node's message2 with the processed template
+            this.message2 = processedMessage;
 
-            // Update message_2 with the processed template
-            message_2 = processedMessage;
-
-            // Also update the system message for consistency
-            if (systemMessage != null) {
-                systemMessage = new SystemMessage(message_2, ChatMessage.TYPE_BOT);
-            }
-
-            System.out.println("TEMPLATE APPLIED: " + message_2);
+            System.out.println("TEMPLATE APPLIED: " + processedMessage);
             return true;
         } catch (Exception e) {
             System.err.println("Error applying template: " + e.getMessage());
             e.printStackTrace();
             return false;
-        }
-    } // overrides toString method and shows all the fields of the class
-
+        }    }
+    
+    // Overrides toString method and shows all the fields of the class
     @Override
     public String toString() {
         return "ChatbotNode{\n" +
                 "  id='" + id + '\'' + ",\n" +
                 "  category='" + category + '\'' + ",\n" +
                 "  type='" + type + '\'' + ",\n" +
-                "  message='" + message + '\'' + ",\n" +
-                "  message_1='" + message_1 + '\'' + ",\n" +
-                "  message_2='" + message_2 + '\'' + ",\n" +
+                "  message1='" + message1 + '\'' + ",\n" +
+                "  message2='" + message2 + '\'' + ",\n" +
                 "  systemMessage=" + systemMessage + ",\n" +
                 "  userMessage=" + userMessage + ",\n" +
                 "  content='" + content + '\'' + ",\n" +
                 "  fallback='" + fallback + '\'' + ",\n" +
                 "  childrenCount=" + (children != null ? children.size() : 0) + ",\n" +
                 "  parent=" + (parent != null ? parent.getId() : "null") + ",\n" +
-                "  pendingChildIds=" + pendingChildIds + "\n" +
+                "  pendingChildIds=" + pendingChildIds + ",\n" +
                 "  msgTemplate=" + (msgTemplate != null ? msgTemplate.toString() : "null") + "\n" +
                 '}';
+    }/**
+     * Updates the system message with a JSON response from the server
+     * 
+     * @param jsonResponse The JSON response from the server as a string
+     * @param messageType The type of message (BOT or SERVER)
+     * @return True if successful, false otherwise
+     */
+    public boolean updateSystemMessageWithJson(String jsonResponse, int messageType) {
+        try {
+            // Create a new SystemMessage with the JSON
+            this.systemMessage = ChatMessage.createMessage(jsonResponse, messageType);
+            
+            try {
+                // Parse the JSON to check if details is null
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                boolean hasDetails = jsonObj.has("details") && !jsonObj.isNull("details");
+                String category = jsonObj.optString("category", "unknown");
+                
+                // Set the category for this node
+                if (!category.isEmpty()) {
+                    this.category = category;
+                }
+                
+                // Create a basic message for message1
+                String basicMessage = "Server response for category: " + category;
+                this.message1 = basicMessage;
+                
+                // Only try to apply template if we have details or error
+                if (hasDetails || (jsonObj.has("error") && !jsonObj.isNull("error"))) {
+                    // Create or get template based on category from the response
+                    if (msgTemplate == null) {
+                        try {
+                            System.out.println("Creating template for category: " + category);
+                            msgTemplate = MsgTemplate.createTemplate(category);
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Failed to create template for category " + category + ": " + e.getMessage());
+                            // Create a default message
+                            this.message2 = basicMessage;
+                            return true;
+                        }
+                    }
+                    
+                    // Apply template to the message2 field in the node
+                    if (msgTemplate.valuesFromJson(jsonResponse)) {
+                        // Choose appropriate template string based on category
+                        String templateStr = "Information for <category>: <details>";
+                        
+                        if (systemMessage instanceof SystemMessage) {
+                            SystemMessage sysMsg = (SystemMessage) systemMessage;
+                            if (sysMsg.getError() != null && !sysMsg.getError().isEmpty()) {
+                                templateStr = "Error: <e>";
+                            } else {
+                                // Create a more specific template based on category
+                                switch (category) {
+                                    case "ΚΡΑΤΗΣΗ":
+                                        templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
+                                        break;
+                                    case "ΑΚΥΡΩΣΗ":
+                                        templateStr = "Cancellation information for reservation <reservation_number>.";
+                                        break;
+                                    case "ΠΛΗΡΟΦΟΡΙΕΣ":
+                                        templateStr = "Information about show <n> on <day> at <time> in <room>.";
+                                        break;
+                                    case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
+                                        templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
+                                        break;
+                                    case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
+                                        templateStr = "Discount information for show <show_name> on <date>.";
+                                        break;
+                                    default:
+                                        // Use the default template
+                                        break;
+                                }
+                            }
+                        }
+                        
+                        // Process the template with values from our template object
+                        String processedMessage = msgTemplate.processTemplate(templateStr);
+                        this.message2 = processedMessage;
+                        
+                        System.out.println("TEMPLATE APPLIED: " + processedMessage);
+                        return true;
+                    } else {
+                        System.out.println("Failed to parse JSON for template values");
+                        this.message2 = basicMessage;
+                        return true;
+                    }
+                } else {
+                    // If no details, just use the message as is without applying a template
+                    System.out.println("No details in JSON response, skipping template application");
+                    
+                    // Create a default message for this category
+                    String defaultMessage = "Information about " + category;
+                    this.message1 = defaultMessage;
+                    this.message2 = defaultMessage;
+                    
+                    return true;
+                }
+            } catch (JSONException e) {
+                System.err.println("Error parsing JSON: " + e.getMessage());
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println("Error updating system message with JSON: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private static final String TAG = "Client";
-    private String serverHost = "192.168.1.18";  // Default from server logs
-    private int serverPort = 65432;  // Default port
+    private String serverHost = "192.168.1.18"; // Default from server logs
+    private int serverPort = 65432; // Default port
     private ChatbotManager chatbotManager;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -38,10 +38,9 @@ public class Client {
         this.chatbotManager = chatbotManager;
         // Start the persistent connection
         connect();
-    }
+    }    public interface ServerResponseCallback {
+        void onServerResponse(String category, String fullJsonResponse);
 
-    public interface ServerResponseCallback {
-        void onServerResponse(String nodeId);
         void onError(String errorMessage);
     }
 
@@ -94,13 +93,13 @@ public class Client {
         try {
             // Get current node from ChatbotManager
             ChatbotNode node = chatbotManager.getCurrentNode();
-            
+
             // Use the node's createRequestJson method to generate the JSON object
             JSONObject jsonRequest = node.createRequestJson(userMessage);
-            
+
             // Send the request directly
             sendJsonRequest(jsonRequest, callback);
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error creating or sending request", e);
             mainHandler.post(() -> callback.onError("Error processing message: " + e.getMessage()));
@@ -114,14 +113,14 @@ public class Client {
         JSONObject json = new JSONObject();
         try {
             json.put("id", node.getId());
-            json.put("category", node.getCategory());         // Include category field
+            json.put("category", node.getCategory()); // Include category field
             json.put("type", node.getType());
-            json.put("message", node.getMessage());           // Using primary message
-            json.put("message_1", node.getMessage());         // Including message_1 explicitly
-            json.put("message_2", node.getMessage2());        // Including message_2 explicitly
+            json.put("message", node.getMessage()); // Using primary message
+            json.put("message_1", node.getMessage()); // Including message_1 explicitly
+            json.put("message_2", node.getMessage2()); // Including message_2 explicitly
             json.put("content", node.getContent());
             json.put("fallback", node.getFallback());
-            
+
             // Print the JSON object for debugging
             System.out.println("NODE CONVERTED TO JSON: " + json.toString());
         } catch (JSONException e) {
@@ -153,7 +152,7 @@ public class Client {
             if (parentNode != null) {
                 return parentNode.getCategory();
             }
-            
+
             return currentCategory;
         } catch (JSONException e) {
             Log.e(TAG, "Error getting parent node category", e);
@@ -161,7 +160,8 @@ public class Client {
         }
     }
 
-    // Methods categorizeMessage and extractFromMessage have been replaced by using ChatbotNode.createRequestJson
+    // Methods categorizeMessage and extractFromMessage have been replaced by using
+    // ChatbotNode.createRequestJson
 
     /**
      * Sends the JSON request to the server
@@ -175,12 +175,12 @@ public class Client {
 
         new Thread(() -> {
             try {
-                if (out != null && socket != null && !socket.isClosed()) {                         // Send JSON request to server
+                if (out != null && socket != null && !socket.isClosed()) { // Send JSON request to server
                     String requestStr = jsonRequest.toString();
                     out.println(requestStr);
                     Log.d(TAG, "Sent to server: " + requestStr);
                     // Add detailed JSON print for debugging
-                    System.out.println("JSON SENT TO SERVER: " + requestStr);                         // Receive response from server
+                    System.out.println("JSON SENT TO SERVER: " + requestStr); // Receive response from server
                     if (in != null) {
                         final String serverResponse = in.readLine();
                         Log.d(TAG, "Received from server: " + serverResponse);
@@ -189,43 +189,20 @@ public class Client {
 
                         // Post callback to main thread
                         mainHandler.post(() -> {
-                            if (serverResponse != null) {                                     try {
+                            if (serverResponse != null) {
+                                try {
                                     // Parse the JSON response
                                     JSONObject jsonResponse = new JSONObject(serverResponse);
-                                      // Debug all fields in the JSON response                                    System.out.println("PARSING SERVER RESPONSE: " + jsonResponse.toString());
-                                    System.out.println("JSON FIELDS: " + jsonResponse.keys());                                         
-                                    
-                                    // Save the server response to apply templates to message_2 fields
-                                    ChatbotNode currentNode = chatbotManager.getCurrentNode();
-                                    if (currentNode != null) {
-                                        System.out.println("APPLYING TEMPLATE TO NODE: " + currentNode.getId() + " (" + currentNode.getType() + ")");
-                                        
-                                        // Get the appropriate default template based on the node's category
-                                        String defaultTemplate = getDefaultTemplateForCategory(currentNode.getCategory());
-                                        
-                                        // For EXTRACT requests or responses with template data
-                                        if (currentNode.getType().equals("EXTRACT") || serverResponse.contains("value")) {
-                                            System.out.println("Processing template data for " + currentNode.getCategory());
-                                            
-                                            // Apply the server response data to the node's message_2 template
-                                            boolean success = currentNode.applyTemplateToMessage2(serverResponse, defaultTemplate);
-                                            System.out.println("Template application " + (success ? "succeeded" : "failed"));
-                                        } else {
-                                            System.out.println("No template data or not an EXTRACT node");
-                                        }
-                                    }
-                                      
+                                    // Debug all fields in the JSON response System.out.println("PARSING SERVER
+                                    // RESPONSE: " + jsonResponse.toString());
+                                    System.out.println("JSON FIELDS: " + jsonResponse.keys());                                    // Simply pass the server response to the callback
+                                    // No template processing here - that will be done in ChatbotManager
+
                                     // Extract the category field
                                     if (jsonResponse.has("category")) {
                                         String category = jsonResponse.getString("category");
-                                        System.out.println("CATEGORY FROM SERVER: " + category);
-
-                                        // Check if category is a valid category
-                                        if (isValidNodeId(category)) {
-                                            callback.onServerResponse(category);
-                                        } else {
-                                            callback.onError("Category '" + category + "' is not a valid category");
-                                        }
+                                        System.out.println("CATEGORY FROM SERVER: " + category);                                            // Pass both the category and the full JSON response to the callback handler
+                                            callback.onServerResponse(category, serverResponse);
                                     } else {
                                         callback.onError("Server response missing 'category' field");
                                     }
@@ -287,41 +264,5 @@ public class Client {
         }
         closeConnection();
         Log.d(TAG, "Client disconnected");
-    }
-
-    private boolean isValidNodeId(String category) {
-        // These are now categories, not IDs
-        String[] validCategories = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
-
-        for (String validCategory : validCategories) {
-            if (validCategory.equals(category)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Gets a default template string based on the category
-     * @param category The category to get a template for
-     * @return A default template string with placeholders
-     */
-    private String getDefaultTemplateForCategory(String category) {
-        switch (category) {
-            case "ΚΡΑΤΗΣΗ":
-                return "Επιβεβαίωση κράτησης για: <show_name> στην αίθουσα <room>, ημέρα <day> και ώρα <time>. " +
-                       "Όνομα: <person_name>, Ηλικία: <person_age>, Θέση: <person_seat>. Θέλετε να προχωρήσετε;";
-            case "ΑΚΥΡΩΣΗ":
-                return "Ακύρωση κράτησης με αριθμό <reservation_number>. Παρακαλώ επιβεβαιώστε με τον κωδικό <passcode>.";
-            case "ΠΛΗΡΟΦΟΡΙΕΣ":
-                return "Πληροφορίες για την παράσταση \"<name>\": Παίζεται στην <room> κάθε <day> στις <time>. " +
-                       "Συμμετέχουν: <cast>. Διάρκεια: <duration> λεπτά. Αξιολόγηση: <stars>/5.";
-            case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-                return "Η παράσταση \"<name>\" έχει μέση αξιολόγηση <stars>/5 από τους θεατές μας.";
-            case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-                return "Προσφορά για την παράσταση \"<show_name>\": <discount_percentage>% έκπτωση με τον κωδικό <discount_code>.";
-            default:
-                return "";
-        }
-    }
+    }    // Template handling has been moved to ChatbotNode class
 }

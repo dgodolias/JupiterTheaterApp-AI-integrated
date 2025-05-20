@@ -29,7 +29,6 @@ public class ChatbotManager {
     private ChatbotNode rootNode; // Root node of conversation tree
     private Map<String, ChatbotNode> nodeMap;
     private ChatbotNode currentNode;
-    private boolean useServerForResponses = true;
     private ConversationState conversationState;
     private Client client; // Client for server communications
 
@@ -39,7 +38,7 @@ public class ChatbotManager {
         Log.d(TAG, "Conversation State: ");
         Log.d(TAG, conversationState.getCurrentStateAsString());
         loadConversationTree(context);
-        
+
         // Initialize the client for server communications
         client = new Client(this);
     }
@@ -70,32 +69,36 @@ public class ChatbotManager {
         String content = jsonNode.optString("content", "");
         String fallback = jsonNode.optString("fallback", "I didn't understand that.");
 
-        //Log.d(TAG, "Processing node: " + id + ", category: " + category + ", type: " + type);
+        // Log.d(TAG, "Processing node: " + id + ", category: " + category + ", type: "
+        // + type);
 
         // Log the children array for this node
         if (jsonNode.has("children")) {
             Object childrenObj = jsonNode.get("children");
             if (childrenObj instanceof JSONArray) {
                 JSONArray childArray = (JSONArray) childrenObj;
-                //Log.d(TAG, "Node " + id + " has " + childArray.length() + " children in JSON");
+                // Log.d(TAG, "Node " + id + " has " + childArray.length() + " children in
+                // JSON");
 
                 for (int i = 0; i < childArray.length(); i++) {
                     Object childObj = childArray.get(i);
                     if (childObj instanceof JSONObject) {
                         JSONObject childJson = (JSONObject) childObj;
-                        //Log.d(TAG, "  Child " + i + " is object with ID: " + childJson.optString("id", "unknown"));
+                        // Log.d(TAG, " Child " + i + " is object with ID: " + childJson.optString("id",
+                        // "unknown"));
                     } else if (childObj instanceof String) {
                         String childId = (String) childObj;
-                        //Log.d(TAG, "  Child " + i + " is string reference to: " + childId);
+                        // Log.d(TAG, " Child " + i + " is string reference to: " + childId);
                     } else {
-                        //Log.d(TAG, "  Child " + i + " is unknown type: " + childObj.getClass().getName());
+                        // Log.d(TAG, " Child " + i + " is unknown type: " +
+                        // childObj.getClass().getName());
                     }
                 }
             } else {
-                //Log.d(TAG, "Node " + id + " has children but not in JSONArray format");
+                // Log.d(TAG, "Node " + id + " has children but not in JSONArray format");
             }
         } else {
-            //Log.d(TAG, "Node " + id + " has no children in JSON");
+            // Log.d(TAG, "Node " + id + " has no children in JSON");
         }
 
         ChatbotNode node;
@@ -105,42 +108,44 @@ public class ChatbotManager {
             String message1 = jsonNode.getString("message_1");
             String message2 = jsonNode.getString("message_2");
 
-            //Log.d(TAG, "Node " + id + " has dual messages: message_1="
-                    //+ message1.substring(0, Math.min(20, message1.length())) + "...");
+            // Log.d(TAG, "Node " + id + " has dual messages: message_1="
+            // + message1.substring(0, Math.min(20, message1.length())) + "...");
             // Use the constructor that accepts both message formats
             node = new ChatbotNode(id, type, message1, message2, content, fallback);
             // Explicitly set the category after node creation to ensure it's properly used
             node.setCategory(category);
-            //Log.d(TAG, "Set category for node " + id + " to: " + category);
+            // Log.d(TAG, "Set category for node " + id + " to: " + category);
         } else {
             // Fall back to the original format
             String message;
             if (jsonNode.has("message_1")) {
                 message = jsonNode.getString("message_1");
-                //Log.d(TAG, "Node " + id + " has only message_1");
+                // Log.d(TAG, "Node " + id + " has only message_1");
             } else if (jsonNode.has("message")) {
                 // For backward compatibility with old JSON format
                 message = jsonNode.getString("message");
-                //Log.d(TAG, "Node " + id + " has only message (old format)");
+                // Log.d(TAG, "Node " + id + " has only message (old format)");
             } else {
                 // Default message if neither format is present
                 message = "No message available.";
-                //Log.d(TAG, "Node " + id + " has no message fields");
+                // Log.d(TAG, "Node " + id + " has no message fields");
             }
             node = new ChatbotNode(id, type, message, content, fallback);
         }
         // Explicitly set the category from JSON to ensure it's properly used
         node.setCategory(category);
-        //Log.d(TAG, "Set category for node " + id + " to: " + category);
+        // Log.d(TAG, "Set category for node " + id + " to: " + category);
 
         // Try to assign the appropriate MsgTemplate based on the node's category
         try {
             MsgTemplate template = MsgTemplate.createTemplate(category);
             node.setMessageTemplate(template);
-            //Log.d(TAG, "Assigned template to node: " + id + " with category: " + category);
+            // Log.d(TAG, "Assigned template to node: " + id + " with category: " +
+            // category);
         } catch (IllegalArgumentException e) {
             // No template available for this node category; that's ok
-            //Log.d(TAG, "No template available for node: " + id + " with category: " + category);
+            // Log.d(TAG, "No template available for node: " + id + " with category: " +
+            // category);
         }
 
         // Add node to the map - important to do this before processing children
@@ -177,22 +182,25 @@ public class ChatbotManager {
         // First, log all nodes in the map
         for (String key : nodeMap.keySet()) {
             ChatbotNode mapNode = nodeMap.get(key);
-            //.d(TAG, "Node in map: " + key + ", children: " + mapNode.getChildren().size() +
-                    //", pending children: " + mapNode.getPendingChildIds().size());
+            // .d(TAG, "Node in map: " + key + ", children: " + mapNode.getChildren().size()
+            // +
+            // ", pending children: " + mapNode.getPendingChildIds().size());
         }
 
         // Now process the pending children
         for (ChatbotNode node : nodeMap.values()) {
             List<String> pendingIds = node.getPendingChildIds();
-            //Log.d(TAG, "Resolving " + pendingIds.size() + " pending child IDs for node: " + node.getId());
+            // Log.d(TAG, "Resolving " + pendingIds.size() + " pending child IDs for node: "
+            // + node.getId());
 
             for (String id : pendingIds) {
                 ChatbotNode referencedNode = nodeMap.get(id);
                 if (referencedNode != null) {
                     node.addChild(referencedNode);
-                    //Log.d(TAG, "  Added child " + id + " to parent " + node.getId());
+                    // Log.d(TAG, " Added child " + id + " to parent " + node.getId());
                 } else {
-                    //Log.e(TAG, "  Failed to find node with ID: " + id + " for parent: " + node.getId());
+                    // Log.e(TAG, " Failed to find node with ID: " + id + " for parent: " +
+                    // node.getId());
                 }
             }
             node.clearPendingChildIds();
@@ -214,20 +222,8 @@ public class ChatbotManager {
         if (node == null)
             return;
 
-        MsgTemplate template = node.getMessageTemplate();
-
-        // Propagate template to children if it exists
-        if (template != null) {
-            for (ChatbotNode child : node.getChildren()) {
-                // Skip if child is the root node
-                if (child.getId().equals("root"))
-                    continue;
-
-                // Set the parent's template to the child
-                child.setMessageTemplate(template);
-                //Log.d(TAG, "Propagated template from " + node.getCategory() + " to child: " + child.getCategory());
-            }
-        }
+        // We're no longer propagating templates, but we'll keep the structure for
+        // traversing children
 
         // Continue recursively for all children
         for (ChatbotNode child : node.getChildren()) {
@@ -290,60 +286,13 @@ public class ChatbotManager {
         }
         currentNode = foundNode;
 
-        // Check if we have a processed template in message_2
-        // If message_2 doesn't contain template placeholders (like <show_name>)
-        // and isn't empty, we should use it instead of message_1
-        if (foundNode.getMessage2() != null && !foundNode.getMessage2().isEmpty()) {
-            // If message_2 doesn't contain any template placeholder markers and
-            // isn't identical to message_1, use it
-            if (!foundNode.getMessage2().contains("<") &&
-                    !foundNode.getMessage2().equals(foundNode.getMessage())) {
-                Log.d(TAG, "Using processed template message_2: " + foundNode.getMessage2());
-                return foundNode.getMessage2();
-            } else if (foundNode.getMessage2().contains("[unknown")) {
-                Log.d(TAG, "Template has unknown values, falling back to message_1");
-                return foundNode.getMessage();
-            } else if (!foundNode.getMessage2().equals(foundNode.getMessage())) {
-                Log.d(TAG, "Using template-filled message_2: " + foundNode.getMessage2());
-                return foundNode.getMessage2();
-            }
-        }
+        // Get the system message
+        ChatMessage systemMsg = foundNode.getSystemMessage();
+        String response = systemMsg.getMessage();
 
-        // Fallback to normal system message
-        return foundNode.getSystemMessage().getMessage();
-    }
+        Log.d(TAG, "Using system message from node: " + foundNode.getId());
 
-    public String getLocalResponse(String userInput) {
-        try {
-            // Create JSON request using the current node (for debugging/consistency)
-            JSONObject jsonRequest = currentNode.createRequestJson(userInput);
-            Log.d(TAG, "Local response using JSON request: " + jsonRequest.toString());
-
-            // Update the current node with the user message
-            currentNode.setUserMessage(userInput);
-
-            System.out.println("Current node: " + currentNode);
-
-            // Process the request locally - find the next node using the node's own logic
-            ChatbotNode nextNode = currentNode.chooseNextNode();
-            if (nextNode != null) {
-                // Apply the message template from the current node to the next node
-                try {
-                    nextNode.setMessageTemplate(MsgTemplate.createTemplate(currentNode.getCategory()));
-                } catch (IllegalArgumentException e) {
-                    // No template available for this node category; that's ok
-                }
-
-                currentNode = nextNode;
-                // Now the system message is what we want to return
-                return nextNode.getSystemMessage().getMessage();
-            } else {
-                return currentNode.getFallback();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting local response", e);
-            return "Συγγνώμη, προέκυψε ένα σφάλμα.";
-        }
+        return response;
     }
 
     /**
@@ -388,14 +337,6 @@ public class ChatbotManager {
             return node.getMessage();
         }
         return "Δεν βρέθηκε απάντηση.";
-    }
-
-    public boolean shouldUseServer() {
-        return useServerForResponses;
-    }
-
-    public void setUseServerForResponses(boolean useServer) {
-        this.useServerForResponses = useServer;
     }
 
     public void reset() {
@@ -753,27 +694,17 @@ public class ChatbotManager {
      * Handles both local and server responses based on current settings.
      * 
      * @param userMessage The user's message to process
-     * @param callback Callback to handle the bot's response or errors
+     * @param callback    Callback to handle the bot's response or errors
      */
     public void processUserMessage(String userMessage, MessageResponseCallback callback) {
         Log.d(TAG, "Processing user message: " + userMessage);
-        
-        if (useServerForResponses) {
-            try {
-                // This is a placeholder - in a real implementation, 
-                // we would make the server call here and handle the response
-                // Currently passing to the callback which will make the actual server call
-                callback.onReadyForServerRequest(userMessage, currentNode);
-            } catch (Exception e) {
-                Log.e(TAG, "Error preparing server request", e);
-                // Fall back to local processing
-                String localResponse = getLocalResponse(userMessage);
-                callback.onResponse(localResponse, ChatMessage.TYPE_BOT);
-            }
-        } else {
-            // Use local response handling
-            String localResponse = getLocalResponse(userMessage);
-            callback.onResponse(localResponse, ChatMessage.TYPE_BOT);
+
+        try {
+            // Always use server processing
+            callback.onReadyForServerRequest(userMessage, currentNode);
+        } catch (Exception e) {
+            Log.e(TAG, "Error preparing server request", e);
+            callback.onError("Error preparing server request: " + e.getMessage());
         }
     }
 
@@ -784,11 +715,11 @@ public class ChatbotManager {
         /**
          * Called when a response is ready
          * 
-         * @param response The response message
+         * @param response    The response message
          * @param messageType The type of message (BOT or SERVER)
          */
         void onResponse(String response, int messageType);
-        
+
         /**
          * Called when a server request should be made
          * 
@@ -796,7 +727,7 @@ public class ChatbotManager {
          * @param currentNode The current node in the conversation
          */
         void onReadyForServerRequest(String userMessage, ChatbotNode currentNode);
-        
+
         /**
          * Called when an error occurs
          * 
@@ -807,84 +738,101 @@ public class ChatbotManager {
 
     /**
      * Gets a response for the provided user message.
-     * This method handles both local and server responses internally, 
+     * This method handles both local and server responses internally,
      * making it the only method MainActivity needs to call.
      * 
-     * @param userMessage The message from the user
+     * @param userMessage      The message from the user
      * @param responseCallback Callback to receive the response
      */
     public void getResponse(String userMessage, ResponseCallback responseCallback) {
         Log.d(TAG, "Getting response for user message: " + userMessage);
-        
-        if (useServerForResponses) {
-            // Handle server communication internally
-            try {
-                // First update the current node with the user message for context
-                currentNode.setUserMessage(userMessage);
-                
-                // Create the request JSON using the current node
-                JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
-                
-                // Make the server request - internally handled
-                makeServerRequest(jsonRequest, new ServerRequestCallback() {
-                    @Override
-                    public void onSuccess(String category) {
-                        try {
-                            // Process the server response
-                            String response = getResponseForNodeId(category);
-                            responseCallback.onResponseReceived(response, ChatMessage.TYPE_SERVER);
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error processing server response", e);
-                            // Fallback to local response
-                            String fallbackResponse = getLocalResponse(userMessage);
-                            responseCallback.onResponseReceived(fallbackResponse, ChatMessage.TYPE_BOT);
-                        }
-                    }
 
-                    @Override
-                    public void onError(String errorMessage) {
-                        Log.e(TAG, "Server error: " + errorMessage);
-                        // Fallback to local response
-                        String fallbackResponse = getLocalResponse(userMessage);
-                        responseCallback.onResponseReceived(fallbackResponse, ChatMessage.TYPE_BOT);
+        try {
+            // Create JSON request using the current node
+            JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
+
+            // Update the current node with the user message
+            currentNode.setUserMessage(userMessage);
+
+            System.out.println("Current node: " + currentNode);
+
+            // Always make the server request
+            makeServerRequest(jsonRequest, new ServerRequestCallback() {
+                @Override
+                public void onSuccess(String category, String fullJsonResponse) {
+                    try {
+                        // Set the category as user message for node navigation purposes
+                        currentNode.setUserMessage(category);
+
+                        // Try to get the next node based on category
+                        ChatbotNode nextNode = currentNode.chooseNextNode();
+                        if (nextNode != null) {
+                            // Update the current node to the next one
+                            currentNode = nextNode;                        // Update the system message with the JSON response
+                            boolean success = currentNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);                            Log.d(TAG, "System message updated: " + success + " for node: " + currentNode.getId());
+
+                            // Get the processed message to display
+                            String response = currentNode.getSystemMessage().getMessage();
+                            int messageType = currentNode.getSystemMessage().getType();
+
+                            // Debug logging
+                            Log.d(TAG, "Using system message from node: " + currentNode.getId());
+
+                            responseCallback.onResponseReceived(response, messageType);
+                        } else {
+                            // No matching node - use getResponseForNodeId as fallback
+                            Log.d(TAG, "No matching node found for category: " + category + ", using fallback");                            // Create a temporary ChatbotNode to handle the message
+                            ChatbotNode tempNode = new ChatbotNode("temp", "CATEGORISE", "", "", "", "");
+                            tempNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                            
+                            // Use the message from the temporary node
+                            String response = tempNode.getSystemMessage().getMessage();
+                            responseCallback.onResponseReceived(response, ChatMessage.TYPE_SERVER);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error processing server response", e);
+                        responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);
                     }
-                });
-            } catch (Exception e) {
-                Log.e(TAG, "Error preparing server request", e);
-                // Fallback to local processing
-                String localResponse = getLocalResponse(userMessage);
-                responseCallback.onResponseReceived(localResponse, ChatMessage.TYPE_BOT);
-            }
-        } else {
-            // Use local response handling
-            String localResponse = getLocalResponse(userMessage);
-            responseCallback.onResponseReceived(localResponse, ChatMessage.TYPE_BOT);
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Server error: " + errorMessage);
+                    responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα επικοινωνίας με τον διακομιστή.",
+                            ChatMessage.TYPE_BOT);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error in getResponse", e);
+            responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);
         }
     }
-    
+
     /**
      * Internal callback for server requests
      */
     private interface ServerRequestCallback {
-        void onSuccess(String category);
+        void onSuccess(String category, String fullJsonResponse);
+
         void onError(String errorMessage);
     }
-      /**
+
+    /**
      * Internal method to handle server communication
      * 
      * @param jsonRequest The JSON request to send to the server
-     * @param callback Callback to handle the server response
+     * @param callback    Callback to handle the server response
      */
     private void makeServerRequest(JSONObject jsonRequest, ServerRequestCallback callback) {
         // Use the client instance that was created in the constructor
         final String userMessage = jsonRequest.optString("message", "");
-        
+
         try {
             // Use our class-level client instance
             client.sendMessage(userMessage, new Client.ServerResponseCallback() {
                 @Override
-                public void onServerResponse(String nodeId) {
-                    callback.onSuccess(nodeId);
+                public void onServerResponse(String category, String fullJsonResponse) {
+                    callback.onSuccess(category, fullJsonResponse);
                 }
 
                 @Override
@@ -896,7 +844,7 @@ public class ChatbotManager {
             callback.onError("Error sending message to server: " + e.getMessage());
         }
     }
-    
+
     /**
      * Callback interface for receiving responses from the ChatbotManager
      */
@@ -904,7 +852,7 @@ public class ChatbotManager {
         /**
          * Called when a response is ready
          * 
-         * @param response The response message
+         * @param response    The response message
          * @param messageType The type of message (BOT or SERVER)
          */
         void onResponseReceived(String response, int messageType);
@@ -921,4 +869,13 @@ public class ChatbotManager {
             System.out.println("Current Node is null");
         }
     }
+    // Template handling methods have been removed as we now directly use message_1
+    // and message_2 values
+
+    /**
+     * Process local response without server communication
+     * 
+     * @param userMessage      The user's message
+     * @param responseCallback Callback to receive the response
+     */
 }

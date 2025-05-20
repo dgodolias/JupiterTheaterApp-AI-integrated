@@ -44,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
         // Set up RecyclerView
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatAdapter = new ChatAdapter(new ArrayList<>());
-        messagesRecyclerView.setAdapter(chatAdapter);        // Create the chatbot manager (now handles its own client)
+        messagesRecyclerView.setAdapter(chatAdapter); // Create the chatbot manager (now handles its own client)
         chatbotManager = new ChatbotManager(this);
 
         // Print the conversation tree structure to the log for debugging
-        // chatbotManager.printTree();        // Display initial message
-        addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);        sendButton.setOnClickListener(v -> {
+        // chatbotManager.printTree(); // Display initial message
+        addMessage(chatbotManager.getInitialMessage(), ChatMessage.TYPE_BOT);
+        sendButton.setOnClickListener(v -> {
             String userMessage = userInputEditText.getText().toString().trim();
             if (!userMessage.isEmpty()) {
                 // Display user message
@@ -61,13 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 // For debugging, print the current node before processing
                 chatbotManager.printCurrentNode();
 
-                // Get response from chatbot manager (handles both local and server logic internally)
+                // Get response from chatbot manager (handles both local and server logic
+                // internally)
                 chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {
                     @Override
                     public void onResponseReceived(String response, int messageType) {
                         // Add the response to the chat
                         addMessage(response, messageType);
-                        
+
                         // For debugging, print the node after processing
                         chatbotManager.printCurrentNode();
                     }
@@ -80,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
             new androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Debug Display Options")
-                    .setItems(options, (dialog, which) -> {                        if (which == 0) {
+                    .setItems(options, (dialog, which) -> {
+                        if (which == 0) {
                             displayTreeStructure();
                         } else if (which == 1) {
                             displayConversationNodeList();
@@ -106,11 +109,7 @@ public class MainActivity extends AppCompatActivity {
             inputLayout.setLayoutParams(params);
 
             return WindowInsetsCompat.CONSUMED;
-        });
-
-        // For testing, enable server responses (remove this line to use local
-        // responses)
-        // chatbotManager.setUseServerForResponses(true);
+        });        // Always using server responses
     }
 
     private void addMessage(String message, int type) {
