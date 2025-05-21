@@ -177,13 +177,19 @@ public abstract class MsgTemplate {
         }
         return pValues;
     }
-    
-    protected List<Integer> extractPossibleIntValues(JSONObject fieldObject) throws JSONException {
+      protected List<Integer> extractPossibleIntValues(JSONObject fieldObject) throws JSONException {
         List<Integer> pValues = new ArrayList<>();
         if (fieldObject.has("pvalues")) {
             JSONArray pvaluesArray = fieldObject.getJSONArray("pvalues");
             for (int i = 0; i < pvaluesArray.length(); i++) {
-                pValues.add(pvaluesArray.getInt(i));
+                try {
+                    // Try to parse as integer
+                    pValues.add(pvaluesArray.getInt(i));
+                } catch (JSONException e) {
+                    // If it's not a direct integer, skip it
+                    System.out.println("Skipping non-integer value in pvalues: " + pvaluesArray.getString(i));
+                    // We don't add string values like ">3" or "<4" to the integer list
+                }
             }
         }
         return pValues;

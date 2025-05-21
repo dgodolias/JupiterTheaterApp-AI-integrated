@@ -23,7 +23,9 @@ def get_dummy_category():
         "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "ΕΞΟΔΟΣ"
     ]
-    return random.choice(valid_categories)
+    choice = random.choice(valid_categories)
+    choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
+    return choice
 
 def process_client_request(client_data):
     """

@@ -250,9 +250,7 @@ public class ChatbotManager {
             return null;
         }
         return json;
-    }
-
-    private void createMinimalStructure() {
+    }    private void createMinimalStructure() {
         rootNode = new ChatbotNode("root", "CATEGORISE",
                 "Γεια σας! Πώς μπορώ να σας βοηθήσω;", "",
                 "Δεν κατάλαβα την ερώτησή σας.");
@@ -263,12 +261,20 @@ public class ChatbotManager {
 
     public String getInitialMessage() {
         if (rootNode != null) {
-            return rootNode.getSystemMessage().getMessage();
+            // Get both message1 and message2 from the root node
+            String message1 = rootNode.getMessage();
+            String message2 = rootNode.getMessage2();
+            
+            // Combine message1 and message2 with a newline between them
+            String combinedMessage = message1;
+            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
+                combinedMessage += "\n" + message2;
+            }
+            
+            return combinedMessage;
         }
         return "Γεια σας! Πώς μπορώ να σας βοηθήσω;";
-    }
-
-    public String getResponseForNodeId(String category) {
+    }public String getResponseForNodeId(String category) {
         Log.d(TAG, "Getting response for category: " + category);
 
         // Find node by category
@@ -286,13 +292,20 @@ public class ChatbotManager {
         }
         currentNode = foundNode;
 
-        // Get the system message
-        ChatMessage systemMsg = foundNode.getSystemMessage();
-        String response = systemMsg.getMessage();
+        // Get both message1 and message2 from the node
+        String message1 = foundNode.getMessage();
+        String message2 = foundNode.getMessage2();
+        
+        // Combine message1 and message2 with a newline between them
+        String combinedMessage = message1;
+        if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
+            combinedMessage += "\n" + message2;
+        }
 
         Log.d(TAG, "Using system message from node: " + foundNode.getId());
+        Log.d(TAG, "Combined message: " + combinedMessage);
 
-        return response;
+        return combinedMessage;
     }
 
     /**
@@ -317,9 +330,7 @@ public class ChatbotManager {
             childrenInfo.append(child.getId()).append(", ");
         }
         Log.d(TAG, childrenInfo.toString());
-    }
-
-    public String findNodeResponseById(String nodeIdOrCategory) {
+    }    public String findNodeResponseById(String nodeIdOrCategory) {
         // First try to get by direct ID
         ChatbotNode node = nodeMap.get(nodeIdOrCategory);
 
@@ -334,7 +345,17 @@ public class ChatbotManager {
         }
 
         if (node != null) {
-            return node.getMessage();
+            // Get both message1 and message2 from the node
+            String message1 = node.getMessage();
+            String message2 = node.getMessage2();
+            
+            // Combine message1 and message2 with a newline between them
+            String combinedMessage = message1;
+            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
+                combinedMessage += "\n" + message2;
+            }
+            
+            return combinedMessage;
         }
         return "Δεν βρέθηκε απάντηση.";
     }
@@ -774,8 +795,7 @@ public class ChatbotManager {
                             // Get both message1 and message2 from the node
                             String message1 = currentNode.getMessage();
                             String message2 = currentNode.getMessage2();
-                            
-                            // Combine message1 and message2 with a newline between them
+                              // Combine message1 and message2 with a newline between them
                             String combinedMessage = message1;
                             if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
                                 combinedMessage += "\n" + message2;
