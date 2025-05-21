@@ -5,7 +5,7 @@
     "time": {"value": "", "pvalues": []},
     "person": {
         "name": {"value": "", "pvalues": []},
-        "age": {"value": "", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+        "age": {"value": "", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "", "pvalues": []}
     }
 }

@@ -19,7 +19,7 @@ Each JSON object should have these fields:
   - age: Person's age (string or number).
   - seat: Requested seat number/location if specified (string)
 
-PVALUES RULE: If a field has a "pvalues" list in its template (e.g., for "age" or "day") and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. For example, if "age" is "10" and "pvalues" for age are ["child < 18", "grownup > 18", "granny > 65"], the "value" for age MUST be "child < 18". If the "pvalues" list is empty for a field, you can determine the appropriate value based on the user's input.
+PVALUES RULE: If a field has a "pvalues" list in its template (e.g., for "age" or "day") and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. For example, if "age" is "10" and "pvalues" for age are ["< 18", "> 18", "> 65"], the "value" for age MUST be "< 18". If the "pvalues" list is empty for a field, you can determine the appropriate value based on the user's input.
 
 Only include person fields that are explicitly mentioned. If no specific seats are requested,
 leave the seat fields empty.
@@ -33,13 +33,13 @@ Example for a booking with 2 people (will be an array of two such objects, respo
     "room": "Main Stage",
     "day": "Friday",
     "time": "20:00",
-    "person": {"name": "John Smith", "age": "grownup > 18", "seat": "A12"}
+    "person": {"name": "John Smith", "age": "> 18", "seat": "A12"}
   },
   {
     "show_name": "Hamlet",
     "room": "Main Stage",
     "day": "Friday",
     "time": "20:00",
-    "person": {"name": "Jane Doe", "age": "grownup > 18", "seat": "A13"}
+    "person": {"name": "Jane Doe", "age": "> 18", "seat": "A13"}
   }
 ]

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public abstract class MsgTemplate {
     private static final Map<String, Supplier<MsgTemplate>> templateMap = new HashMap<>();
-    
+
     static {
         templateMap.put("ΠΛΗΡΟΦΟΡΙΕΣ", ShowInfoTemplate::new);
         templateMap.put("ΚΡΑΤΗΣΗ", BookingTemplate::new);
@@ -20,19 +20,23 @@ public abstract class MsgTemplate {
         templateMap.put("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", DiscountTemplate::new);
         templateMap.put("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", ReviewTemplate::new);
     }
-    
+
     /**
-     * Processes a template string by replacing variable placeholders with actual values
-     * @param templateString Template string with variables in <variable_name> format
+     * Processes a template string by replacing variable placeholders with actual
+     * values
+     * 
+     * @param templateString Template string with variables in <variable_name>
+     *                       format
      * @return Processed string with all variables replaced with their values
      */
     public abstract String processTemplate(String templateString);
-    
+
     /**
      * Helper method to replace a template variable with its value
-     * @param template The template string
+     * 
+     * @param template     The template string
      * @param variableName Variable name without brackets
-     * @param value Value to replace the variable with
+     * @param value        Value to replace the variable with
      * @return Template with the variable replaced
      */
     protected String replaceTemplateVariable(String template, String variableName, String value) {
@@ -41,12 +45,14 @@ public abstract class MsgTemplate {
         }
         return template.replace("<" + variableName + ">", value);
     }
-    
+
     /**
      * Creates an appropriate MsgTemplate instance based on the provided node ID
+     * 
      * @param id The node ID used to determine which template to create
      * @return A new instance of the appropriate MsgTemplate subclass
-     * @throws IllegalArgumentException if no template is registered for the given ID
+     * @throws IllegalArgumentException if no template is registered for the given
+     *                                  ID
      */
     public static MsgTemplate createTemplate(String id) {
         Supplier<MsgTemplate> supplier = templateMap.get(id);
@@ -54,15 +60,18 @@ public abstract class MsgTemplate {
             return supplier.get();
         }
         throw new IllegalArgumentException("Unknown template type: " + id);
-    }      /**
+    }
+
+    /**
      * Fills the template fields from a JSON string
+     * 
      * @param jsonString JSON string to parse
      * @return true if parsing was successful, false otherwise
      */
     public boolean valuesFromJson(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            
+
             // Check for error first
             if (jsonObject.has("error") && !jsonObject.isNull("error")) {
                 String error = jsonObject.getString("error");
@@ -70,19 +79,19 @@ public abstract class MsgTemplate {
                 // Still return true since we might want to show the error message
                 return true;
             }
-            
+
             // Try to populate from details section if it exists and is not null
             if (jsonObject.has("details") && !jsonObject.isNull("details")) {
                 return populateFromDetails(jsonObject);
             }
-            
+
             // If there are no details or details is null, still return true
             // This allows messages without details to be shown properly
             if (jsonObject.has("details") && jsonObject.isNull("details")) {
                 System.out.println("Details is null, skipping template population");
                 return true;
             }
-            
+
             // Fall back to populating from the entire object
             return populateFromJsonObject(jsonObject);
         } catch (JSONException e) {
@@ -92,14 +101,18 @@ public abstract class MsgTemplate {
             return true;
         }
     }
-    
+
     /**
      * Populates the template fields from a JSONObject
+     * 
      * @param jsonObject JSONObject to extract values from
      * @return true if population was successful, false otherwise
      */
-    protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;    /**
+    protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;
+
+    /**
      * Extracts details from a JSON response
+     * 
      * @param jsonObject The JSON object containing the response
      * @return JSONObject with the extracted details or null if not found or null
      */
@@ -115,8 +128,10 @@ public abstract class MsgTemplate {
         }
         return null;
     }
-      /**
+
+    /**
      * Populates the template from the details section of the response
+     * 
      * @param jsonObject The complete JSON response object
      * @return true if successfully populated, false otherwise
      */
@@ -127,7 +142,7 @@ public abstract class MsgTemplate {
                 JSONObject details = jsonObject.getJSONObject("details");
                 return populateFromJsonObject(details);
             }
-            
+
             // If no details or details is null, just return true without trying to populate
             // This allows the message to be shown even without template data
             System.out.println("No details found in JSON, skipping template population");
@@ -138,7 +153,7 @@ public abstract class MsgTemplate {
             return true;
         }
     }
-    
+
     /**
      * Helper methods for JSON extraction
      */
@@ -148,14 +163,14 @@ public abstract class MsgTemplate {
         }
         return "";
     }
-    
+
     protected int extractIntValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
             return fieldObject.getInt("value");
         }
         return 0;
     }
-    
+
     protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
         List<String> values = new ArrayList<>();
         if (fieldObject.has("value")) {
@@ -177,7 +192,8 @@ public abstract class MsgTemplate {
         }
         return pValues;
     }
-      protected List<Integer> extractPossibleIntValues(JSONObject fieldObject) throws JSONException {
+
+    protected List<Integer> extractPossibleIntValues(JSONObject fieldObject) throws JSONException {
         List<Integer> pValues = new ArrayList<>();
         if (fieldObject.has("pvalues")) {
             JSONArray pvaluesArray = fieldObject.getJSONArray("pvalues");
@@ -208,10 +224,10 @@ class ShowInfoTemplate extends MsgTemplate {
     private List<String> room;
     private List<String> duration;
     private List<String> stars;
-    
+
     private List<String> possibleDays;
     private List<Integer> possibleStarRatings;
-    
+
     public ShowInfoTemplate() {
         name = new ArrayList<>();
         day = new ArrayList<>();
@@ -221,50 +237,50 @@ class ShowInfoTemplate extends MsgTemplate {
         room = new ArrayList<>();
         duration = new ArrayList<>();
         stars = new ArrayList<>();
-        
+
         possibleDays = new ArrayList<>();
         possibleStarRatings = new ArrayList<>();
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             if (jsonObject.has("name")) {
                 name = extractStringListValue(jsonObject.getJSONObject("name"));
             }
-            
+
             if (jsonObject.has("day")) {
                 JSONObject dayObject = jsonObject.getJSONObject("day");
                 day = extractStringListValue(dayObject);
                 possibleDays = extractPossibleStringValues(dayObject);
             }
-            
+
             if (jsonObject.has("topic")) {
                 topic = extractStringListValue(jsonObject.getJSONObject("topic"));
             }
-            
+
             if (jsonObject.has("time")) {
                 time = extractStringListValue(jsonObject.getJSONObject("time"));
             }
-            
+
             if (jsonObject.has("cast")) {
                 cast = extractStringListValue(jsonObject.getJSONObject("cast"));
             }
-            
+
             if (jsonObject.has("room")) {
                 room = extractStringListValue(jsonObject.getJSONObject("room"));
             }
-            
+
             if (jsonObject.has("duration")) {
                 duration = extractStringListValue(jsonObject.getJSONObject("duration"));
             }
-            
+
             if (jsonObject.has("stars")) {
                 JSONObject starsObject = jsonObject.getJSONObject("stars");
                 stars = extractStringListValue(starsObject);
                 possibleStarRatings = extractPossibleIntValues(starsObject);
             }
-            
+
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -302,18 +318,47 @@ class ShowInfoTemplate extends MsgTemplate {
     }
 
     // Getters and setters
-    public List<String> getName() { return name; }
-    public List<String> getDay() { return day; }
-    public List<String> getTopic() { return topic; }
-    public List<String> getTime() { return time; }
-    public List<String> getCast() { return cast; }
-    public List<String> getRoom() { return room; }
-    public List<String> getDuration() { return duration; }
-    public List<String> getStars() { return stars; }
-    public List<String> getPossibleDays() { return possibleDays; }
-    public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
+    public List<String> getName() {
+        return name;
+    }
 
-    //tostring
+    public List<String> getDay() {
+        return day;
+    }
+
+    public List<String> getTopic() {
+        return topic;
+    }
+
+    public List<String> getTime() {
+        return time;
+    }
+
+    public List<String> getCast() {
+        return cast;
+    }
+
+    public List<String> getRoom() {
+        return room;
+    }
+
+    public List<String> getDuration() {
+        return duration;
+    }
+
+    public List<String> getStars() {
+        return stars;
+    }
+
+    public List<String> getPossibleDays() {
+        return possibleDays;
+    }
+
+    public List<Integer> getPossibleStarRatings() {
+        return possibleStarRatings;
+    }
+
+    // tostring
     @Override
     public String toString() {
         return "ShowInfoTemplate{" +
@@ -338,9 +383,9 @@ class BookingTemplate extends MsgTemplate {
     private String day;
     private String time;
     private Person person;
-    
+
     private List<String> possibleDays;
-    
+
     public BookingTemplate() {
         showName = "";
         room = "";
@@ -349,47 +394,47 @@ class BookingTemplate extends MsgTemplate {
         person = new Person();
         possibleDays = new ArrayList<>();
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             if (jsonObject.has("show_name")) {
                 showName = extractStringValue(jsonObject.getJSONObject("show_name"));
             }
-            
+
             if (jsonObject.has("room")) {
                 room = extractStringValue(jsonObject.getJSONObject("room"));
             }
-            
+
             if (jsonObject.has("day")) {
                 JSONObject dayObject = jsonObject.getJSONObject("day");
                 day = extractStringValue(dayObject);
                 possibleDays = extractPossibleStringValues(dayObject);
             }
-            
+
             if (jsonObject.has("time")) {
                 time = extractStringValue(jsonObject.getJSONObject("time"));
             }
-            
+
             if (jsonObject.has("person")) {
                 JSONObject personObject = jsonObject.getJSONObject("person");
                 person = new Person();
-                
+
                 if (personObject.has("name")) {
                     person.setName(extractStringValue(personObject.getJSONObject("name")));
                 }
-                
+
                 if (personObject.has("age")) {
                     JSONObject ageObject = personObject.getJSONObject("age");
                     person.setAge(extractStringValue(ageObject));
                     person.setPossibleAgeCategories(extractPossibleStringValues(ageObject));
                 }
-                
+
                 if (personObject.has("seat")) {
                     person.setSeat(extractStringValue(personObject.getJSONObject("seat")));
                 }
             }
-            
+
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -415,7 +460,7 @@ class BookingTemplate extends MsgTemplate {
         private String age;
         private String seat;
         private List<String> possibleAgeCategories;
-        
+
         public Person() {
             name = "";
             age = "";
@@ -424,27 +469,65 @@ class BookingTemplate extends MsgTemplate {
         }
 
         // Getters and setters
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public String getAge() { return age; }
-        public void setAge(String age) { this.age = age; }
-        public String getSeat() { return seat; }
-        public void setSeat(String seat) { this.seat = seat; }
-        public List<String> getPossibleAgeCategories() { return possibleAgeCategories; }
-        public void setPossibleAgeCategories(List<String> possibleAgeCategories) { 
-            this.possibleAgeCategories = possibleAgeCategories; 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAge() {
+            return age;
+        }
+
+        public void setAge(String age) {
+            this.age = age;
+        }
+
+        public String getSeat() {
+            return seat;
+        }
+
+        public void setSeat(String seat) {
+            this.seat = seat;
+        }
+
+        public List<String> getPossibleAgeCategories() {
+            return possibleAgeCategories;
+        }
+
+        public void setPossibleAgeCategories(List<String> possibleAgeCategories) {
+            this.possibleAgeCategories = possibleAgeCategories;
         }
     }
-    
-    // Getters
-    public String getShowName() { return showName; }
-    public String getRoom() { return room; }
-    public String getDay() { return day; }
-    public String getTime() { return time; }
-    public Person getPerson() { return person; }
-    public List<String> getPossibleDays() { return possibleDays; }
 
-    //tostring
+    // Getters
+    public String getShowName() {
+        return showName;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public List<String> getPossibleDays() {
+        return possibleDays;
+    }
+
+    // tostring
     @Override
 
     public String toString() {
@@ -465,42 +548,47 @@ class BookingTemplate extends MsgTemplate {
 class CancellationTemplate extends MsgTemplate {
     private String reservationNumber;
     private String passcode;
-    
+
     public CancellationTemplate() {
         reservationNumber = "";
         passcode = "";
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             if (jsonObject.has("reservation_number")) {
                 reservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
             }
-            
+
             if (jsonObject.has("passcode")) {
                 passcode = extractStringValue(jsonObject.getJSONObject("passcode"));
             }
-            
+
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
+
     @Override
     public String processTemplate(String templateString) {
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         return templateString;
     }
-    
-    // Getters
-    public String getReservationNumber() { return reservationNumber; }
-    public String getPasscode() { return passcode; }
 
-    //tostring
+    // Getters
+    public String getReservationNumber() {
+        return reservationNumber;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    // tostring
     @Override
     public String toString() {
         return "CancellationTemplate{" +
@@ -520,7 +608,7 @@ class DiscountTemplate extends MsgTemplate {
     private List<String> age;
     private List<String> date;
     private List<String> possibleAgeCategories;
-    
+
     public DiscountTemplate() {
         showName = new ArrayList<>();
         numberOfPeople = 0;
@@ -528,35 +616,35 @@ class DiscountTemplate extends MsgTemplate {
         date = new ArrayList<>();
         possibleAgeCategories = new ArrayList<>();
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             if (jsonObject.has("show_name")) {
                 showName = extractStringListValue(jsonObject.getJSONObject("show_name"));
             }
-            
+
             if (jsonObject.has("no_of_people")) {
                 numberOfPeople = extractIntValue(jsonObject.getJSONObject("no_of_people"));
             }
-            
+
             if (jsonObject.has("age")) {
                 JSONObject ageObject = jsonObject.getJSONObject("age");
                 age = extractStringListValue(ageObject);
                 possibleAgeCategories = extractPossibleStringValues(ageObject);
             }
-            
+
             if (jsonObject.has("date")) {
                 date = extractStringListValue(jsonObject.getJSONObject("date"));
             }
-            
+
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
+
     @Override
     public String processTemplate(String templateString) {
         for (String s : showName) {
@@ -571,15 +659,29 @@ class DiscountTemplate extends MsgTemplate {
         }
         return templateString;
     }
-    
-    // Getters
-    public List<String> getShowName() { return showName; }
-    public int getNumberOfPeople() { return numberOfPeople; }
-    public List<String> getAge() { return age; }
-    public List<String> getDate() { return date; }
-    public List<String> getPossibleAgeCategories() { return possibleAgeCategories; }
 
-    //tostring
+    // Getters
+    public List<String> getShowName() {
+        return showName;
+    }
+
+    public int getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public List<String> getAge() {
+        return age;
+    }
+
+    public List<String> getDate() {
+        return date;
+    }
+
+    public List<String> getPossibleAgeCategories() {
+        return possibleAgeCategories;
+    }
+
+    // tostring
     @Override
     public String toString() {
         return "DiscountTemplate{" +
@@ -601,7 +703,7 @@ class ReviewTemplate extends MsgTemplate {
     private int stars;
     private String review;
     private List<Integer> possibleStarRatings;
-    
+
     public ReviewTemplate() {
         reservationNumber = "";
         passcode = "";
@@ -609,35 +711,35 @@ class ReviewTemplate extends MsgTemplate {
         review = "";
         possibleStarRatings = new ArrayList<>();
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             if (jsonObject.has("reservation_number")) {
                 reservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
             }
-            
+
             if (jsonObject.has("passcode")) {
                 passcode = extractStringValue(jsonObject.getJSONObject("passcode"));
             }
-            
+
             if (jsonObject.has("stars")) {
                 JSONObject starsObject = jsonObject.getJSONObject("stars");
                 stars = extractIntValue(starsObject);
                 possibleStarRatings = extractPossibleIntValues(starsObject);
             }
-            
+
             if (jsonObject.has("review")) {
                 review = extractStringValue(jsonObject.getJSONObject("review"));
             }
-            
+
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
+
     @Override
     public String processTemplate(String templateString) {
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
@@ -646,15 +748,29 @@ class ReviewTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "review", review);
         return templateString;
     }
-    
-    // Getters
-    public String getReservationNumber() { return reservationNumber; }
-    public String getPasscode() { return passcode; }
-    public int getStars() { return stars; }
-    public String getReview() { return review; }
-    public List<Integer> getPossibleStarRatings() { return possibleStarRatings; }
 
-    //tostring
+    // Getters
+    public String getReservationNumber() {
+        return reservationNumber;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    public int getStars() {
+        return stars;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public List<Integer> getPossibleStarRatings() {
+        return possibleStarRatings;
+    }
+
+    // tostring
     @Override
     public String toString() {
         return "ReviewTemplate{" +

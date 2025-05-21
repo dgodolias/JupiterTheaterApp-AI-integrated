@@ -7,13 +7,13 @@ Return a simple JSON with these fields:
 - age: Age(s) mentioned (array).
 - date: Date(s) mentioned (array)
 
-PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["child < 18", "grownup > 18", "granny > 65"]) and that list is NOT empty, the values in the "age" array MUST be from that list. If "pvalues" for age is empty, determine age values freely.
+PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["< 18", "> 18", "> 65"]) and that list is NOT empty, the values in the "age" array MUST be from that list. If "pvalues" for age is empty, determine age values freely.
 
 CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
 Example (respond with raw JSON only):
 {
   "show_name": ["Hamlet"],
   "no_of_people": 2,
-  "age": ["child < 18"],
+  "age": ["< 18"],
   "date": ["Friday"]
 }

@@ -8,7 +8,7 @@ Return a simple JSON (or an array of them if multiple people) with these fields:
 - time: Show time in 24-hour format
 - person: {"name": "Person's name", "age": "age", "seat": "seat number"}
 
-PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["child < 18", "grownup > 18", "granny > 65"]) and that list is NOT empty, the value for "age" MUST be one of those "pvalues". If "pvalues" for age is empty, determine the age value freely.
+PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["< 18", "> 18", "> 65"]) and that list is NOT empty, the value for "age" MUST be one of those "pvalues". If "pvalues" for age is empty, determine the age value freely.
 
 Only include information that is explicitly mentioned.
 
@@ -19,5 +19,5 @@ Example (for one person, respond with raw JSON only):
   "show_name": "Hamlet",
   "day": "Friday",
   "time": "20:00",
-  "person": {"name": "John", "age": "grownup > 18", "seat": ""}
+  "person": {"name": "John", "age": "> 18", "seat": ""}
 }

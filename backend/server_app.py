@@ -24,7 +24,7 @@ def get_dummy_category():
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "ΕΞΟΔΟΣ"
     ]
     choice = random.choice(valid_categories)
-    choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
+    #choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
     return choice
 
 def process_client_request(client_data):
@@ -107,7 +107,7 @@ def process_client_request(client_data):
                         "time": {"value": "19:30", "pvalues": []},
                         "person": {
                             "name": {"value": "Maria Papadopoulos", "pvalues": []},
-                            "age": {"value": "grownup > 18", "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                            "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
                             "seat": {"value": "B12", "pvalues": []}
                         }
                     }
@@ -122,7 +122,7 @@ def process_client_request(client_data):
                     dummy_data = {
                         "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
                         "no_of_people": {"value": 3, "pvalues": []},
-                        "age": {"value": ["child < 18", "granny > 65"], "pvalues": ["child < 18", "grownup > 18", "granny > 65"]},
+                        "age": {"value": ["< 18", "> 65"], "pvalues": ["< 18", "> 18", "> 65"]},
                         "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
                     }
                     print(f"Using DUMMY discount info: {dummy_data}")

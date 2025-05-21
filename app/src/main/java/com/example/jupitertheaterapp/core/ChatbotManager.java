@@ -789,7 +789,10 @@ public class ChatbotManager {
                         ChatbotNode nextNode = currentNode.chooseNextNode();
                         if (nextNode != null) {
                             // Update the current node to the next one
-                            currentNode = nextNode;                            // Update the system message with the JSON response
+                            currentNode = nextNode;                           
+
+                            // EDW ARXIZEI NA GINETAI POPULATE TO EPOMENO NODE //
+
                             boolean success = currentNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);                            Log.d(TAG, "System message updated: " + success + " for node: " + currentNode.getId());
 
                             // Get both message1 and message2 from the node
