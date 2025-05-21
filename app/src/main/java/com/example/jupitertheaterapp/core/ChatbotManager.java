@@ -804,22 +804,12 @@ public class ChatbotManager {
 
                         // Try to get the next node based on category
                         ChatbotNode nextNode = currentNode.chooseNextNode();
-                        if (nextNode != null) {
-                            // Update the current node to the next one
-                            currentNode = nextNode;                           
-
-                            // EDW ARXIZEI NA GINETAI POPULATE TO EPOMENO NODE //
-
-                            boolean success = currentNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);                            Log.d(TAG, "System message updated: " + success + " for node: " + currentNode.getId());
-
-                            // Get both message1 and message2 from the node
-                            String message1 = currentNode.getMessage();
-                            String message2 = currentNode.getMessage2();
-                              // Combine message1 and message2 with a newline between them
-                            String combinedMessage = message1;
-                            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
-                                combinedMessage += "\n" + message2;
-                            }
+                        if (nextNode != null) {                            // Update the current node to the next one
+                            currentNode = nextNode;                               // Use the comprehensive conversation turn handler to process the message
+                            // This method handles state transition, message processing, and response building
+                            String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                            Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
+                            Log.d(TAG, "Current state: " + currentNode.getCurrentState());
                             
                             int messageType = currentNode.getSystemMessage().getType();
 
@@ -832,17 +822,9 @@ public class ChatbotManager {
                             // No matching node - use getResponseForNodeId as fallback
                             Log.d(TAG, "No matching node found for category: " + category + ", using fallback");                            // Create a temporary ChatbotNode to handle the message
                             ChatbotNode tempNode = new ChatbotNode("temp", "CATEGORISE", "", "", "", "");
-                            tempNode.updateSystemMessageWithJson(fullJsonResponse, ChatMessage.TYPE_SERVER);
-                            
-                            // Get both message1 and message2 from the temp node
-                            String message1 = tempNode.getMessage();
-                            String message2 = tempNode.getMessage2();
-                            
-                            // Combine message1 and message2 with a newline between them
-                            String combinedMessage = message1;
-                            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
-                                combinedMessage += "\n" + message2;
-                            }
+                            // Use the current state but with the temporary node
+                            String combinedMessage = tempNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                            Log.d(TAG, "Fallback handler processed message");
                             
                             Log.d(TAG, "Combined fallback message: " + combinedMessage);
                             responseCallback.onResponseReceived(combinedMessage, ChatMessage.TYPE_SERVER);

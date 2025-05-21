@@ -383,7 +383,7 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     if (userMessageText.equals(child.getCategory())) {
                         System.out.println("DEBUG: Found matching category node: " + child.getId());
-                        return child;
+                        return handleNodeSelectionWithState(child);
                     }
                 }
             }
@@ -393,7 +393,7 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     if (this.category.equals(child.getCategory())) {
                         System.out.println("DEBUG: Found child with matching category: " + child.getId());
-                        return child;
+                        return handleNodeSelectionWithState(child);
                     }
                 }
             }
@@ -401,7 +401,7 @@ public class ChatbotNode {
             // If still no match but we have children, return the first one as fallback
             if (hasChildren()) {
                 System.out.println("DEBUG: No category match at root, returning first child: " + getFirstChild().getId());
-                return getFirstChild();
+                return handleNodeSelectionWithState(getFirstChild());
             }
             
             return null;
@@ -442,7 +442,7 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains(patternToFind)) {
                         System.out.println("DEBUG: Found matching child node: " + child.getId());
-                        return child;
+                        return handleNodeSelectionWithState(child);
                     }
                 }
             }
@@ -458,7 +458,7 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains("confirmed")) {
                         System.out.println("DEBUG: Found confirmation node: " + child.getId());
-                        return child;
+                        return handleNodeSelectionWithState(child);
                     }
                 }
             }
@@ -468,7 +468,7 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains("rejected") || child.getId().contains("cancel")) {
                         System.out.println("DEBUG: Found rejection node: " + child.getId());
-                        return child;
+                        return handleNodeSelectionWithState(child);
                     }
                 }
             }
@@ -486,7 +486,7 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if (child.getId().contains("more")) {
                     System.out.println("DEBUG: Found more info node: " + child.getId());
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
             
@@ -506,7 +506,7 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if ("root".equals(child.getId())) {
                     System.out.println("DEBUG: Found direct link to root node");
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
             
@@ -516,7 +516,7 @@ public class ChatbotNode {
             while (current != null && !current.getId().equals("root")) {
                 if (current.getParent() != null && current.getParent().getId().equals("root")) {
                     System.out.println("DEBUG: Found root node via parent traversal");
-                    return current.getParent();
+                    return handleNodeSelectionWithState(current.getParent());
                 }
                 current = current.getParent();
             }
@@ -530,14 +530,14 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if ("root".equals(child.getId())) {
                     System.out.println("DEBUG: Found direct link to root node");
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
             
             // If no direct link, see if root is accessible through the parent
             if (this.getParent() != null && this.getParent().getId().equals("root")) {
                 System.out.println("DEBUG: Returning to root via parent");
-                return this.getParent();
+                return handleNodeSelectionWithState(this.getParent());
             }
         }
         
@@ -547,7 +547,7 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if (child.getId().contains("confirm")) {
                     System.out.println("DEBUG: Found confirmation-related node through pattern matching: " + child.getId());
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
         }
@@ -555,7 +555,7 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if (child.getId().contains("reject") || child.getId().contains("cancel")) {
                     System.out.println("DEBUG: Found rejection-related node through pattern matching: " + child.getId());
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
         }
@@ -565,7 +565,7 @@ public class ChatbotNode {
             for (ChatbotNode child : getChildren()) {
                 if (this.category.equals(child.getCategory())) {
                     System.out.println("DEBUG: Found child with matching category: " + child.getId());
-                    return child;
+                    return handleNodeSelectionWithState(child);
                 }
             }
         }
@@ -573,7 +573,7 @@ public class ChatbotNode {
         // Fallback: If no specific condition matched but we have children, return first child
         if (hasChildren()) {
             System.out.println("DEBUG: No specific condition matched, returning first child: " + getFirstChild().getId());
-            return getFirstChild();
+            return handleNodeSelectionWithState(getFirstChild());
         }
         
         System.out.println("DEBUG: No next node found, returning null");
@@ -637,16 +637,16 @@ public class ChatbotNode {
                 "  pendingChildIds=" + pendingChildIds + ",\n" +
                 "  msgTemplate=" + (msgTemplate != null ? msgTemplate.toString() : "null") + "\n" +
                 '}';
-    }
-
-    /**
-     * Updates the system message with a JSON response from the server
+    }    /**
+     * Updates the system message with a JSON response from the server.
+     * This method is now primarily used internally by processMessageByState()
+     * but can still be called directly if needed.
      * 
      * @param jsonResponse The JSON response from the server as a string
      * @param messageType  The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
      */
-    public boolean updateSystemMessageWithJson(String jsonResponse, int messageType) {
+    public boolean fillMsg2FromTemplate(String jsonResponse, int messageType) {
         try {
             // First, parse the JSON to extract category, error, and details
             JSONObject jsonObj = new JSONObject(jsonResponse);
@@ -841,5 +841,357 @@ public class ChatbotNode {
         }
         
         return false;
+    }
+
+    /**
+     * Updates the conversation state based on the current node.
+     * This method should be called whenever transitioning to a new node.
+     * 
+     * @return The new state that was set
+     */
+    public ConversationState.State handleNodeTransition() {
+        ConversationState conversationState = ConversationState.getInstance();
+        ConversationState.State currentState = conversationState.getCurrentState();
+        ConversationState.State newState = currentState; // Default to keeping the same state
+        
+        System.out.println("DEBUG: Handling node transition for node " + this.id);
+        System.out.println("DEBUG: Current state: " + currentState);
+        
+        // ===================================================================
+        // STATE TRANSITION LOGIC BASED ON NODE ID
+        // ===================================================================
+        
+        // ROOT NODE - Initialize to INITIAL state
+        if ("root".equals(this.id)) {
+            newState = ConversationState.State.INITIAL;
+            System.out.println("DEBUG: Setting state to INITIAL for root node");
+        }
+        
+        // INFORMATION NODES - Set appropriate states for information flow
+        else if ("info_some".equals(this.id)) {
+            newState = ConversationState.State.GIVE_INFO;
+            System.out.println("DEBUG: Setting state to GIVE_INFO for info_some node");
+        }
+        else if ("info_none".equals(this.id)) {
+            newState = ConversationState.State.LLM_GET_INFO;
+            System.out.println("DEBUG: Setting state to LLM_GET_INFO for info_none node");
+        }
+        
+        // BOOKING NODES - Set appropriate states for booking flow
+        else if ("booking_complete".equals(this.id)) {
+            newState = ConversationState.State.CONFIRMATION;
+            System.out.println("DEBUG: Setting state to CONFIRMATION for booking_complete node");
+        }
+        else if ("booking_incomplete".equals(this.id)) {
+            newState = ConversationState.State.LLM_GET_INFO;
+            System.out.println("DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node");
+        }
+        
+        // CANCELLATION NODES - Set appropriate states for cancellation flow
+        else if ("cancel_complete".equals(this.id)) {
+            newState = ConversationState.State.CONFIRMATION;
+            System.out.println("DEBUG: Setting state to CONFIRMATION for cancel_complete node");
+        }
+        else if ("cancel_incomplete".equals(this.id)) {
+            newState = ConversationState.State.LLM_GET_INFO;
+            System.out.println("DEBUG: Setting state to LLM_GET_INFO for cancel_incomplete node");
+        }
+        
+        // REVIEW NODES - Set appropriate states for review flow
+        else if ("review_complete".equals(this.id)) {
+            newState = ConversationState.State.CONFIRMATION;
+            System.out.println("DEBUG: Setting state to CONFIRMATION for review_complete node");
+        }
+        else if ("review_incomplete".equals(this.id)) {
+            newState = ConversationState.State.LLM_GET_INFO;
+            System.out.println("DEBUG: Setting state to LLM_GET_INFO for review_incomplete node");
+        }
+        
+        // DISCOUNT NODES - Set appropriate states for discount flow
+        else if ("discount_some".equals(this.id)) {
+            newState = ConversationState.State.GIVE_INFO;
+            System.out.println("DEBUG: Setting state to GIVE_INFO for discount_some node");
+        }
+        else if ("discount_none".equals(this.id)) {
+            newState = ConversationState.State.LLM_GET_INFO;
+            System.out.println("DEBUG: Setting state to LLM_GET_INFO for discount_none node");
+        }
+        
+        // CONFIRMATION NODES - Handle confirmation results
+        else if (this.id.contains("confirmed")) {
+            newState = ConversationState.State.GIVE_INFO;
+            System.out.println("DEBUG: Setting state to GIVE_INFO for confirmation node");
+        }
+        else if (this.id.contains("rejected")) {
+            newState = ConversationState.State.INITIAL;
+            System.out.println("DEBUG: Setting state to INITIAL for rejection node");
+        }
+        
+        // If state changed, update the ConversationState singleton
+        if (newState != currentState) {
+            conversationState.setCurrentState(newState);
+            System.out.println("DEBUG: State updated to: " + newState);
+        } else {
+            System.out.println("DEBUG: State unchanged: " + currentState);
+        }
+        
+        return newState;
+    }    /**
+     * Processes a message based on the current conversation state.
+     * This method acts as a dispatcher that selects the appropriate processing method
+     * based on the current conversation state and node type.
+     * 
+     * @param jsonResponse The JSON response from the server
+     * @param messageType The type of message (BOT or SERVER)
+     * @return True if successful, false otherwise
+     */
+    public boolean processMessageByState(String jsonResponse, int messageType) {
+        ConversationState conversationState = ConversationState.getInstance();
+        ConversationState.State currentState = conversationState.getCurrentState();
+        
+        System.out.println("DEBUG: Processing message with state: " + currentState);
+        System.out.println("DEBUG: Current node: " + this.id + ", Category: " + this.category);
+        
+        // Process message based on the current state
+        switch (currentState) {
+            case INITIAL:
+                // In the initial state, just use the existing template processing
+                System.out.println("DEBUG: Processing message with INITIAL state");
+                return fillMsg2FromTemplate(jsonResponse, messageType);
+                
+            case LLM_GET_INFO:
+                // When we need to get info from the user with LLM help
+                System.out.println("DEBUG: Processing message with LLM_GET_INFO state");
+                
+                // Different handling based on category
+                if ("ΚΡΑΤΗΣΗ".equals(this.category)) {
+                    System.out.println("DEBUG: Processing booking info request");
+                    // TODO: Use LLM to extract booking information more effectively
+                }
+                else if ("ΑΚΥΡΩΣΗ".equals(this.category)) {
+                    System.out.println("DEBUG: Processing cancellation info request");
+                    // TODO: Use LLM to extract cancellation information more effectively
+                }
+                else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
+                    System.out.println("DEBUG: Processing show info request");
+                    // TODO: Use LLM to extract show information queries more effectively
+                }
+                else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(this.category)) {
+                    System.out.println("DEBUG: Processing review info request");
+                    // TODO: Use LLM to extract review information more effectively
+                }
+                
+                // For now, fall back to the template processing
+                return fillMsg2FromTemplate(jsonResponse, messageType);
+                
+            case GIVE_INFO:
+                // When we need to provide info to the user (database lookup)
+                System.out.println("DEBUG: GIVE_INFO state - Should search database with template data");
+                
+                // First apply the template to extract data
+                boolean templateApplied = fillMsg2FromTemplate(jsonResponse, messageType);
+                if (!templateApplied || msgTemplate == null) {
+                    System.out.println("DEBUG: Failed to apply template or no template available");
+                    return templateApplied;
+                }
+                
+                // Different database queries based on category
+                if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
+                    System.out.println("DEBUG: Should query show information from database");
+                    // TODO: Query database for show information using msgTemplate
+                    // Example:
+                    // if (msgTemplate instanceof ShowInfoTemplate) {
+                    //     ShowInfoTemplate infoTemplate = (ShowInfoTemplate) msgTemplate;
+                    //     String showName = infoTemplate.getName();
+                    //     String day = infoTemplate.getDay();
+                    //     // Query database with these parameters
+                    //     // Update message2 with results
+                    // }
+                }
+                else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.category)) {
+                    System.out.println("DEBUG: Should query discount information from database");
+                    // TODO: Query database for discount information using msgTemplate
+                }
+                
+                return true;
+                
+            case CONFIRMATION:
+                // When we need to ask for confirmation
+                System.out.println("DEBUG: CONFIRMATION state - Should prepare confirmation message");
+                
+                // First apply the template
+                boolean success = fillMsg2FromTemplate(jsonResponse, messageType);
+                
+                // Then enhance the message to make it clear confirmation is needed
+                if (success) {
+                    // Different confirmation messages based on node/category
+                    if ("booking_complete".equals(this.id)) {
+                        // Add confirmation prompt to the end of message2
+                        this.message2 += "\n\nΘέλετε να επιβεβαιώσετε αυτή την κράτηση; (ναι/όχι)";
+                    }
+                    else if ("cancel_complete".equals(this.id)) {
+                        // Add confirmation prompt for cancellation
+                        this.message2 += "\n\nΘέλετε να επιβεβαιώσετε αυτήν την ακύρωση; (ναι/όχι)";
+                    }
+                    else if ("review_complete".equals(this.id)) {
+                        // Add confirmation prompt for review submission
+                        this.message2 += "\n\nΘέλετε να υποβάλετε αυτή την αξιολόγηση; (ναι/όχι)";
+                    }
+                }
+                
+                return success;
+                
+            case EXIT:
+                // When we're exiting the conversation
+                System.out.println("DEBUG: EXIT state - Should prepare exit message");
+                
+                // Apply template first
+                boolean templateSuccess = fillMsg2FromTemplate(jsonResponse, messageType);
+                
+                // Add exit message
+                this.message2 += "\n\nΕυχαριστούμε που χρησιμοποιήσατε το σύστημα του Jupiter Theater!";
+                
+                return templateSuccess;
+                
+            default:
+                // Fallback to regular template processing
+                System.out.println("DEBUG: Unknown state - Falling back to template processing");
+                return fillMsg2FromTemplate(jsonResponse, messageType);
+        }
+    }
+
+    /**
+     * Gets the current conversation state
+     * 
+     * @return The current conversation state
+     */
+    public ConversationState.State getCurrentState() {
+        ConversationState conversationState = ConversationState.getInstance();
+        return conversationState.getCurrentState();
+    }
+
+    /**
+     * Modifies the chooseNextNode method to add a wrapper that captures the return value
+     * and performs state transition handling before returning it.
+     * This ensures state is always updated when a new node is selected.
+     * 
+     * @param nextNode The node that was selected by chooseNextNode
+     * @return The same node, after handling any needed state transitions
+     */
+    private ChatbotNode handleNodeSelectionWithState(ChatbotNode nextNode) {
+        if (nextNode != null) {
+            System.out.println("DEBUG: Selected next node: " + nextNode.getId() + ", handling state transition");
+            // This will update the state based on the node's type
+            nextNode.handleNodeTransition();
+        } else {
+            System.out.println("DEBUG: No node selected, state unchanged");
+        }
+        return nextNode;
+    }
+
+    /**
+     * Handles a complete conversation turn, processing the user message,
+     * updating the conversation state, and formulating a response.
+     * 
+     * @param jsonResponse JSON response from the server
+     * @param messageType Type of message (BOT, SERVER)
+     * @return A combined response message to show to the user
+     */
+    public String handleConversationTurn(String jsonResponse, int messageType) {
+        System.out.println("DEBUG: Handling conversation turn for node: " + this.id);
+        
+        // 1. Update the state based on the current node
+        ConversationState.State state = handleNodeTransition();
+        System.out.println("DEBUG: Current state after transition: " + state);
+        
+        // 2. Process the message according to the current state
+        boolean processed = processMessageByState(jsonResponse, messageType);
+        if (!processed) {
+            System.out.println("WARNING: Failed to process message for node: " + this.id);
+            return "Sorry, I could not process that message properly.";
+        }
+        
+        // 3. Combine message1 and message2 with a newline between them
+        String combinedMessage = getMessage();
+        String message2 = getMessage2();
+        if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
+            combinedMessage += "\n" + message2;
+        }
+        
+        // 4. Add state-specific modifications to the response
+        switch (state) {
+            case CONFIRMATION:
+                // If we're in confirmation state but the message doesn't already include a prompt
+                if (!combinedMessage.contains("(ναι/όχι)")) {
+                    combinedMessage += "\n\nΠαρακαλώ επιβεβαιώστε (ναι/όχι).";
+                }
+                break;
+                
+            case LLM_GET_INFO:
+                // If we're trying to get information, make sure it's clear what we need
+                if (msgTemplate != null) {
+                    // Add a prompt based on what information is missing
+                    String missingInfoPrompt = getMissingInfoPrompt();
+                    if (!missingInfoPrompt.isEmpty() && !combinedMessage.contains(missingInfoPrompt)) {
+                        combinedMessage += "\n\n" + missingInfoPrompt;
+                    }
+                }
+                break;
+            
+            // Other state-specific modifications can be added here
+            default:
+                // No additional modifications for other states
+                break;
+        }
+        
+        return combinedMessage;
+    }
+    
+    /**
+     * Generates a prompt asking for specific missing information based on the template
+     * 
+     * @return A prompt for the missing information
+     */
+    private String getMissingInfoPrompt() {
+        if (msgTemplate == null) {
+            return "";
+        }
+        
+        StringBuilder prompt = new StringBuilder("Χρειάζομαι περισσότερες πληροφορίες: ");
+        
+        if ("ΚΡΑΤΗΣΗ".equals(category)) {
+            if (msgTemplate instanceof BookingTemplate) {
+                BookingTemplate template = (BookingTemplate) msgTemplate;
+                if (template.getShowName().isEmpty()) {
+                    prompt.append("Ποια παράσταση σας ενδιαφέρει; ");
+                }
+                if (template.getDay().isEmpty()) {
+                    prompt.append("Ποια ημέρα θέλετε να κάνετε κράτηση; ");
+                }
+                if (template.getTime().isEmpty()) {
+                    prompt.append("Τι ώρα θέλετε να παρακολουθήσετε την παράσταση; ");
+                }
+                if (template.getPerson() == null || template.getPerson().getName().isEmpty()) {
+                    prompt.append("Σε ποιο όνομα θα είναι η κράτηση; ");
+                }
+            }
+        } 
+        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
+            if (msgTemplate instanceof CancellationTemplate) {
+                CancellationTemplate template = (CancellationTemplate) msgTemplate;
+                if (template.getReservationNumber().isEmpty()) {
+                    prompt.append("Ποιος είναι ο αριθμός της κράτησής σας; ");
+                }
+                if (template.getPasscode().isEmpty()) {
+                    prompt.append("Ποιος είναι ο κωδικός της κράτησής σας; ");
+                }
+            }
+        }
+        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
+            // For information requests, we can be more flexible
+            prompt = new StringBuilder("Για ποια παράσταση, ημερομηνία ή θέμα θέλετε πληροφορίες;");
+        }
+        
+        return prompt.toString();
     }
 }

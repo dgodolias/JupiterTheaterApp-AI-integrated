@@ -104,7 +104,7 @@ def categorize_prompt(user_message):
     # Validate category
     valid_categories = [
         "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
-        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "ΕΞΟΔΟΣ"
+        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     
     # Return the category if valid, otherwise default to ΠΛΗΡΟΦΟΡΙΕΣ

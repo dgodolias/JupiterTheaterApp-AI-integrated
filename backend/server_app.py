@@ -18,13 +18,13 @@ from information_extractor import (
 DUMMY_RESPONSES = True
 
 # Set to True to use full dummy data, False for partial dummy data
-DUMMY_FULL = False
+DUMMY_FULL = True
 
 def get_dummy_category():
     """Returns a random category from the predefined list to save LLM API calls."""
     valid_categories = [
         "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
-        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "ΕΞΟΔΟΣ"
+        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     choice = random.choice(valid_categories)
     #choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
@@ -136,8 +136,6 @@ def process_client_request(client_data):
                 elif request_category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
                     details = extract_review_info(request_message)
                     print(f"Extracted review info: {details}")
-                elif request_category == "ΕΞΟΔΟΣ":
-                    details = "Client requested to close connection."
                 else:
                     raise ValueError(f"Unsupported category: {request_category}")
                 

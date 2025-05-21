@@ -11,10 +11,10 @@ public class ConversationState {
     // Available states
     public enum State {
         INITIAL,            // Initial state of the conversation
-        GET_INFO_FROM_USER,  // When the chatbot needs information from the user
-        GIVE_INFO_TO_USER,   // When the chatbot is providing information to the user
+        GET_INFO,  // When the chatbot needs information from the user
+        GIVE_INFO,   // When the chatbot is providing information to the user
         CONFIRMATION,        // When the chatbot is asking for confirmation
-        LLM_RESPONSE,        // When using a large language model response
+        LLM_GET_INFO,        // When using a large language model response
         EXIT                 // When exiting the conversation
     }
     
