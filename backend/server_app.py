@@ -17,6 +17,9 @@ from information_extractor import (
 # This saves API calls/resources when testing
 DUMMY_RESPONSES = True
 
+# Set to True to use full dummy data, False for partial dummy data
+DUMMY_FULL = False
+
 def get_dummy_category():
     """Returns a random category from the predefined list to save LLM API calls."""
     valid_categories = [
@@ -82,58 +85,34 @@ def process_client_request(client_data):
             
             if not request_category:
                 raise ValueError("Category field is required for EXTRACT requests")
-                
-            # Use dummy responses if the flag is enabled
+                  # Use dummy responses if the flag is enabled
             if DUMMY_RESPONSES:
                 dummy_data = None
                 
-                if request_category == "ΠΛΗΡΟΦΟΡΙΕΣ":
-                    dummy_data = {
-                        "name": {"value": ["A Midsummer Night's Dream"], "pvalues": []},
-                        "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
-                        "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []},
-                        "time": {"value": ["20:00", "15:00"], "pvalues": []},
-                        "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []},
-                        "room": {"value": ["Grand Hall"], "pvalues": []},
-                        "duration": {"value": ["120 minutes"], "pvalues": []},
-                        "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}
-                    }
-                    print(f"Using DUMMY show info: {dummy_data}")
-                elif request_category == "ΚΡΑΤΗΣΗ":
-                    dummy_data = {
-                        "show_name": {"value": "Romeo and Juliet", "pvalues": []},
-                        "room": {"value": "Main Theater", "pvalues": []},
-                        "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
-                        "time": {"value": "19:30", "pvalues": []},
-                        "person": {
-                            "name": {"value": "Maria Papadopoulos", "pvalues": []},
-                            "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
-                            "seat": {"value": "B12", "pvalues": []}
-                        }
-                    }
-                    print(f"Using DUMMY booking info: {dummy_data}")
-                elif request_category == "ΑΚΥΡΩΣΗ":
-                    dummy_data = {
-                        "reservation_number": {"value": "RES78901", "pvalues": []},
-                        "passcode": {"value": "JUPITER2025", "pvalues": []}
-                    }
-                    print(f"Using DUMMY cancellation info: {dummy_data}")
-                elif request_category == "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-                    dummy_data = {
-                        "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
-                        "no_of_people": {"value": 3, "pvalues": []},
-                        "age": {"value": ["< 18", "> 65"], "pvalues": ["< 18", "> 18", "> 65"]},
-                        "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
-                    }
-                    print(f"Using DUMMY discount info: {dummy_data}")
-                elif request_category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-                    dummy_data = {
-                        "reservation_number": {"value": "DUMMY123", "pvalues": []},
-                        "passcode": {"value": "12345", "pvalues": []},
-                        "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
-                        "review": {"value": "This is a dummy review for testing.", "pvalues": []}
-                    }
-                    print(f"Using DUMMY review info: {dummy_data}")
+                # Determine which folder to use based on DUMMY_FULL flag
+                folder_path = "full" if DUMMY_FULL else "nonfull"
+                base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fake_data", folder_path)
+                
+                # Map categories to file names
+                file_mapping = {
+                    "ΠΛΗΡΟΦΟΡΙΕΣ": "show_info.json",
+                    "ΚΡΑΤΗΣΗ": "booking.json",
+                    "ΑΚΥΡΩΣΗ": "cancellation.json",
+                    "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ": "discount.json",
+                    "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ": "review.json"
+                }
+                
+                if request_category in file_mapping:
+                    json_file = os.path.join(base_path, file_mapping[request_category])
+                    try:
+                        with open(json_file, 'r', encoding='utf-8') as f:
+                            dummy_data = json.load(f)
+                        data_completeness = "full" if DUMMY_FULL else "partial"
+                        print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}")
+                    except Exception as e:
+                        print(f"Error loading dummy data from {json_file}: {e}")
+                        # Fallback to empty data structure if file cannot be loaded
+                        dummy_data = {}
                 else:
                     raise ValueError(f"Unsupported category: {request_category}")
                 

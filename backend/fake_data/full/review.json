@@ -1,0 +1,6 @@
+{
+    "reservation_number": {"value": "DUMMY123", "pvalues": []},
+    "passcode": {"value": "12345", "pvalues": []},
+    "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]},
+    "review": {"value": "This is a dummy review for testing.", "pvalues": []}
+}

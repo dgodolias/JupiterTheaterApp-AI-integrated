@@ -1,0 +1,6 @@
+{
+    "show_name": {"value": [], "pvalues": []},
+    "no_of_people": {"value": 0, "pvalues": []},
+    "age": {"value": ["< 18"], "pvalues": ["< 18", "> 18", "> 65"]},
+    "date": {"value": [], "pvalues": []}
+}

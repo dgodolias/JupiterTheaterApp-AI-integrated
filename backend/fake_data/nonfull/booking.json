@@ -1,0 +1,11 @@
+{
+    "show_name": {"value": "", "pvalues": []},
+    "room": {"value": "Main Theater", "pvalues": []},
+    "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+    "time": {"value": "19:30", "pvalues": []},
+    "person": {
+        "name": {"value": "", "pvalues": []},
+        "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
+        "seat": {"value": "", "pvalues": []}
+    }
+}

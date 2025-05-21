@@ -1,0 +1,6 @@
+{
+    "show_name": {"value": ["Hamlet", "Macbeth"], "pvalues": []},
+    "no_of_people": {"value": 3, "pvalues": []},
+    "age": {"value": ["< 18", "> 65"], "pvalues": ["< 18", "> 18", "> 65"]},
+    "date": {"value": ["2025-05-20", "2025-05-21"], "pvalues": []}
+}

@@ -1,0 +1,10 @@
+{
+    "name": {"value": ["A Midsummer Night's Dream"], "pvalues": []},
+    "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
+    "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []},
+    "time": {"value": ["20:00", "15:00"], "pvalues": []},
+    "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []},
+    "room": {"value": ["Grand Hall"], "pvalues": []},
+    "duration": {"value": ["120 minutes"], "pvalues": []},
+    "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}
+}
