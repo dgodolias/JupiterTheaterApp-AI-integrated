@@ -219,20 +219,37 @@ public class ChatbotManager {
      * @param node The current node to process
      */
     private void propagateTemplatesToChildren(ChatbotNode node) {
+        // Use a helper method with a Set to track visited nodes
+        propagateTemplatesToChildren(node, new HashSet<String>());
+    }
+    
+    /**
+     * Helper method that uses a Set to track visited nodes and avoid infinite recursion.
+     * 
+     * @param node The current node to process
+     * @param visitedNodes Set of node IDs that have already been visited
+     */
+    private void propagateTemplatesToChildren(ChatbotNode node, HashSet<String> visitedNodes) {
         if (node == null)
             return;
-
+            
+        // Add this node's ID to the visited set to avoid processing it again
+        if (!visitedNodes.add(node.getId())) {
+            // If we couldn't add the ID because it's already in the set, return immediately
+            return;
+        }
+        
         // We're no longer propagating templates, but we'll keep the structure for
         // traversing children
 
         // Continue recursively for all children
         for (ChatbotNode child : node.getChildren()) {
-            // Skip processing already visited root node to prevent circular reference
-            // issues
+            // Skip processing root node to prevent circular reference issues
             if (child.getId().equals("root"))
                 continue;
 
-            propagateTemplatesToChildren(child);
+            // Pass the visitedNodes set to the recursive call
+            propagateTemplatesToChildren(child, visitedNodes);
         }
     }
 

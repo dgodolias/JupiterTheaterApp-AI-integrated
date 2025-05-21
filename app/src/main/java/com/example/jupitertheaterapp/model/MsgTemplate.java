@@ -21,6 +21,52 @@ public abstract class MsgTemplate {
         templateMap.put("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", ReviewTemplate::new);
     }
 
+    // Map for translating field names to Greek for display
+    protected Map<String, String> fieldNameMap;
+    
+    /**
+     * Gets the Greek display name for a field
+     * @param fieldName The field name in English
+     * @return The field name in Greek, or the original name if not found
+     */
+    public String getGreekFieldName(String fieldName) {
+        if (fieldNameMap != null && fieldNameMap.containsKey(fieldName)) {
+            return fieldNameMap.get(fieldName);
+        }
+        return fieldName;
+    }
+    
+    /**
+     * Get a comma-separated list of missing fields in Greek
+     * @param missingFields List of missing field names in English
+     * @return Comma-separated list of missing fields in Greek
+     */
+    public String getMissingFieldsInGreek(List<String> missingFields) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < missingFields.size(); i++) {
+            result.append(getGreekFieldName(missingFields.get(i)));
+            if (i < missingFields.size() - 1) {
+                result.append(", ");
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * Get a list of field names that are missing or incomplete
+     * @return List of field names that are missing values
+     */
+    public abstract List<String> getMissingFields();
+    
+    /**
+     * Get a comma-separated string of missing field names in Greek
+     * @return Comma-separated string of missing field names in Greek
+     */
+    public String getMissingFieldsAsGreekString() {
+        List<String> missing = getMissingFields();
+        return getMissingFieldsInGreek(missing);
+    }
+
     /**
      * Processes a template string by replacing variable placeholders with actual
      * values
@@ -30,6 +76,15 @@ public abstract class MsgTemplate {
      * @return Processed string with all variables replaced with their values
      */
     public abstract String processTemplate(String templateString);
+
+    // Special handler for the <missing> placeholder in templates
+    protected String processMissingFieldsPlaceholder(String templateString) {
+        if (templateString.contains("<missing>")) {
+            String missingFieldsGreek = getMissingFieldsAsGreekString();
+            return templateString.replace("<missing>", missingFieldsGreek);
+        }
+        return templateString;
+    }
 
     /**
      * Helper method to replace a template variable with its value
@@ -240,6 +295,17 @@ class ShowInfoTemplate extends MsgTemplate {
 
         possibleDays = new ArrayList<>();
         possibleStarRatings = new ArrayList<>();
+        
+        // Initialize Greek field name mapping
+        fieldNameMap = new HashMap<>();
+        fieldNameMap.put("name", "όνομα παράστασης");
+        fieldNameMap.put("day", "ημέρα");
+        fieldNameMap.put("topic", "θέμα");
+        fieldNameMap.put("time", "ώρα");
+        fieldNameMap.put("cast", "ηθοποιοί");
+        fieldNameMap.put("room", "αίθουσα");
+        fieldNameMap.put("duration", "διάρκεια");
+        fieldNameMap.put("stars", "βαθμολογία");
     }
 
     @Override
@@ -289,7 +355,24 @@ class ShowInfoTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if (name.isEmpty()) missingFields.add("name");
+        if (day.isEmpty()) missingFields.add("day");
+        if (topic.isEmpty()) missingFields.add("topic");
+        if (time.isEmpty()) missingFields.add("time");
+        if (cast.isEmpty()) missingFields.add("cast");
+        if (room.isEmpty()) missingFields.add("room");
+        if (duration.isEmpty()) missingFields.add("duration");
+        if (stars.isEmpty()) missingFields.add("stars");
+        return missingFields;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
+        // Handle <missing> placeholder first
+        templateString = processMissingFieldsPlaceholder(templateString);
+        
         for (String n : name) {
             templateString = replaceTemplateVariable(templateString, "name", n);
         }
@@ -393,6 +476,16 @@ class BookingTemplate extends MsgTemplate {
         time = "";
         person = new Person();
         possibleDays = new ArrayList<>();
+        
+        // Initialize Greek field name mapping
+        fieldNameMap = new HashMap<>();
+        fieldNameMap.put("show_name", "όνομα παράστασης");
+        fieldNameMap.put("room", "αίθουσα");
+        fieldNameMap.put("day", "ημέρα");
+        fieldNameMap.put("time", "ώρα");
+        fieldNameMap.put("person_name", "όνομα");
+        fieldNameMap.put("person_age", "ηλικιακή κατηγορία");
+        fieldNameMap.put("person_seat", "θέση");
     }
 
     @Override
@@ -443,7 +536,23 @@ class BookingTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if (showName.isEmpty()) missingFields.add("show_name");
+        if (room.isEmpty()) missingFields.add("room");
+        if (day.isEmpty()) missingFields.add("day");
+        if (time.isEmpty()) missingFields.add("time");
+        if (person.getName().isEmpty()) missingFields.add("person_name");
+        if (person.getAge().isEmpty()) missingFields.add("person_age");
+        if (person.getSeat().isEmpty()) missingFields.add("person_seat");
+        return missingFields;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
+        // Handle <missing> placeholder first
+        templateString = processMissingFieldsPlaceholder(templateString);
+        
         templateString = replaceTemplateVariable(templateString, "show_name", showName);
         templateString = replaceTemplateVariable(templateString, "room", room);
         templateString = replaceTemplateVariable(templateString, "day", day);
@@ -552,6 +661,11 @@ class CancellationTemplate extends MsgTemplate {
     public CancellationTemplate() {
         reservationNumber = "";
         passcode = "";
+        
+        // Initialize Greek field name mapping
+        fieldNameMap = new HashMap<>();
+        fieldNameMap.put("reservation_number", "αριθμός κράτησης");
+        fieldNameMap.put("passcode", "κωδικός επιβεβαίωσης");
     }
 
     @Override
@@ -573,7 +687,18 @@ class CancellationTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if (reservationNumber.isEmpty()) missingFields.add("reservation_number");
+        if (passcode.isEmpty()) missingFields.add("passcode");
+        return missingFields;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
+        // Handle <missing> placeholder first
+        templateString = processMissingFieldsPlaceholder(templateString);
+        
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         return templateString;
@@ -615,6 +740,13 @@ class DiscountTemplate extends MsgTemplate {
         age = new ArrayList<>();
         date = new ArrayList<>();
         possibleAgeCategories = new ArrayList<>();
+        
+        // Initialize Greek field name mapping
+        fieldNameMap = new HashMap<>();
+        fieldNameMap.put("show_name", "όνομα παράστασης");
+        fieldNameMap.put("no_of_people", "αριθμός ατόμων");
+        fieldNameMap.put("age", "ηλικιακή κατηγορία");
+        fieldNameMap.put("date", "ημερομηνία");
     }
 
     @Override
@@ -646,7 +778,20 @@ class DiscountTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if (showName.isEmpty()) missingFields.add("show_name");
+        if (numberOfPeople <= 0) missingFields.add("no_of_people");
+        if (age.isEmpty()) missingFields.add("age");
+        if (date.isEmpty()) missingFields.add("date");
+        return missingFields;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
+        // Handle <missing> placeholder first
+        templateString = processMissingFieldsPlaceholder(templateString);
+        
         for (String s : showName) {
             templateString = replaceTemplateVariable(templateString, "show_name", s);
         }
@@ -710,6 +855,13 @@ class ReviewTemplate extends MsgTemplate {
         stars = 0;
         review = "";
         possibleStarRatings = new ArrayList<>();
+        
+        // Initialize Greek field name mapping
+        fieldNameMap = new HashMap<>();
+        fieldNameMap.put("reservation_number", "αριθμός κράτησης");
+        fieldNameMap.put("passcode", "κωδικός επιβεβαίωσης");
+        fieldNameMap.put("stars", "βαθμολογία αστεριών");
+        fieldNameMap.put("review", "σχόλιο αξιολόγησης");
     }
 
     @Override
@@ -741,7 +893,20 @@ class ReviewTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if (reservationNumber.isEmpty()) missingFields.add("reservation_number");
+        if (passcode.isEmpty()) missingFields.add("passcode");
+        if (stars <= 0) missingFields.add("stars");
+        // Review is optional, so we don't check for it
+        return missingFields;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
+        // Handle <missing> placeholder first
+        templateString = processMissingFieldsPlaceholder(templateString);
+        
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
