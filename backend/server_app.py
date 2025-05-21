@@ -108,7 +108,7 @@ def process_client_request(client_data):
                         with open(json_file, 'r', encoding='utf-8') as f:
                             dummy_data = json.load(f)
                         data_completeness = "full" if DUMMY_FULL else "partial"
-                        print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}")
+                        print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}:",dummy_data)
                     except Exception as e:
                         print(f"Error loading dummy data from {json_file}: {e}")
                         # Fallback to empty data structure if file cannot be loaded
