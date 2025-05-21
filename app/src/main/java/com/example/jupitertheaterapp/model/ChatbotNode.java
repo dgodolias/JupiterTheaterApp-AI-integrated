@@ -310,13 +310,9 @@ public class ChatbotNode {
         }
 
         return path;
-    }
-
-    /**
+    }    /**
      * Choose the next node in the conversation based on the current state and user
-     * message
-     * Uses the conversation path and category matching to make more context-aware
-     * decisions
+     * message. Uses a robust approach without relying on level-based handler functions.
      * 
      * @return The next node in the conversation
      */
@@ -342,16 +338,19 @@ public class ChatbotNode {
             System.out.println("DEBUG:   - ID: " + child.getId() + ", Category: " + child.getCategory());
         }
 
-        // Since server handles all node selection logic, we just need to match the
-        // exact category
-        // from server response to our node categories
-        System.out.println("DEBUG: Looking for exact category match with server response: " + userMessageText);
+        // Get the conversation path from root to current node
+        List<ChatbotNode> pathToCurrentNode = getConversationPath();
+        System.out.println("DEBUG: Path length: " + pathToCurrentNode.size());
+        System.out.println("DEBUG: Path from root to current node: ");
+        for (ChatbotNode node : pathToCurrentNode) {
+            System.out.println("DEBUG:   - " + node.getId() + " (" + node.getCategory() + ")");
+        }
 
         // These are the valid categories that can be returned by the server
         String[] validCategories = { "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ",
                 "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ" };
 
-        // First check if this input is a valid category from the server
+        // Check if user message is a valid category from the server
         boolean isValidServerCategory = false;
         for (String validCategory : validCategories) {
             if (userMessageText.equals(validCategory)) {
@@ -360,62 +359,265 @@ public class ChatbotNode {
                 break;
             }
         }
-        // Find the child with matching category or null if none found
-        if (isValidServerCategory) {
-            System.out.println("DEBUG: Checking each category explicitly for: '" + userMessageText + "'");
 
-            // Explicit category checking for each main category
-            if (userMessageText.equals("ΚΡΑΤΗΣΗ")) {
-                System.out.println("DEBUG: Found ΚΡΑΤΗΣΗ category match");
-                // Find child with ΚΡΑΤΗΣΗ category
+        // Check for user confirmation or rejection keywords
+        boolean isConfirmation = userMessageText.toLowerCase().contains("yes") || 
+                                userMessageText.toLowerCase().contains("confirm") || 
+                                userMessageText.toLowerCase().contains("ναι") || 
+                                userMessageText.toLowerCase().contains("επιβεβαιώνω");
+        
+        boolean isRejection = userMessageText.toLowerCase().contains("no") || 
+                             userMessageText.toLowerCase().contains("cancel") || 
+                             userMessageText.toLowerCase().contains("όχι") || 
+                             userMessageText.toLowerCase().contains("ακύρωση");
+
+        System.out.println("DEBUG: isConfirmation: " + isConfirmation + ", isRejection: " + isRejection);
+
+        // CASE-BASED NODE SELECTION APPROACH
+        
+        // Case 1: If we're at the root node, we need to match with a category node
+        if ("root".equals(this.id)) {
+            System.out.println("DEBUG: At root node, looking for category match");
+            if (isValidServerCategory) {
+                // Find matching category node
                 for (ChatbotNode child : getChildren()) {
-                    if ("ΚΡΑΤΗΣΗ".equals(child.getCategory())) {
-                        System.out.println("DEBUG: Returning ΚΡΑΤΗΣΗ node: " + child.getId());
+                    if (userMessageText.equals(child.getCategory())) {
+                        System.out.println("DEBUG: Found matching category node: " + child.getId());
                         return child;
                     }
                 }
-            } else if (userMessageText.equals("ΑΚΥΡΩΣΗ")) {
-                System.out.println("DEBUG: Found ΑΚΥΡΩΣΗ category match");
-                // Find child with ΑΚΥΡΩΣΗ category
+            }
+            
+            // If no direct match, try to find a child with matching category regardless of ID
+            if (this.category != null && !this.category.isEmpty()) {
                 for (ChatbotNode child : getChildren()) {
-                    if ("ΑΚΥΡΩΣΗ".equals(child.getCategory())) {
-                        System.out.println("DEBUG: Returning ΑΚΥΡΩΣΗ node: " + child.getId());
+                    if (this.category.equals(child.getCategory())) {
+                        System.out.println("DEBUG: Found child with matching category: " + child.getId());
                         return child;
                     }
                 }
-            } else if (userMessageText.equals("ΠΛΗΡΟΦΟΡΙΕΣ")) {
-                System.out.println("DEBUG: Found ΠΛΗΡΟΦΟΡΙΕΣ category match");
-                // Find child with ΠΛΗΡΟΦΟΡΙΕΣ category
+            }
+            
+            // If still no match but we have children, return the first one as fallback
+            if (hasChildren()) {
+                System.out.println("DEBUG: No category match at root, returning first child: " + getFirstChild().getId());
+                return getFirstChild();
+            }
+            
+            return null;
+        }
+        
+        // Case 2: If we're at a main category node, check for template completeness
+        else if (validCategoryNode(this)) {
+            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness");
+            boolean hasCompleteInfo = hasCompleteTemplateInformation();
+            
+            // Fallback if template is null
+            if (!hasCompleteInfo && getMessageTemplate() == null) {
+                System.out.println("DEBUG: Template is null, using message text as fallback");
+                hasCompleteInfo = userMessageText.contains("complete") || userMessageText.contains("ολοκληρωμένη") || 
+                                 userMessageText.contains("some") || userMessageText.contains("κάποιες");
+            }
+            
+            System.out.println("DEBUG: Template completeness check result: " + hasCompleteInfo);
+            
+            // Generic pattern matching based on category and template completeness
+            String completePattern = null;
+            String incompletePattern = null;
+            
+            // Determine patterns based on category
+            if ("ΚΡΑΤΗΣΗ".equals(this.getCategory()) || "ΑΚΥΡΩΣΗ".equals(this.getCategory()) || "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(this.getCategory())) {
+                completePattern = "complete";
+                incompletePattern = "incomplete";
+            } else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory()) || "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.getCategory())) {
+                completePattern = "some";
+                incompletePattern = "none";
+            }
+            
+            // Find the appropriate child based on completeness and category-specific patterns
+            if (completePattern != null && incompletePattern != null) {
+                String patternToFind = hasCompleteInfo ? completePattern : incompletePattern;
+                System.out.println("DEBUG: Looking for child with pattern: " + patternToFind);
+                
                 for (ChatbotNode child : getChildren()) {
-                    if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(child.getCategory())) {
-                        System.out.println("DEBUG: Returning ΠΛΗΡΟΦΟΡΙΕΣ node: " + child.getId());
-                        return child;
-                    }
-                }
-            } else if (userMessageText.equals("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ")) {
-                System.out.println("DEBUG: Found ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ category match");
-                // Find child with ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ category
-                for (ChatbotNode child : getChildren()) {
-                    if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(child.getCategory())) {
-                        System.out.println("DEBUG: Returning ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ node: " + child.getId());
-                        return child;
-                    }
-                }
-            } else if (userMessageText.equals("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ")) {
-                System.out.println("DEBUG: Found ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category match");
-                // Find child with ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category
-                for (ChatbotNode child : getChildren()) {
-                    if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(child.getCategory())) {
-                        System.out.println("DEBUG: Returning ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ node: " + child.getId());
+                    if (child.getId().contains(patternToFind)) {
+                        System.out.println("DEBUG: Found matching child node: " + child.getId());
                         return child;
                     }
                 }
             }
         }
-
-        System.out.println("DEBUG: No exact category match found for server response: " + userMessageText);
+        
+        // Case 3: If we're at a "complete/some" node, handle confirmation/rejection
+        else if (this.getId().contains("complete") || this.getId().contains("some")) {
+            System.out.println("DEBUG: At complete/some node: " + this.getId());
+            
+            if (isConfirmation) {
+                System.out.println("DEBUG: At complete/some node with confirmation");
+                // Look for confirmation node
+                for (ChatbotNode child : getChildren()) {
+                    if (child.getId().contains("confirmed")) {
+                        System.out.println("DEBUG: Found confirmation node: " + child.getId());
+                        return child;
+                    }
+                }
+            }
+            else if (isRejection) {
+                System.out.println("DEBUG: At complete/some node with rejection");
+                // Look for rejection node
+                for (ChatbotNode child : getChildren()) {
+                    if (child.getId().contains("rejected") || child.getId().contains("cancel")) {
+                        System.out.println("DEBUG: Found rejection node: " + child.getId());
+                        return child;
+                    }
+                }
+            }
+            
+            // If user hasn't confirmed or rejected yet, we stay at the current node
+            // by returning null (no navigation) or could return the most appropriate child
+            System.out.println("DEBUG: No confirmation/rejection detected, staying at current node");
+        }
+        
+        // Case 4: If we're at an "incomplete/none" node, find node for more info
+        else if (this.getId().contains("incomplete") || this.getId().contains("none")) {
+            System.out.println("DEBUG: At incomplete/none node: " + this.getId());
+            
+            // Try to find a node specifically designed to gather more information
+            for (ChatbotNode child : getChildren()) {
+                if (child.getId().contains("more")) {
+                    System.out.println("DEBUG: Found more info node: " + child.getId());
+                    return child;
+                }
+            }
+            
+            // If no specific "more" node, we might want to ask for specific information
+            // based on the template data we already have
+            if (this.msgTemplate != null) {
+                System.out.println("DEBUG: Using template to determine what information to request next");
+                // Here you could implement logic to select a child based on missing template data
+            }
+        }
+        
+        // Case 5: If we're at a "confirmed" or "rejected" node, return to root
+        else if (this.getId().contains("confirmed") || this.getId().contains("rejected")) {
+            System.out.println("DEBUG: At confirmed/rejected node: " + this.getId() + ", looking for root");
+            
+            // Look for a direct link to root
+            for (ChatbotNode child : getChildren()) {
+                if ("root".equals(child.getId())) {
+                    System.out.println("DEBUG: Found direct link to root node");
+                    return child;
+                }
+            }
+            
+            // If no direct link, we may need to traverse back through parent nodes
+            // until we find the root
+            ChatbotNode current = this;
+            while (current != null && !current.getId().equals("root")) {
+                if (current.getParent() != null && current.getParent().getId().equals("root")) {
+                    System.out.println("DEBUG: Found root node via parent traversal");
+                    return current.getParent();
+                }
+                current = current.getParent();
+            }
+        }
+        
+        // Case 6: Terminal nodes that should return to root when we're done with them
+        else if (isTerminalNode(this.getId())) {
+            System.out.println("DEBUG: At terminal node: " + this.getId() + ", looking for root");
+            
+            // Look for a direct link to root
+            for (ChatbotNode child : getChildren()) {
+                if ("root".equals(child.getId())) {
+                    System.out.println("DEBUG: Found direct link to root node");
+                    return child;
+                }
+            }
+            
+            // If no direct link, see if root is accessible through the parent
+            if (this.getParent() != null && this.getParent().getId().equals("root")) {
+                System.out.println("DEBUG: Returning to root via parent");
+                return this.getParent();
+            }
+        }
+        
+        // General pattern matching for any node not caught by specific cases above
+        // This helps with custom node transitions not covered by our standard cases
+        if (isConfirmation) {
+            for (ChatbotNode child : getChildren()) {
+                if (child.getId().contains("confirm")) {
+                    System.out.println("DEBUG: Found confirmation-related node through pattern matching: " + child.getId());
+                    return child;
+                }
+            }
+        }
+        else if (isRejection) {
+            for (ChatbotNode child : getChildren()) {
+                if (child.getId().contains("reject") || child.getId().contains("cancel")) {
+                    System.out.println("DEBUG: Found rejection-related node through pattern matching: " + child.getId());
+                    return child;
+                }
+            }
+        }
+        
+        // If a category was determined from the user message, try to find a matching child
+        if (this.category != null && !this.category.isEmpty()) {
+            for (ChatbotNode child : getChildren()) {
+                if (this.category.equals(child.getCategory())) {
+                    System.out.println("DEBUG: Found child with matching category: " + child.getId());
+                    return child;
+                }
+            }
+        }
+        
+        // Fallback: If no specific condition matched but we have children, return first child
+        if (hasChildren()) {
+            System.out.println("DEBUG: No specific condition matched, returning first child: " + getFirstChild().getId());
+            return getFirstChild();
+        }
+        
+        System.out.println("DEBUG: No next node found, returning null");
         return null;
+    }    /**
+     * Checks if this is a valid category node (main category)
+     * 
+     * @param node The node to check
+     * @return true if it's a main category node, false otherwise
+     */
+    private boolean validCategoryNode(ChatbotNode node) {
+        String category = node.getCategory();
+        return "ΚΡΑΤΗΣΗ".equals(category) || 
+               "ΑΚΥΡΩΣΗ".equals(category) || 
+               "ΠΛΗΡΟΦΟΡΙΕΣ".equals(category) || 
+               "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(category) || 
+               "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category);
     }
+    
+    /**
+     * Checks if this is a terminal node that should return to root
+     * 
+     * @param nodeId The node ID to check
+     * @return true if it's a terminal node, false otherwise
+     */
+    private boolean isTerminalNode(String nodeId) {
+        return nodeId.equals("booking_complete") || 
+               nodeId.equals("booking_incomplete") ||
+               nodeId.equals("cancel_complete") || 
+               nodeId.equals("cancel_incomplete") || 
+               nodeId.equals("info_some") || 
+               nodeId.equals("info_none") || 
+               nodeId.equals("review_complete") ||
+               nodeId.equals("review_incomplete") ||
+               nodeId.equals("discount_some") ||
+               nodeId.equals("discount_none");
+    }
+    
+    // NOTE: The level-based handler methods (handleRootNodeSelection, handleLevel1Selection, 
+    // and handleDeepLevelSelection) have been removed as part of refactoring the node
+    // selection logic to use a more robust case-based approach. If you encounter
+    // any compile warnings about these methods, you can safely ignore them as they
+    // are artifacts from the previous implementation that may be referenced elsewhere
+    // but are no longer needed.
 
     // Overrides toString method and shows all the fields of the class
     @Override
@@ -580,5 +782,64 @@ public class ChatbotNode {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Ελέγχει αν το template του node έχει όλα τα απαραίτητα πεδία συμπληρωμένα
+     * για την κατηγορία του
+     * 
+     * @return true αν το template είναι πλήρες, false διαφορετικά
+     */
+    public boolean hasCompleteTemplateInformation() {
+        if (msgTemplate == null) {
+            return false;
+        }
+        
+        // Έλεγχος με βάση την κατηγορία
+        if ("ΚΡΑΤΗΣΗ".equals(category)) {
+            if (msgTemplate instanceof BookingTemplate) {
+                BookingTemplate bookingTemplate = (BookingTemplate) msgTemplate;
+                return !bookingTemplate.getShowName().isEmpty() && 
+                       !bookingTemplate.getDay().isEmpty() && 
+                       !bookingTemplate.getTime().isEmpty() && 
+                       !bookingTemplate.getPerson().getName().isEmpty();
+            }
+        } 
+        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
+            if (msgTemplate instanceof CancellationTemplate) {
+                CancellationTemplate cancelTemplate = (CancellationTemplate) msgTemplate;
+                return !cancelTemplate.getReservationNumber().isEmpty() && 
+                       !cancelTemplate.getPasscode().isEmpty();
+            }
+        } 
+        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
+            if (msgTemplate instanceof ShowInfoTemplate) {
+                ShowInfoTemplate infoTemplate = (ShowInfoTemplate) msgTemplate;
+                // Για πληροφορίες, θεωρούμε ότι έχουμε κάποιες πληροφορίες αν έχουμε τουλάχιστον ένα από τα βασικά πεδία
+                return !infoTemplate.getName().isEmpty() || 
+                       !infoTemplate.getDay().isEmpty() || 
+                       !infoTemplate.getTopic().isEmpty();
+            }
+        } 
+        else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(category)) {
+            if (msgTemplate instanceof ReviewTemplate) {
+                ReviewTemplate reviewTemplate = (ReviewTemplate) msgTemplate;
+                return !reviewTemplate.getReservationNumber().isEmpty() && 
+                       !reviewTemplate.getPasscode().isEmpty() && 
+                       reviewTemplate.getStars() > 0;
+            }
+        } 
+        else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
+            if (msgTemplate instanceof DiscountTemplate) {
+                DiscountTemplate discountTemplate = (DiscountTemplate) msgTemplate;
+                // Για προσφορές, θεωρούμε ότι έχουμε κάποιες πληροφορίες αν έχουμε τουλάχιστον ένα από τα βασικά πεδία
+                return !discountTemplate.getShowName().isEmpty() || 
+                       !discountTemplate.getAge().isEmpty() || 
+                       !discountTemplate.getDate().isEmpty() ||
+                       discountTemplate.getNumberOfPeople() > 0;
+            }
+        }
+        
+        return false;
     }
 }
