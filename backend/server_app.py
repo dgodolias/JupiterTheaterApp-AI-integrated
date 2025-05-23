@@ -20,11 +20,9 @@ DUMMY_RESPONSES = True
 # Set to True to use full dummy data, False for partial dummy data
 DUMMY_FULL = True
 
-# Set to True to alternate between full and partial dummy data for consecutive requests
-DUAL_MODE = False
-
-# Counter to track requests for alternating between full and partial dummy data in DUAL_MODE
-request_counter = 0
+# Set to True to enable alternating DUMMY_FULL state for EXTRACT requests
+DUAL = True  # Or False to disable
+DUAL_STATE_FULL = True  # Initial state for DUAL mode (True for full, False for nonfull)
 
 def get_dummy_category():
     """Returns a random category from the predefined list to save LLM API calls."""
@@ -33,23 +31,16 @@ def get_dummy_category():
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     choice = random.choice(valid_categories)
-    choice = "ΚΡΑΤΗΣΗ"
+    choice = "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ" 
     return choice
 
 def process_client_request(client_data):
     """
     Processes the client's JSON request and returns a structured response.
-    Expected JSON format: {"type": "CATEGORISE|EXTRACT", "category": "", "message": "..."}
+    Expected JSON format: {"type": "CATEGORISE|EXTRACT", "category": "", "message": "..."
     """
-    global request_counter
-    
-    # If DUAL_MODE is enabled, determine DUMMY_FULL value based on the request counter
-    current_dummy_full = DUMMY_FULL
-    if DUAL_MODE:
-        current_dummy_full = (request_counter % 2 == 0)
-        request_counter += 1
-        print(f"DUAL MODE: Using {'full' if current_dummy_full else 'partial'} dummy data for this request")
-    
+    global DUAL_STATE_FULL # Allow modification of the global variable
+
     try:
         # Try to parse the client message as JSON
         try:
@@ -100,12 +91,19 @@ def process_client_request(client_data):
             
             if not request_category:
                 raise ValueError("Category field is required for EXTRACT requests")
-                  # Use dummy responses if the flag is enabled
+            
             if DUMMY_RESPONSES:
                 dummy_data = None
                 
-                # Determine which folder to use based on current_dummy_full value (respects DUAL_MODE)
-                folder_path = "full" if current_dummy_full else "nonfull"
+                # Determine which folder to use
+                current_dummy_full_state = DUMMY_FULL # Default to global DUMMY_FULL
+                
+                if DUAL:
+                    current_dummy_full_state = DUAL_STATE_FULL
+                    print(f"DUAL mode active. Using DUMMY_FULL = {current_dummy_full_state}")
+                    DUAL_STATE_FULL = not DUAL_STATE_FULL # Toggle for the next DUAL request
+                
+                folder_path = "full" if current_dummy_full_state else "nonfull"
                 base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fake_data", folder_path)
                 
                 # Map categories to file names
@@ -122,7 +120,7 @@ def process_client_request(client_data):
                     try:
                         with open(json_file, 'r', encoding='utf-8') as f:
                             dummy_data = json.load(f)
-                        data_completeness = "full" if current_dummy_full else "partial"
+                        data_completeness = "full" if current_dummy_full_state else "partial"
                         print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}:",dummy_data)
                     except Exception as e:
                         print(f"Error loading dummy data from {json_file}: {e}")
@@ -163,4 +161,124 @@ def process_client_request(client_data):
         response_data = {"category": None, "details": None, "error": str(e)}
     
     return response_data
-# ...existing code...
+
+def get_local_ip():
+    """Get the local IP address of this machine."""
+    try:
+        # Create a socket to determine the IP address this machine uses to connect to the outside world
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # You don't actually need to send data - just start a connection
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return local_ip
+    except Exception as e:
+        print(f"Error getting local IP: {e}")
+        return "127.0.0.1"  # Fallback to localhost
+
+def start_server(host=None, port=65432):
+    """Starts the TCP server to listen for client connections."""
+    if host is None:
+        host = get_local_ip()
+    
+    # Create server socket outside the with block so we can reference it in signal handlers
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    # Flag to track server state
+    server_running = True
+    
+    # Define signal handler function
+    def signal_handler(sig, frame):
+        nonlocal server_running
+        print(f"\nReceived interrupt signal {sig}. Shutting down server...")
+        server_running = False
+        # Close the server socket
+        try:
+            server_socket.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            # Socket might already be closed
+            pass
+        server_socket.close()
+        print("Server socket closed.")
+        sys.exit(0)
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)  # Handle Ctrl+C
+    signal.signal(signal.SIGTERM, signal_handler)  # Handle termination signal
+    
+    try:
+        server_socket.bind((host, port))
+    except socket.error as e:
+        print(f"Error binding server to {host}:{port} - {e}")
+        sys.exit(1)
+        
+    server_socket.listen()
+    print(f"Jupiter Theater Server listening on {host}:{port}")
+    print("Press Ctrl+C to stop the server")
+    
+    while server_running:
+        try:
+            # Set a timeout so the server can check for the running flag
+            server_socket.settimeout(1.0)
+            try:
+                conn, addr = server_socket.accept()
+                # Reset timeout for normal operation
+                server_socket.settimeout(None)
+                
+                with conn:
+                    print(f"Connected by {addr}")
+                    while server_running:
+                        print(f"Waiting for message from {addr}...")
+                        data = conn.recv(4096)  # Increased buffer size
+                        if not data:
+                            print(f"Client {addr} disconnected (no data).")
+                            break
+                        client_data = data.decode('utf-8').strip()
+                        
+                        # Process the client data (now expecting JSON format)
+                        response_payload = process_client_request(client_data)
+                        
+                        # Send the response back to the client
+                        try:
+                            response_json = json.dumps(response_payload, ensure_ascii=False)
+                            conn.sendall(response_json.encode('utf-8') + b'\n')  # Add newline for easier client parsing
+                            print(f"Response sent to {addr}. Waiting for next message...")
+                        except socket.error as e:
+                            print(f"Error sending data to {addr}: {e}")
+                            break
+                    print(f"Connection with {addr} closed.")
+            except socket.timeout:
+                # This is expected due to the timeout we set
+                continue
+        except KeyboardInterrupt:
+            print("\nServer shutting down from KeyboardInterrupt...")
+            server_running = False
+            break
+        except Exception as e:
+            print(f"An unexpected error occurred in the server loop: {e}")
+            # Continue running to accept new connections unless server_running was changed
+    
+    # Ensure socket is closed before exiting
+    try:
+        server_socket.close()
+        print("Server socket closed.")
+    except Exception as e:
+        print(f"Error closing server socket: {e}")
+
+if __name__ == "__main__":
+    # Ensure the current working directory allows imports from sibling modules
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if (current_dir not in sys.path):
+        sys.path.insert(0, current_dir)
+    
+    # Option to specify port via command line
+    port = 65432  # Default port
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+        except ValueError:
+            print(f"Invalid port number: {sys.argv[1]}. Using default: {port}")
+    
+    # Start server on the automatically detected IP address
+    start_server(port=port)
