@@ -400,6 +400,11 @@ class ShowInfoTemplate extends MsgTemplate {
         return templateString;
     }
 
+    // Get the total number of fields in this template
+    public int getTotalFieldCount() {
+        return 8; // name, day, topic, time, cast, room, duration, stars
+    }
+
     // Getters and setters
     public List<String> getName() {
         return name;
@@ -805,23 +810,28 @@ class DiscountTemplate extends MsgTemplate {
         return templateString;
     }
 
+    // Get the total number of fields in this template
+    public int getTotalFieldCount() {
+        return 4; // show_name, no_of_people, age, date
+    }
+    
     // Getters
     public List<String> getShowName() {
         return showName;
     }
-
+    
     public int getNumberOfPeople() {
         return numberOfPeople;
     }
-
+    
     public List<String> getAge() {
         return age;
     }
-
+    
     public List<String> getDate() {
         return date;
     }
-
+    
     public List<String> getPossibleAgeCategories() {
         return possibleAgeCategories;
     }
