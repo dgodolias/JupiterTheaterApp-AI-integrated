@@ -115,8 +115,7 @@ public class Client {
             json.put("id", node.getId());
             json.put("category", node.getCategory()); // Include category field
             json.put("type", node.getType());
-            json.put("message", node.getMessage()); // Using primary message
-            json.put("message_1", node.getMessage()); // Including message_1 explicitly
+            json.put("message_1", node.getMessage1()); // Including message_1 explicitly
             json.put("message_2", node.getMessage2()); // Including message_2 explicitly
             json.put("content", node.getContent());
             json.put("fallback", node.getFallback());

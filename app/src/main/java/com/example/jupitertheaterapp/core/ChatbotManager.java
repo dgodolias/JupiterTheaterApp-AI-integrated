@@ -279,7 +279,7 @@ public class ChatbotManager {
     public String getInitialMessage() {
         if (rootNode != null) {
             // Get both message1 and message2 from the root node
-            String message1 = rootNode.getMessage();
+            String message1 = rootNode.getMessage1();
             String message2 = rootNode.getMessage2();
             
             // Combine message1 and message2 with a newline between them
@@ -310,7 +310,7 @@ public class ChatbotManager {
         currentNode = foundNode;
 
         // Get both message1 and message2 from the node
-        String message1 = foundNode.getMessage();
+        String message1 = foundNode.getMessage1();
         String message2 = foundNode.getMessage2();
         
         // Combine message1 and message2 with a newline between them
@@ -363,7 +363,7 @@ public class ChatbotManager {
 
         if (node != null) {
             // Get both message1 and message2 from the node
-            String message1 = node.getMessage();
+            String message1 = node.getMessage1();
             String message2 = node.getMessage2();
             
             // Combine message1 and message2 with a newline between them
@@ -483,7 +483,7 @@ public class ChatbotManager {
         }
 
         // For backward compatibility, also print message_1 and message_2
-        String message1Preview = node.getMessage();
+        String message1Preview = node.getMessage1();
         if (message1Preview.length() > 40) {
             message1Preview = message1Preview.substring(0, 37) + "...";
         }
@@ -662,7 +662,7 @@ public class ChatbotManager {
 
             // System message details (including message_1 and message_2)
             result.append("- System Message: ").append(node.getSystemMessage().getMessage()).append("\n");
-            result.append("- Message_1: ").append(node.getMessage()).append("\n");
+            result.append("- Message_1: ").append(node.getMessage1()).append("\n");
             result.append("- Message_2: ").append(node.getMessage2()).append("\n");
 
             // User message if available
@@ -799,36 +799,23 @@ public class ChatbotManager {
                 @Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
-                        // Set the category as user message for node navigation purposes
-                        currentNode.setUserMessage(category);
+                        System.out.println("Server category response: " + category);
+                        System.out.println("Server response: " + fullJsonResponse);
+                        // This method handles state transition, message processing, and response building
+                        String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                        Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
+                        Log.d(TAG, "Current state: " + currentNode.getCurrentState());
+                        
+                        int messageType = currentNode.getSystemMessage().getType();
 
+                        // Debug logging
+                        Log.d(TAG, "Using system message from node: " + currentNode.getId());
+                        Log.d(TAG, "Combined message: " + combinedMessage);
+
+                        responseCallback.onResponseReceived(combinedMessage, messageType);
+                        combinedMessage = currentNode.getMessage1()+"\n" + currentNode.getMessage2();
                         // Try to get the next node based on category
                         ChatbotNode nextNode = currentNode.chooseNextNode();
-                        if (nextNode != null) {                            // Update the current node to the next one
-                            currentNode = nextNode;                               // Use the comprehensive conversation turn handler to process the message
-                            // This method handles state transition, message processing, and response building
-                            String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
-                            Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
-                            Log.d(TAG, "Current state: " + currentNode.getCurrentState());
-                            
-                            int messageType = currentNode.getSystemMessage().getType();
-
-                            // Debug logging
-                            Log.d(TAG, "Using system message from node: " + currentNode.getId());
-                            Log.d(TAG, "Combined message: " + combinedMessage);
-
-                            responseCallback.onResponseReceived(combinedMessage, messageType);
-                        } else {
-                            // No matching node - use getResponseForNodeId as fallback
-                            Log.d(TAG, "No matching node found for category: " + category + ", using fallback");                            // Create a temporary ChatbotNode to handle the message
-                            ChatbotNode tempNode = new ChatbotNode("temp", "CATEGORISE", "", "", "", "");
-                            // Use the current state but with the temporary node
-                            String combinedMessage = tempNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
-                            Log.d(TAG, "Fallback handler processed message");
-                            
-                            Log.d(TAG, "Combined fallback message: " + combinedMessage);
-                            responseCallback.onResponseReceived(combinedMessage, ChatMessage.TYPE_SERVER);
-                        }
                     } catch (Exception e) {
                         Log.e(TAG, "Error processing server response", e);
                         responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);

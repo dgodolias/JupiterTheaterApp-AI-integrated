@@ -82,22 +82,9 @@ public class ChatbotNode {
         this.systemMessage = systemMessage;
         this.userMessage = userMessage;
 
-        // Set message fields with default values
-        if (systemMessage != null) {
-            this.message1 = systemMessage.getMessage();
-            this.message2 = systemMessage.getMessage();
+        this.message1 = "";
+        this.message2 = "";
 
-            // If it's a SystemMessage, we can check for JSON data and apply template
-            if (systemMessage instanceof SystemMessage) {
-                JSONObject details = ((SystemMessage) systemMessage).getDetails();
-                if (details != null) {
-                    // Apply template later if needed
-                }
-            }
-        } else {
-            this.message1 = "";
-            this.message2 = "";
-        }
 
         this.content = content;
         this.fallback = fallback;
@@ -137,7 +124,7 @@ public class ChatbotNode {
         return type;
     }
 
-    public String getMessage() {
+    public String getMessage1() {
         // Return message1 from the node directly
         return message1 != null ? message1 : "";
     }
@@ -1112,7 +1099,7 @@ public class ChatbotNode {
         }
         
         // 3. Combine message1 and message2 with a newline between them
-        String combinedMessage = getMessage();
+        String combinedMessage = getMessage1();
         String message2 = getMessage2();
         if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
             combinedMessage += "\n" + message2;
