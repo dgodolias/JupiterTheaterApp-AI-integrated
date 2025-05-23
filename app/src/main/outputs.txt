@@ -1,332 +1,327 @@
-2025-05-23 11:13:51.980 10596-10596 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (greylist, reflection, allowed)
-2025-05-23 11:13:52.194 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Conversation State: 
-2025-05-23 11:13:52.194 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  INITIAL
-2025-05-23 11:13:52.206 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Starting to resolve node references. Node map size: 17
-2025-05-23 11:13:52.206 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  After resolving references, root node has 5 children
-2025-05-23 11:13:52.206 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Conversation tree loaded successfully
-2025-05-23 11:13:52.207 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: 
-                                                                                                    Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω; (type: 1)
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: 
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: 
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:52.207 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.209 10596-10641 Client                  com.example.jupitertheaterapp        D  Attempting to connect to 192.168.1.18:65432
-2025-05-23 11:13:52.212 10596-10641 Client                  com.example.jupitertheaterapp        D  Connected to server successfully
-2025-05-23 11:13:52.285 10596-10596 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden method Landroid/view/View;->getViewRootImpl()Landroid/view/ViewRootImpl; (greylist, reflection, allowed)
-2025-05-23 11:13:52.285 10596-10596 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden field Landroid/view/View$AttachInfo;->mVisibleInsets:Landroid/graphics/Rect; (greylist, reflection, allowed)
-2025-05-23 11:13:52.285 10596-10596 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden field Landroid/view/ViewRootImpl;->mAttachInfo:Landroid/view/View$AttachInfo; (greylist, reflection, allowed)
-2025-05-23 11:13:52.311 10596-10628 HostConnection          com.example.jupitertheaterapp        D  HostConnection::get() New Host Connection established 0xe1e56280, tid 10628
-2025-05-23 11:13:52.313 10596-10628 HostConnection          com.example.jupitertheaterapp        D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
-2025-05-23 11:13:52.316 10596-10628 OpenGLRenderer          com.example.jupitertheaterapp        W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
-2025-05-23 11:13:52.326 10596-10628 eglCodecCommon          com.example.jupitertheaterapp        D  setVertexArrayObject: set vao to 0 (0) 0 0
-2025-05-23 11:13:52.326 10596-10628 EGL_emulation           com.example.jupitertheaterapp        D  eglCreateContext: 0xe1e1a240: maj 2 min 0 rcv 2
-2025-05-23 11:13:52.330 10596-10628 EGL_emulation           com.example.jupitertheaterapp        D  eglMakeCurrent: 0xe1e1a240: ver 2 0 (tinfo 0xe1e0f650)
-2025-05-23 11:13:52.333 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:52.333 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.333 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: 
-2025-05-23 11:13:52.333 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:52.349 10596-10628 Gralloc3                com.example.jupitertheaterapp        W  mapper 3.x is not supported
-2025-05-23 11:13:52.355 10596-10628 HostConnection          com.example.jupitertheaterapp        D  createUnique: call
-2025-05-23 11:13:52.355 10596-10628 HostConnection          com.example.jupitertheaterapp        D  HostConnection::get() New Host Connection established 0xe1e56410, tid 10628
-2025-05-23 11:13:52.359 10596-10628 HostConnection          com.example.jupitertheaterapp        D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
-2025-05-23 11:13:52.359 10596-10628 eglCodecCommon          com.example.jupitertheaterapp        D  allocate: Ask for block of size 0x1000
-2025-05-23 11:13:52.359 10596-10628 eglCodecCommon          com.example.jupitertheaterapp        D  allocate: ioctl allocate returned offset 0x3ff1fc000 size 0x2000
-2025-05-23 11:13:52.375 10596-10628 EGL_emulation           com.example.jupitertheaterapp        D  eglMakeCurrent: 0xe1e1a240: ver 2 0 (tinfo 0xe1e0f650)
-2025-05-23 11:13:52.381 10596-10628 eglCodecCommon          com.example.jupitertheaterapp        D  setVertexArrayObject: set vao to 0 (0) 1 0
-2025-05-23 11:13:53.553 10596-10596 AssistStructure         com.example.jupitertheaterapp        I  Flattened final assist data: 1392 bytes, containing 1 windows, 7 views
-2025-05-23 11:13:55.082 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: vh (type: 0)
-2025-05-23 11:13:55.082 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: vh
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: vh
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: 
-2025-05-23 11:13:55.083 10596-10596 System.out              com.example.jupitertheaterapp        I  Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    id='root',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    category='-',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:55.090 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=null,
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:55.091 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: vh
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"vh"}
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    id='root',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    category='-',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='vh'},
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-2025-05-23 11:13:55.091 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
-2025-05-23 11:13:55.092 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=null,
-2025-05-23 11:13:55.092 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:55.092 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
-2025-05-23 11:13:55.092 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:55.092 10596-10596 System.out              com.example.jupitertheaterapp        I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"vh"}
-2025-05-23 11:13:55.097 10596-10647 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"CATEGORISE","category":"-","message":"vh"}
-2025-05-23 11:13:55.097 10596-10647 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"CATEGORISE","category":"-","message":"vh"}
-2025-05-23 11:13:55.099 10596-10647 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": null, "error": null}
-2025-05-23 11:13:55.099 10596-10647 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": null, "error": null}
-2025-05-23 11:13:55.102 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: vh
-2025-05-23 11:13:55.112 10596-10596 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@5e808eb
-2025-05-23 11:13:55.112 10596-10596 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:55.112 10596-10596 System.out              com.example.jupitertheaterapp        I  Server category response: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  Server response: {"category": "ΚΡΑΤΗΣΗ", "details": null, "error": null}
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: root
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node root
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to INITIAL for root node
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: root, Category: -
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.setMessage() setting message to: 
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  No details in JSON response, skipping template application
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Using primary node message from message2 field
-2025-05-23 11:13:55.113 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Combined message: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.117 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: root
-2025-05-23 11:13:55.118 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-23 11:13:55.118 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: root
-2025-05-23 11:13:55.118 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.118 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Combined message to display: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.118 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Response received: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.118 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.118 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 2
-2025-05-23 11:13:55.118 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω; (type: 2)
-2025-05-23 11:13:55.118 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.119 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.119 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.119 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    id='root',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details=null, error='null', type=2},
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='vh'},
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=null,
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response sent to UI with message type: 2
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with user message: vh
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: root, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 5
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: kratisi, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: akyrosi, Category: ΑΚΥΡΩΣΗ
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 11:13:55.121 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: prosfores_ekptoseis, Category: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 1
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: At root node, looking for category match
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Found child with matching category: kratisi
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: kratisi, handling state transition
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node kratisi
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Next node chosen: kratisi
-2025-05-23 11:13:55.122 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Advanced to next node: kratisi
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Advanced to next node: kratisi
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Showing next node's message: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Response received: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 1
-2025-05-23 11:13:55.122 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση; (type: 1)
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.122 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.122 10596-10596 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
-2025-05-23 11:13:55.123 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.123 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:55.123 10596-10596 System.out              com.example.jupitertheaterapp        I    id='kratisi',
-2025-05-23 11:13:55.123 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:55.123 10596-10596 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;',
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='',
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Για να κάνετε κράτηση, χρειάζομαι πληροφορίες όπως την ημερομηνία, την ώρα και τον αριθμό των εισιτηρίων.',
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=root,
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='', room='', day='', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7459648}
-2025-05-23 11:13:55.124 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:55.133 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.134 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 11:13:55.144 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:55.144 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:58.173 10596-10648 ProfileInstaller        com.example.jupitertheaterapp        D  Installing profile for com.example.jupitertheaterapp
-2025-05-23 11:13:58.970 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: hf (type: 0)
-2025-05-23 11:13:58.970 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: hf
-2025-05-23 11:13:58.970 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: hf
-2025-05-23 11:13:58.970 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:58.970 10596-10596 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
-2025-05-23 11:13:58.970 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    id='kratisi',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Για να κάνετε κράτηση, χρειάζομαι πληροφορίες όπως την ημερομηνία, την ώρα και τον αριθμό των εισιτηρίων.',
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=root,
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='', room='', day='', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7459648}
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:58.974 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: hf
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"hf"}
-2025-05-23 11:13:58.974 10596-10596 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    id='kratisi',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='hf'},
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Για να κάνετε κράτηση, χρειάζομαι πληροφορίες όπως την ημερομηνία, την ώρα και τον αριθμό των εισιτηρίων.',
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=root,
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='', room='', day='', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7459648}
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"hf"}
-2025-05-23 11:13:58.975 10596-10596 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:58.979 10596-10649 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"hf"}
-2025-05-23 11:13:58.979 10596-10649 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"hf"}
-2025-05-23 11:13:58.991 10596-10649 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
-2025-05-23 11:13:58.991 10596-10649 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
-2025-05-23 11:13:58.994 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: hf
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@1fd708e
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  Server category response: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  Server response: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: kratisi
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node kratisi
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 11:13:59.008 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 11:13:59.009 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 11:13:59.009 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 11:13:59.009 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: kratisi, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.009 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 11:13:59.009 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.setMessage() setting message to: Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;
-2025-05-23 11:13:59.010 10596-10596 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Using primary node message from message2 field
-2025-05-23 11:13:59.011 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Combined message: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: kratisi
-2025-05-23 11:13:59.011 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-23 11:13:59.011 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: kratisi
-2025-05-23 11:13:59.011 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Combined message to display: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Response received: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.011 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 2
-2025-05-23 11:13:59.011 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos (type: 2)
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    id='kratisi',
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='Θα θέλατε να κάνετε κράτηση για κάποια παράσταση;',
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos',
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='hf'},
-2025-05-23 11:13:59.012 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Για να κάνετε κράτηση, χρειάζομαι πληροφορίες όπως την ημερομηνία, την ώρα και τον αριθμό των εισιτηρίων.',
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=root,
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@d0860af}
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response sent to UI with message type: 2
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with user message: hf
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: kratisi, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 2
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: booking_incomplete, Category: ΚΡΑΤΗΣΗ
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 2
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-23 11:13:59.013 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG:   - kratisi (ΚΡΑΤΗΣΗ)
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: At category node kratisi, checking template completeness
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness check result: true
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Looking for child with pattern: complete
-2025-05-23 11:13:59.014 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Found matching child node: booking_incomplete
-2025-05-23 11:13:59.015 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: booking_incomplete, handling state transition
-2025-05-23 11:13:59.015 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node booking_incomplete
-2025-05-23 11:13:59.015 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 11:13:59.015 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node
-2025-05-23 11:13:59.015 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: State updated to: LLM_GET_INFO
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Next node chosen: booking_incomplete
-2025-05-23 11:13:59.016 10596-10596 ChatbotManager          com.example.jupitertheaterapp        D  Advanced to next node: booking_incomplete
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Advanced to next node: booking_incomplete
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Showing next node's message: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Response received: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 1
-2025-05-23 11:13:59.016 10596-10596 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες. (type: 1)
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.016 10596-10596 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
-2025-05-23 11:13:59.016 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    id='booking_incomplete',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    message1='Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    message2='Για να ολοκληρωθεί η κράτηση χρειάζομαι: <missing>. Παρακαλώ δώστε τις πληροφορίες που λείπουν.',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    fallback='Παρακαλώ δώστε όλες τις πληροφορίες που χρειάζονται για την κράτηση: όνομα παράστασης, αίθουσα, ημέρα, ώρα, όνομα, ηλικιακή κατηγορία, και θέση.',
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
-2025-05-23 11:13:59.017 10596-10596 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 11:13:59.018 10596-10596 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='', room='', day='', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@60acbc}
-2025-05-23 11:13:59.018 10596-10596 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 11:13:59.026 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.026 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Παράσταση: Romeo and Juliet, Αίθουσα: Main Theater, Ημέρα: Saturday, Ώρα: 19:30, Όνομα: Maria Papadopoulos
-2025-05-23 11:13:59.039 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
-2025-05-23 11:13:59.040 10596-10596 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες.
+
+2025-05-23 12:50:33.246 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Starting to resolve node references. Node map size: 17
+2025-05-23 12:50:33.246 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  After resolving references, root node has 5 children
+2025-05-23 12:50:33.246 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Conversation tree loaded successfully
+2025-05-23 12:50:33.248 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Initial message from root node: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.248 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω; (type: 1)
+2025-05-23 12:50:33.248 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.249 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.249 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.249 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.249 13386-13422 Client                  com.example.jupitertheaterapp        D  Attempting to connect to 192.168.1.18:65432
+2025-05-23 12:50:33.261 13386-13422 Client                  com.example.jupitertheaterapp        D  Connected to server successfully
+2025-05-23 12:50:33.321 13386-13386 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden method Landroid/view/View;->getViewRootImpl()Landroid/view/ViewRootImpl; (greylist, reflection, allowed)
+2025-05-23 12:50:33.321 13386-13386 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden field Landroid/view/View$AttachInfo;->mVisibleInsets:Landroid/graphics/Rect; (greylist, reflection, allowed)
+2025-05-23 12:50:33.321 13386-13386 pitertheaterap          com.example.jupitertheaterapp        W  Accessing hidden field Landroid/view/ViewRootImpl;->mAttachInfo:Landroid/view/View$AttachInfo; (greylist, reflection, allowed)
+2025-05-23 12:50:33.340 13386-13418 HostConnection          com.example.jupitertheaterapp        D  HostConnection::get() New Host Connection established 0xe1e3e3c0, tid 13418
+2025-05-23 12:50:33.340 13386-13418 HostConnection          com.example.jupitertheaterapp        D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
+2025-05-23 12:50:33.342 13386-13418 OpenGLRenderer          com.example.jupitertheaterapp        W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-05-23 12:50:33.350 13386-13418 eglCodecCommon          com.example.jupitertheaterapp        D  setVertexArrayObject: set vao to 0 (0) 0 0
+2025-05-23 12:50:33.350 13386-13418 EGL_emulation           com.example.jupitertheaterapp        D  eglCreateContext: 0xe1e1a240: maj 2 min 0 rcv 2
+2025-05-23 12:50:33.355 13386-13418 EGL_emulation           com.example.jupitertheaterapp        D  eglMakeCurrent: 0xe1e1a240: ver 2 0 (tinfo 0xe1e0f690)
+2025-05-23 12:50:33.359 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.360 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:33.371 13386-13418 Gralloc3                com.example.jupitertheaterapp        W  mapper 3.x is not supported
+2025-05-23 12:50:33.373 13386-13418 HostConnection          com.example.jupitertheaterapp        D  createUnique: call
+2025-05-23 12:50:33.373 13386-13418 HostConnection          com.example.jupitertheaterapp        D  HostConnection::get() New Host Connection established 0xe1e3e550, tid 13418
+2025-05-23 12:50:33.375 13386-13418 HostConnection          com.example.jupitertheaterapp        D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
+2025-05-23 12:50:33.375 13386-13418 eglCodecCommon          com.example.jupitertheaterapp        D  allocate: Ask for block of size 0x1000
+2025-05-23 12:50:33.375 13386-13418 eglCodecCommon          com.example.jupitertheaterapp        D  allocate: ioctl allocate returned offset 0x3ff1fc000 size 0x2000
+2025-05-23 12:50:33.387 13386-13418 EGL_emulation           com.example.jupitertheaterapp        D  eglMakeCurrent: 0xe1e1a240: ver 2 0 (tinfo 0xe1e0f690)
+2025-05-23 12:50:33.390 13386-13418 eglCodecCommon          com.example.jupitertheaterapp        D  setVertexArrayObject: set vao to 0 (0) 1 0
+2025-05-23 12:50:34.672 13386-13386 AssistStructure         com.example.jupitertheaterapp        I  Flattened final assist data: 1392 bytes, containing 1 windows, 7 views
+2025-05-23 12:50:35.769 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: g (type: 0)
+2025-05-23 12:50:35.769 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: g
+2025-05-23 12:50:35.770 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: g
+2025-05-23 12:50:35.770 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:35.770 13386-13386 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
+2025-05-23 12:50:35.770 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-23 12:50:35.775 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:35.775 13386-13386 System.out              com.example.jupitertheaterapp        I    id='root',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    category='-',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=null,
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:35.776 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: g
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"g"}
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I  Current node (before server request): ChatbotNode{
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    id='root',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    category='-',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='g'},
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=null,
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
+2025-05-23 12:50:35.776 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:35.777 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"g"}
+2025-05-23 12:50:35.781 13386-13426 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"CATEGORISE","category":"-","message":"g"}
+2025-05-23 12:50:35.782 13386-13426 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"CATEGORISE","category":"-","message":"g"}
+2025-05-23 12:50:35.783 13386-13426 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": null, "error": null}
+2025-05-23 12:50:35.783 13386-13426 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": null, "error": null}
+2025-05-23 12:50:35.788 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: g
+2025-05-23 12:50:35.800 13386-13386 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@235ef65
+2025-05-23 12:50:35.800 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:35.800 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server category response: ΠΛΗΡΟΦΟΡΙΕΣ for node: root
+2025-05-23 12:50:35.800 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server fullJsonResponse: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": null, "error": null}
+2025-05-23 12:50:35.800 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Current Node ID: root, Category: -, State: INITIAL
+2025-05-23 12:50:35.800 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: User Message: g
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Available children: plirofories, kratisi, akyrosi, axiologiseis_sxolia, prosfores_ekptoseis
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode (GIVE_INFO/INITIAL/EXIT): No specific exit/root, taking first child: plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: plirofories, handling state transition
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state (before): INITIAL for node plirofories with category ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: State updated for node plirofories from INITIAL to: LLM_GET_INFO
+2025-05-23 12:50:35.801 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Next node candidate chosen by root is: plirofories
+2025-05-23 12:50:35.801 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Transitioning to node: plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state (before): LLM_GET_INFO for node plirofories with category ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged for node plirofories: LLM_GET_INFO
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition for node plirofories: LLM_GET_INFO
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: LLM_GET_INFO for node: plirofories
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Bot turn for node plirofories. Using message1/message2 from JSON directly.
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with LLM_GET_INFO state. Messages/templates from JSON.
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Node ID: plirofories, State: LLM_GET_INFO
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message1 (from JSON): 'Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;'
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message2 (from JSON or processed template): ''
+2025-05-23 12:50:35.801 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Final combined message for node plirofories: "Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;"
+2025-05-23 12:50:35.802 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Message from new node (post-root) plirofories: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Response received: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 1
+2025-05-23 12:50:35.802 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας; (type: 1)
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.802 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    id='plirofories',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=root,
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:35.803 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node after turn processing: plirofories
+2025-05-23 12:50:35.815 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:35.815 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:37.025 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: h (type: 0)
+2025-05-23 12:50:37.025 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: h
+2025-05-23 12:50:37.025 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: h
+2025-05-23 12:50:37.025 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:37.025 13386-13386 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
+2025-05-23 12:50:37.025 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I    id='plirofories',
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
+2025-05-23 12:50:37.029 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='',
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=root,
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:37.030 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: h
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:37.030 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I  Current node (before server request): ChatbotNode{
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    id='plirofories',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='h'},
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=root,
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:37.031 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:37.033 13386-13427 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:37.033 13386-13427 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:37.035 13386-13427 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:37.035 13386-13427 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:37.039 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: h
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@b02f1b7
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:37.047 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server category response: ΠΛΗΡΟΦΟΡΙΕΣ for node: plirofories
+2025-05-23 12:50:37.047 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server fullJsonResponse: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Current Node ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ, State: LLM_GET_INFO
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: User Message: h
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Available children: info_confirmation, info_none
+2025-05-23 12:50:37.047 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode (LLM_GET_INFO): Template complete? false
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode (Fallback): Found child matching current node's category: info_confirmation
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: info_confirmation, handling state transition
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state (before): LLM_GET_INFO for node info_confirmation with category ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: State updated for node info_confirmation from LLM_GET_INFO to: CONFIRMATION
+2025-05-23 12:50:37.048 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Next node candidate chosen by plirofories is: info_confirmation
+2025-05-23 12:50:37.048 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Transitioning to node: info_confirmation
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: info_confirmation
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
+2025-05-23 12:50:37.048 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state (before): CONFIRMATION for node info_confirmation with category ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:37.049 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged for node info_confirmation: CONFIRMATION
+2025-05-23 12:50:37.049 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition for node info_confirmation: CONFIRMATION
+2025-05-23 12:50:37.049 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: CONFIRMATION for node: info_confirmation
+2025-05-23 12:50:37.049 13386-13386 System.out              com.example.jupitertheaterapp        I  Skipping non-integer value in pvalues: >3
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  Skipping non-integer value in pvalues: <4
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED (using message_2 from JSON as template): Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: CONFIRMATION state. Confirmation prompt should be in message1/message2 from JSON.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Node ID: info_confirmation, State: CONFIRMATION
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message1 (from JSON): ''
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message2 (from JSON or processed template): 'Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.'
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Final combined message for node info_confirmation: "Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια."
+2025-05-23 12:50:37.050 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Message from EXTRACT node info_confirmation processing existing jsonResponse: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Response received: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 2
+2025-05-23 12:50:37.050 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια. (type: 2)
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.050 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["A Midsummer Night's Dream"],"pvalues":[]},"day":{"value":["Friday","Saturday","Sunday"],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy","Fantasy"],"pvalues":[]},"time":{"value":["20:00","15:00"],"pvalues":[]},"cast":{"value":["George Dimitriou","Elena Papadaki","Nikos Ioannou"],"pvalues":[]},"room":{"value":["Grand Hall"],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[4],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:37.051 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node after turn processing: info_confirmation
+2025-05-23 12:50:37.056 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:37.056 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Displaying message in adapter: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.210 13386-13428 ProfileInstaller        com.example.jupitertheaterapp        D  Installing profile for com.example.jupitertheaterapp
+2025-05-23 12:50:39.392 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: h (type: 0)
+2025-05-23 12:50:39.392 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: h
+2025-05-23 12:50:39.392 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: h
+2025-05-23 12:50:39.392 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.392 13386-13386 chatty                  com.example.jupitertheaterapp        I  uid=10136(com.example.jupitertheaterapp) identical 1 line
+2025-05-23 12:50:39.392 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["A Midsummer Night's Dream"],"pvalues":[]},"day":{"value":["Friday","Saturday","Sunday"],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy","Fantasy"],"pvalues":[]},"time":{"value":["20:00","15:00"],"pvalues":[]},"cast":{"value":["George Dimitriou","Elena Papadaki","Nikos Ioannou"],"pvalues":[]},"room":{"value":["Grand Hall"],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[4],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:39.396 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: h
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:39.396 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I  Current node (before server request): ChatbotNode{
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["A Midsummer Night's Dream"],"pvalues":[]},"day":{"value":["Friday","Saturday","Sunday"],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy","Fantasy"],"pvalues":[]},"time":{"value":["20:00","15:00"],"pvalues":[]},"cast":{"value":["George Dimitriou","Elena Papadaki","Nikos Ioannou"],"pvalues":[]},"room":{"value":["Grand Hall"],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[4],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='h'},
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:39.397 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:39.400 13386-13429 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:39.400 13386-13429 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"h"}
+2025-05-23 12:50:39.404 13386-13429 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:39.404 13386-13429 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@5451643
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:39.408 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server category response: ΠΛΗΡΟΦΟΡΙΕΣ for node: info_confirmation
+2025-05-23 12:50:39.408 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Server fullJsonResponse: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": ["A Midsummer Night's Dream"], "pvalues": []}, "day": {"value": ["Friday", "Saturday", "Sunday"], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy", "Fantasy"], "pvalues": []}, "time": {"value": ["20:00", "15:00"], "pvalues": []}, "cast": {"value": ["George Dimitriou", "Elena Papadaki", "Nikos Ioannou"], "pvalues": []}, "room": {"value": ["Grand Hall"], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [4], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Current Node ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ, State: CONFIRMATION
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: User Message: h
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode: Available children: info_complete
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode (CONFIRMATION): User confirmed? false, Rejected? false
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: chooseNextNode (CONFIRMATION): No clear yes/no, staying on current node: info_confirmation
+2025-05-23 12:50:39.408 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  Next node candidate chosen by info_confirmation is: null
+2025-05-23 12:50:39.408 13386-13386 ChatbotManager          com.example.jupitertheaterapp        D  No next node candidate, or staying on node: info_confirmation
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: info_confirmation
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state (before): CONFIRMATION for node info_confirmation with category ΠΛΗΡΟΦΟΡΙΕΣ
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged for node info_confirmation: CONFIRMATION
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition for node info_confirmation: CONFIRMATION
+2025-05-23 12:50:39.408 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: CONFIRMATION for node: info_confirmation
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  Skipping non-integer value in pvalues: >3
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  Skipping non-integer value in pvalues: <4
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED (using message_2 from JSON as template): Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: CONFIRMATION state. Confirmation prompt should be in message1/message2 from JSON.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Node ID: info_confirmation, State: CONFIRMATION
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message1 (from JSON): ''
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: handleConversationTurn: Retrieved from node: message2 (from JSON or processed template): 'Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.'
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Final combined message for node info_confirmation: "Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια."
+2025-05-23 12:50:39.409 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Response received: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: MainActivity received response: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Response message type: 2
+2025-05-23 12:50:39.409 13386-13386 MainActivity            com.example.jupitertheaterapp        D  Adding message to chat: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια. (type: 2)
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Adding message to chat: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: Created message object: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.409 13386-13386 System.out              com.example.jupitertheaterapp        I  DEBUG: SystemMessage.getMessage() returning: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής, A Midsummer Night's Dream, Friday, 20:00 λεπτά, Grand Hall, 120 minutes λεπτά, Comedy, George Dimitriou, 4/5 αστέρια.',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["A Midsummer Night's Dream"],"pvalues":[]},"day":{"value":["Friday","Saturday","Sunday"],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy","Fantasy"],"pvalues":[]},"time":{"value":["20:00","15:00"],"pvalues":[]},"cast":{"value":["George Dimitriou","Elena Papadaki","Nikos Ioannou"],"pvalues":[]},"room":{"value":["Grand Hall"],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[4],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='h'},
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I  }
+2025-05-23 12:50:39.410 13386-13386 System.out              com.example.jupitertheaterapp        I  Current Node after turn processing: info_confirmation

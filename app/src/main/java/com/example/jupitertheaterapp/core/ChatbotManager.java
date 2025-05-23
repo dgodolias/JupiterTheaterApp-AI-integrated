@@ -278,20 +278,22 @@ public class ChatbotManager {
 
     public String getInitialMessage() {
         if (rootNode != null) {
-            // Get both message1 and message2 from the root node
-            String message1 = rootNode.getMessage1();
-            String message2 = rootNode.getMessage2();
-            
-            // Combine message1 and message2 with a newline between them
-            String combinedMessage = message1;
-            if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
-                combinedMessage += "\n" + message2;
+            // The initial message should be the root node's primary message.
+            // message2 was used before, but message1 is more conventional for initial prompts if not empty.
+            String initialMsg = rootNode.getMessage1();
+            if (initialMsg == null || initialMsg.isEmpty()){
+                initialMsg = rootNode.getMessage2(); // Fallback to message2 if message1 is empty
             }
-            
-            return combinedMessage;
+            if (initialMsg == null || initialMsg.isEmpty()){
+                initialMsg = "Welcome!"; // Absolute fallback
+            }
+             System.out.println("DEBUG: Initial message from root node: " + initialMsg);
+            return initialMsg;
         }
-        return "Γεια σας! Πώς μπορώ να σας βοηθήσω;";
-    }public String getResponseForNodeId(String category) {
+        return "Chatbot is not initialized.";
+    }
+
+    public String getResponseForNodeId(String category) {
         Log.d(TAG, "Getting response for category: " + category);
 
         // Find node by category
@@ -795,83 +797,90 @@ public class ChatbotManager {
                 @Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
-                        System.out.println("Server category response: " + category);
-                        System.out.println("Server response: " + fullJsonResponse);
+                        ChatbotNode previouslyCurrentNode = currentNode; // Node that was current when server request was made
 
-                        String combinedMessageFromTurn = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
-                        Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId() + " resulting in: '" + combinedMessageFromTurn + "'");
-                        Log.d(TAG, "Current state: " + currentNode.getCurrentState());
-                        int messageType = currentNode.getSystemMessage().getType(); // Type from current node after turn
+                        Log.d(TAG, "Server category response: " + category + " for node: " + previouslyCurrentNode.getId());
+                        Log.d(TAG, "Server fullJsonResponse: " + fullJsonResponse);
 
-                        ChatbotNode nextNode = currentNode.chooseNextNode(); // Determine next node based on current state
-                        System.out.println("DEBUG: Next node chosen after turn: " + (nextNode != null ? nextNode.getId() : "null"));
+                        // Determine the next node based on the interaction with the previouslyCurrentNode
+                        // Note: chooseNextNode() internally might call previouslyCurrentNode.handleConversationTurn() 
+                        // if its logic depends on processed results, but that internal call is for decision-making.
+                        // The message displayed to the user will be from the *final* chosen node for this turn.
+                        ChatbotNode nextNodeCandidate = previouslyCurrentNode.chooseNextNode(); // Pass jsonResponse if chooseNextNode needs it
+                        Log.d(TAG, "Next node candidate chosen by " + previouslyCurrentNode.getId() + " is: " + (nextNodeCandidate != null ? nextNodeCandidate.getId() : "null"));
 
-                        boolean transitionedFromRoot = previousNode.getId().equals("root") && nextNode != null && !nextNode.getId().equals("root");
+                        String messageToDisplayToUser;
+                        int messageTypeForDisplay = ChatMessage.TYPE_BOT; // Default for bot-originated messages
 
-                        if (transitionedFromRoot) {
-                            // If we transitioned away from root, the message from the new node is primary.
-                            currentNode = nextNode;
-                            Log.d(TAG, "Advanced from root to next node: " + nextNode.getId());
-                            System.out.println("DEBUG: Advanced from root to next node: " + nextNode.getId());
-
-                            String nextNodeMessage = nextNode.getMessage1(); // Typically, the prompt/question from the new node.
-                             if (nextNodeMessage == null || nextNodeMessage.isEmpty()) {
-                                // If message1 is empty, try to get a fuller message from handleConversationTurn for the new node
-                                // This might occur if the nextNode itself needs to process something (e.g. an initial state message)
-                                nextNodeMessage = nextNode.handleConversationTurn(null, ChatMessage.TYPE_BOT); // Pass null as no new server JSON
-                            }
-
-                            if (nextNodeMessage != null && !nextNodeMessage.isEmpty()) {
-                                System.out.println("DEBUG: Sending message from new node (post-root): " + nextNodeMessage);
-                                responseCallback.onResponseReceived(nextNodeMessage, ChatMessage.TYPE_BOT);
-                            } else {
-                                // Fallback if the new node somehow has no message
-                                responseCallback.onResponseReceived(currentNode.getFallback(), ChatMessage.TYPE_BOT);
-                            }
+                        if (nextNodeCandidate == null) {
+                            // This might happen if at a terminal node or if chooseNextNode explicitly returns null to stay.
+                            // In this case, the response should be from the previouslyCurrentNode's processing of the server data.
+                            Log.d(TAG, "No next node candidate, or staying on node: " + previouslyCurrentNode.getId());
+                            currentNode = previouslyCurrentNode; // Stay on the current node
+                            // Get the message from this node, processing the current server response
+                            messageToDisplayToUser = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                            messageTypeForDisplay = ChatMessage.TYPE_SERVER; // As it's based on direct server response processing
                         } else {
-                            // Standard flow: send the combined message from the current node's turn processing.
-                            System.out.println("DEBUG: Sending combined message from current node's turn: " + combinedMessageFromTurn);
-                            responseCallback.onResponseReceived(combinedMessageFromTurn, messageType);
-                            System.out.println("DEBUG: Response sent to UI with message type: " + messageType);
+                            // We have a next node candidate.
+                            currentNode = nextNodeCandidate;
+                            Log.d(TAG, "Transitioning to node: " + currentNode.getId());
 
-                            // If a next node is chosen and it's different, update current node and send its message1 if appropriate.
-                            if (nextNode != null && nextNode != currentNode) {
-                                currentNode = nextNode;
-                                Log.d(TAG, "Advanced to next node: " + nextNode.getId());
-                                System.out.println("DEBUG: Advanced to next node (non-root transition): " + nextNode.getId());
+                            // Now, the message to display should come from this NEW currentNode.
+                            // If this new currentNode is supposed to process the *same* fullJsonResponse
+                            // (e.g., an info_confirmation node that uses details extracted by plirofories from this server response),
+                            // then pass fullJsonResponse. 
+                            // If this new currentNode is just a prompt (e.g., transition from root to plirofories, or info_confirmation to info_complete)
+                            // then pass null for jsonResponse to its handleConversationTurn.
+                            
+                            // Decision: When do we pass fullJsonResponse to the new current node?
+                            // - If previouslyCurrentNode was root AND new node is a category (EXTRACT/CATEGORISE) -> null (it's a prompt)
+                            // - If new node is for CONFIRMATION and previous was EXTRACT -> pass fullJsonResponse (confirmation uses details from extract)
+                            // - If new node is for GIVING INFO (e.g. info_complete) and previous was CONFIRMATION -> null (or new server call would happen before this)
+                            // This logic is getting complicated here. The most straightforward approach for your desired flow
+                            // is that each node defines what it needs.
+                            // If the next node is supposed to show the details gathered by the *previous* node from *this* server call,
+                            // then the previous node's handleConversationTurn should have already set its message2, and the new node will just use it if needed.
 
-                                String nextNodeMessage1 = nextNode.getMessage1();
-                                if (nextNodeMessage1 != null && !nextNodeMessage1.isEmpty()) {
-                                     // Avoid sending another message if it's identical to what was just sent
-                                    if (!nextNodeMessage1.equals(combinedMessageFromTurn)) {
-                                        System.out.println("DEBUG: Showing next node's message1: " + nextNodeMessage1);
-                                        responseCallback.onResponseReceived(nextNodeMessage1, ChatMessage.TYPE_BOT);
-                                    } else {
-                                         System.out.println("DEBUG: Skipping next node's message1 as it is identical to previously sent message.");
-                                    }
-                                } else {
-                                     System.out.println("DEBUG: Next node's message1 is empty, not sending.");
-                                }
-                            } else if (nextNode == currentNode) {
-                                System.out.println("DEBUG: Next node is same as current, no further message from nextNode.");
+                            // For your desired flow: "message_1 + message_2" from the NEW current node.
+                            // If new node is like "info_confirmation", its message_2 template should be filled by this jsonResponse.
+                            // If new node is just a prompt like "plirofories" after root, it should not process jsonResponse from root's turn.
+                            
+                            if (previouslyCurrentNode == rootNode && currentNode != rootNode) {
+                                // Transition from root: new node displays its static message (usually a prompt)
+                                messageToDisplayToUser = currentNode.handleConversationTurn(null, ChatMessage.TYPE_BOT);
+                                Log.d(TAG, "Message from new node (post-root) " + currentNode.getId() + ": " + messageToDisplayToUser);
+                            } else if (currentNode.getType().equals("EXTRACT") && previouslyCurrentNode.getType().equals("EXTRACT") && fullJsonResponse != null) {
+                                 // Case: Plirofories (EXTRACT) -> Info_Confirmation (EXTRACT using same details)
+                                 // The new currentNode (info_confirmation) should process the *same* jsonResponse to fill its template.
+                                messageToDisplayToUser = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                                messageTypeForDisplay = ChatMessage.TYPE_SERVER; 
+                                Log.d(TAG, "Message from EXTRACT node " + currentNode.getId() + " processing existing jsonResponse: " + messageToDisplayToUser);
+                            } else {
+                                // Default: new node displays its static message or processes a new server call later.
+                                // For this turn, it displays its static message (message_1 + message_2 from JSON, message_2 not template-filled now)
+                                messageToDisplayToUser = currentNode.handleConversationTurn(null, ChatMessage.TYPE_BOT);
+                                Log.d(TAG, "Message from new node " + currentNode.getId() + " (no new JSON processing this turn): " + messageToDisplayToUser);
                             }
                         }
+
+                        responseCallback.onResponseReceived(messageToDisplayToUser, messageTypeForDisplay);
+                        System.out.println("Current Node after turn processing: " + (currentNode != null ? currentNode.getId() : "null"));
+
                     } catch (Exception e) {
-                        Log.e(TAG, "Error processing server response", e);
-                        responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);
+                        Log.e(TAG, "Error processing server response: " + e.getMessage(), e);
+                        responseCallback.onResponseReceived("Σφάλμα επεξεργασίας απάντησης διακομιστή.", ChatMessage.TYPE_BOT);
                     }
                 }
 
                 @Override
                 public void onError(String errorMessage) {
                     Log.e(TAG, "Server error: " + errorMessage);
-                    responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα επικοινωνίας με τον διακομιστή.",
-                            ChatMessage.TYPE_BOT);
+                    responseCallback.onResponseReceived("Σφάλμα επικοινωνίας με τον διακομιστή: " + errorMessage, ChatMessage.TYPE_BOT);
                 }
             });
         } catch (Exception e) {
             Log.e(TAG, "Error in getResponse", e);
-            responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);
+            responseCallback.onResponseReceived("Προέκυψε σφάλμα κατά την επεξεργασία του αιτήματός σας.", ChatMessage.TYPE_BOT);
         }
     }
 

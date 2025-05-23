@@ -66,18 +66,24 @@ public class MainActivity extends AppCompatActivity {
 
                 // Get response from chatbot manager (handles both local and server logic
                 // internally)
-                chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {                    @Override
+                chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {
+                    @Override
                     public void onResponseReceived(String response, int messageType) {
                         // Log received response for debugging
                         Log.d(TAG, "Response received: " + response);
                         System.out.println("DEBUG: MainActivity received response: " + response);
                         System.out.println("DEBUG: Response message type: " + messageType);
                         
-                        // Add the response to the chat
-                        addMessage(response, messageType);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Add the response to the chat
+                                addMessage(response, messageType);
 
-                        // For debugging, print the node after processing
-                        chatbotManager.printCurrentNode();
+                                // For debugging, print the node after processing
+                                chatbotManager.printCurrentNode();
+                            }
+                        });
                     }
                 });
             }

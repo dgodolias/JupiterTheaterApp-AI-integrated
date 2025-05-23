@@ -298,275 +298,120 @@ public class ChatbotNode {
         }
 
         return path;
-    }    /**
+    }
+
+    /**
      * Choose the next node in the conversation based on the current state and user
      * message. Uses a robust approach without relying on level-based handler functions.
      * 
      * @return The next node in the conversation
      */
     public ChatbotNode chooseNextNode() {
-        // Get the user message from this node
-        String userMessageText = "";
-        if (userMessage != null) {
-            userMessageText = userMessage.getMessage();
-        }
+        String userMessageText = (userMessage != null) ? userMessage.getMessage().toLowerCase() : "";
+        ConversationState.State currentState = getCurrentState(); // Get current state from ConversationState singleton
 
-        System.out.println("DEBUG: Choosing next node with user message: " + userMessageText);
-        System.out.println("DEBUG: Current node ID: " + this.id + ", Category: " + this.category);
+        System.out.println("DEBUG: chooseNextNode: Current Node ID: " + this.id + ", Category: " + this.category + ", State: " + currentState);
+        System.out.println("DEBUG: chooseNextNode: User Message: " + userMessageText);
+        System.out.println("DEBUG: chooseNextNode: Available children: " + 
+            children.stream().map(ChatbotNode::getId).reduce((s1, s2) -> s1 + ", " + s2).orElse("None"));
 
-        // If no children, there's nowhere to go
         if (!hasChildren()) {
-            System.out.println("DEBUG: No children found for node " + this.id);
+            System.out.println("DEBUG: chooseNextNode: No children for node " + this.id + ". Returning null (stay on current node or end flow).");
             return null;
         }
 
-        System.out.println("DEBUG: Available children count: " + this.children.size());
-        System.out.println("DEBUG: Available child nodes for matching:");
-        for (ChatbotNode child : getChildren()) {
-            System.out.println("DEBUG:   - ID: " + child.getId() + ", Category: " + child.getCategory());
-        }
+        // --- State-based navigation using explicit children --- 
 
-        // Get the conversation path from root to current node
-        List<ChatbotNode> pathToCurrentNode = getConversationPath();
-        System.out.println("DEBUG: Path length: " + pathToCurrentNode.size());
-        System.out.println("DEBUG: Path from root to current node: ");
-        for (ChatbotNode node : pathToCurrentNode) {
-            System.out.println("DEBUG:   - " + node.getId() + " (" + node.getCategory() + ")");
-        }
-
-        // These are the valid categories that can be returned by the server
-        String[] validCategories = { "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ",
-                "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ" };
-
-        // Check if user message is a valid category from the server
-        boolean isValidServerCategory = false;
-        for (String validCategory : validCategories) {
-            if (userMessageText.equals(validCategory)) {
-                isValidServerCategory = true;
-                System.out.println("DEBUG: Confirmed valid server category: " + validCategory);
-                break;
-            }
-        }
-
-        // Check for user confirmation or rejection keywords
-        boolean isConfirmation = userMessageText.toLowerCase().contains("yes") || 
-                                userMessageText.toLowerCase().contains("confirm") || 
-                                userMessageText.toLowerCase().contains("ναι") || 
-                                userMessageText.toLowerCase().contains("επιβεβαιώνω");
-        
-        boolean isRejection = userMessageText.toLowerCase().contains("no") || 
-                             userMessageText.toLowerCase().contains("cancel") || 
-                             userMessageText.toLowerCase().contains("όχι") || 
-                             userMessageText.toLowerCase().contains("ακύρωση");
-
-        System.out.println("DEBUG: isConfirmation: " + isConfirmation + ", isRejection: " + isRejection);
-
-        // CASE-BASED NODE SELECTION APPROACH
-        
-        // Case 1: If we're at the root node, we need to match with a category node
-        if ("root".equals(this.id)) {
-            System.out.println("DEBUG: At root node, looking for category match");
-            if (isValidServerCategory) {
-                // Find matching category node
-                for (ChatbotNode child : getChildren()) {
-                    if (userMessageText.equals(child.getCategory())) {
-                        System.out.println("DEBUG: Found matching category node: " + child.getId());
+        if (currentState == ConversationState.State.LLM_GET_INFO) {
+            boolean templateComplete = hasCompleteTemplateInformation();
+            System.out.println("DEBUG: chooseNextNode (LLM_GET_INFO): Template complete? " + templateComplete);
+            if (templateComplete) {
+                // Template is full, look for a child that represents confirmation or completion step
+                for (ChatbotNode child : children) {
+                    if (child.getId().endsWith("_confirmation") || child.getId().endsWith("_complete")) {
+                        System.out.println("DEBUG: chooseNextNode (LLM_GET_INFO): Template complete, found next step child: " + child.getId());
+                        return handleNodeSelectionWithState(child);
+                    }
+                }
+            } else {
+                // Template is NOT full, look for a child that represents staying in incomplete state or getting more info
+                // This could be a self-reference or a specific "_incomplete" or "_missing_info" child.
+                for (ChatbotNode child : children) {
+                    if (child.getId().equals(this.id) || child.getId().endsWith("_incomplete") || child.getId().endsWith("_missing_info")) {
+                        System.out.println("DEBUG: chooseNextNode (LLM_GET_INFO): Template incomplete, found self-loop or incomplete child: " + child.getId());
                         return handleNodeSelectionWithState(child);
                     }
                 }
             }
-            
-            // If no direct match, try to find a child with matching category regardless of ID
-            if (this.category != null && !this.category.isEmpty()) {
-                for (ChatbotNode child : getChildren()) {
-                    if (this.category.equals(child.getCategory())) {
-                        System.out.println("DEBUG: Found child with matching category: " + child.getId());
+        } 
+        else if (currentState == ConversationState.State.CONFIRMATION) {
+            boolean isConfirmed = userMessageText.equals("ναι");
+            boolean isRejected = userMessageText.equals("όχι");
+            System.out.println("DEBUG: chooseNextNode (CONFIRMATION): User confirmed? " + isConfirmed + ", Rejected? " + isRejected);
+
+            if (isConfirmed) {
+                for (ChatbotNode child : children) {
+                    if (child.getId().endsWith("_confirmed")) {
+                        System.out.println("DEBUG: chooseNextNode (CONFIRMATION): User confirmed, found confirmed child: " + child.getId());
                         return handleNodeSelectionWithState(child);
                     }
                 }
+            } else if (isRejected) {
+                for (ChatbotNode child : children) {
+                    if (child.getId().endsWith("_rejected") || child.getId().endsWith("_cancelled")) {
+                        System.out.println("DEBUG: chooseNextNode (CONFIRMATION): User rejected, found rejected/cancelled child: " + child.getId());
+                        return handleNodeSelectionWithState(child);
+                    }
+                }
+            } else {
+                // If no clear confirmation/rejection, stay on current node to re-prompt
+                System.out.println("DEBUG: chooseNextNode (CONFIRMATION): No clear yes/no, staying on current node: " + this.id);
+                return null; // Stay on the current node
             }
-            
-            // If still no match but we have children, return the first one as fallback
+        } 
+        else if (currentState == ConversationState.State.GIVE_INFO || currentState == ConversationState.State.INITIAL || currentState == ConversationState.State.EXIT) {
+            // After giving info, or if flow resets/exits, look for a child to continue (e.g., to root or a thank you node)
+            // This is often a single child defined in the JSON for explicit navigation.
             if (hasChildren()) {
-                System.out.println("DEBUG: No category match at root, returning first child: " + getFirstChild().getId());
-                return handleNodeSelectionWithState(getFirstChild());
-            }
-            
-            return null;
-        }
-        
-        // Case 2: If we're at a main category node, check for template completeness
-        else if (validCategoryNode(this)) {
-            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness");
-            boolean hasCompleteInfo = hasCompleteTemplateInformation();
-            
-            // Fallback if template is null
-            if (!hasCompleteInfo && getMessageTemplate() == null) {
-                System.out.println("DEBUG: Template is null, using message text as fallback");
-                hasCompleteInfo = userMessageText.contains("complete") || userMessageText.contains("ολοκληρωμένη") || 
-                                 userMessageText.contains("some") || userMessageText.contains("κάποιες");
-            }
-            
-            System.out.println("DEBUG: Template completeness check result: " + hasCompleteInfo);
-            
-            // Generic pattern matching based on category and template completeness
-            String completePattern = null;
-            String incompletePattern = null;
-            
-            // Determine patterns based on category
-            if ("ΚΡΑΤΗΣΗ".equals(this.getCategory()) || "ΑΚΥΡΩΣΗ".equals(this.getCategory()) || "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(this.getCategory())) {
-                completePattern = "complete";
-                incompletePattern = "incomplete";
-            } else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory()) || "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.getCategory())) {
-                completePattern = "some";
-                incompletePattern = "none";
-            }
-            
-            // Find the appropriate child based on completeness and category-specific patterns
-            if (completePattern != null && incompletePattern != null) {
-                String patternToFind = hasCompleteInfo ? completePattern : incompletePattern;
-                System.out.println("DEBUG: Looking for child with pattern: " + patternToFind);
-                
-                for (ChatbotNode child : getChildren()) {
-                    if (child.getId().contains(patternToFind)) {
-                        System.out.println("DEBUG: Found matching child node: " + child.getId());
-                        return handleNodeSelectionWithState(child);
-                    }
-                }
-            }
-        }
-        
-        // Case 3: If we're at a "complete/some" node, handle confirmation/rejection
-        else if (this.getId().contains("complete") || this.getId().contains("some")) {
-            System.out.println("DEBUG: At complete/some node: " + this.getId());
-            
-            if (isConfirmation) {
-                System.out.println("DEBUG: At complete/some node with confirmation");
-                // Look for confirmation node
-                for (ChatbotNode child : getChildren()) {
-                    if (child.getId().contains("confirmed")) {
-                        System.out.println("DEBUG: Found confirmation node: " + child.getId());
-                        return handleNodeSelectionWithState(child);
-                    }
-                }
-            }
-            else if (isRejection) {
-                System.out.println("DEBUG: At complete/some node with rejection");
-                // Look for rejection node
-                for (ChatbotNode child : getChildren()) {
-                    if (child.getId().contains("rejected") || child.getId().contains("cancel")) {
-                        System.out.println("DEBUG: Found rejection node: " + child.getId());
-                        return handleNodeSelectionWithState(child);
-                    }
-                }
-            }
-            
-            // If user hasn't confirmed or rejected yet, we stay at the current node
-            // by returning null (no navigation) or could return the most appropriate child
-            System.out.println("DEBUG: No confirmation/rejection detected, staying at current node");
-        }
-        
-        // Case 4: If we're at an "incomplete/none" node, find node for more info
-        else if (this.getId().contains("incomplete") || this.getId().contains("none")) {
-            System.out.println("DEBUG: At incomplete/none node: " + this.getId());
-            
-            // Try to find a node specifically designed to gather more information
-            for (ChatbotNode child : getChildren()) {
-                if (child.getId().contains("more")) {
-                    System.out.println("DEBUG: Found more info node: " + child.getId());
+                 for (ChatbotNode child : children) {
+                    // This could be a specific child like "go_to_root" or just the next logical step defined
+                    // For example, after booking_confirmed, the child might be a "thank_you_node" or "root"
+                    if (child.getId().equals("root") || child.getId().endsWith("_exit") || child.getId().endsWith("_thank_you")) {
+                         System.out.println("DEBUG: chooseNextNode (GIVE_INFO/INITIAL/EXIT): Found explicit next step child: " + child.getId());
                     return handleNodeSelectionWithState(child);
                 }
             }
-            
-            // If no specific "more" node, we might want to ask for specific information
-            // based on the template data we already have
-            if (this.msgTemplate != null) {
-                System.out.println("DEBUG: Using template to determine what information to request next");
-                // Here you could implement logic to select a child based on missing template data
-            }
-        }
-        
-        // Case 5: If we're at a "confirmed" or "rejected" node, return to root
-        else if (this.getId().contains("confirmed") || this.getId().contains("rejected")) {
-            System.out.println("DEBUG: At confirmed/rejected node: " + this.getId() + ", looking for root");
-            
-            // Look for a direct link to root
-            for (ChatbotNode child : getChildren()) {
-                if ("root".equals(child.getId())) {
-                    System.out.println("DEBUG: Found direct link to root node");
-                    return handleNodeSelectionWithState(child);
-                }
-            }
-            
-            // If no direct link, we may need to traverse back through parent nodes
-            // until we find the root
-            ChatbotNode current = this;
-            while (current != null && !current.getId().equals("root")) {
-                if (current.getParent() != null && current.getParent().getId().equals("root")) {
-                    System.out.println("DEBUG: Found root node via parent traversal");
-                    return handleNodeSelectionWithState(current.getParent());
-                }
-                current = current.getParent();
-            }
-        }
-        
-        // Case 6: Terminal nodes that should return to root when we're done with them
-        else if (isTerminalNode(this.getId())) {
-            System.out.println("DEBUG: At terminal node: " + this.getId() + ", looking for root");
-            
-            // Look for a direct link to root
-            for (ChatbotNode child : getChildren()) {
-                if ("root".equals(child.getId())) {
-                    System.out.println("DEBUG: Found direct link to root node");
-                    return handleNodeSelectionWithState(child);
-                }
-            }
-            
-            // If no direct link, see if root is accessible through the parent
-            if (this.getParent() != null && this.getParent().getId().equals("root")) {
-                System.out.println("DEBUG: Returning to root via parent");
-                return handleNodeSelectionWithState(this.getParent());
-            }
-        }
-        
-        // General pattern matching for any node not caught by specific cases above
-        // This helps with custom node transitions not covered by our standard cases
-        if (isConfirmation) {
-            for (ChatbotNode child : getChildren()) {
-                if (child.getId().contains("confirm")) {
-                    System.out.println("DEBUG: Found confirmation-related node through pattern matching: " + child.getId());
-                    return handleNodeSelectionWithState(child);
+                // If no specific exit/root child, but there are other children, take the first one as a general next step.
+                // This assumes the JSON is structured to guide the flow.
+                if (!children.isEmpty()) {
+                    System.out.println("DEBUG: chooseNextNode (GIVE_INFO/INITIAL/EXIT): No specific exit/root, taking first child: " + children.get(0).getId());
+                    return handleNodeSelectionWithState(children.get(0));
                 }
             }
         }
-        else if (isRejection) {
-            for (ChatbotNode child : getChildren()) {
-                if (child.getId().contains("reject") || child.getId().contains("cancel")) {
-                    System.out.println("DEBUG: Found rejection-related node through pattern matching: " + child.getId());
-                    return handleNodeSelectionWithState(child);
-                }
-            }
-        }
-        
-        // If a category was determined from the user message, try to find a matching child
-        if (this.category != null && !this.category.isEmpty()) {
+
+        // Fallback: If current state logic didn't find a specific child, 
+        // but children exist and one matches the current node's category (if updated by server for example)
+        // This can be a way to transition if the state logic is not exhaustive for all tree structures.
+        if (this.category != null && !this.category.isEmpty() && !this.category.equals(this.id) && !"root".equals(this.id)) {
             for (ChatbotNode child : getChildren()) {
                 if (this.category.equals(child.getCategory())) {
-                    System.out.println("DEBUG: Found child with matching category: " + child.getId());
+                    System.out.println("DEBUG: chooseNextNode (Fallback): Found child matching current node's category: " + child.getId());
                     return handleNodeSelectionWithState(child);
                 }
             }
         }
         
-        // Fallback: If no specific condition matched but we have children, return first child
-        if (hasChildren()) {
-            System.out.println("DEBUG: No specific condition matched, returning first child: " + getFirstChild().getId());
-            return handleNodeSelectionWithState(getFirstChild());
-        }
-        
-        System.out.println("DEBUG: No next node found, returning null");
-        return null;
-    }    /**
+        // If no specific logic above navigated and children exist, but we are not supposed to stay (e.g. not waiting for confirmation)
+        // and not in a state that has specific child routing, this implies the JSON should guide via a single child perhaps.
+        // However, to prevent unintended loops if JSON isn't perfectly set up for this, let's be cautious.
+        // If still no node chosen, and the current node is not meant to be a waiting point (like a confirmation node without a yes/no),
+        // it implies an issue in tree design or this logic. For safety, return null (stay on node).
+        System.out.println("DEBUG: chooseNextNode: No specific child chosen based on state/conditions. Current children: " + children.size() + ". Returning null.");
+        return null; // Default to staying on the current node if no other rule applies
+    }
+
+    /**
      * Checks if this is a valid category node (main category)
      * 
      * @param node The node to check
@@ -638,269 +483,118 @@ public class ChatbotNode {
             // First, parse the JSON to extract category, error, and details
             JSONObject jsonObj = new JSONObject(jsonResponse);
             boolean hasDetails = jsonObj.has("details") && !jsonObj.isNull("details");
-            String category = jsonObj.optString("category", "unknown");
+            String category = jsonObj.optString("category", "unknown"); // Category from server response
             String errorMessage = jsonObj.has("error") && !jsonObj.isNull("error") ? jsonObj.getString("error") : null;
 
-            // Set the category for this node
-            if (!category.isEmpty()) {
-                this.category = category;
+            // Set the category for this node based on server response, if different.
+            // This node's `this.category` is what MsgTemplate.createTemplate will use.
+            if (!category.isEmpty() && !this.category.equals(category)) {
+                // this.category = category; // Keep this commented as per previous discussion on immutability
+                                           // However, ensure MsgTemplate uses the SERVER's category for creation.
             }
 
             // Create a SystemMessage with the JSON response
             SystemMessage sysMsg = new SystemMessage(jsonResponse, messageType, true);
-            sysMsg.setCategory(category);
+            sysMsg.setCategory(category); // Store server's category in SystemMessage
 
-            // Override the default message in SystemMessage with our original message
-            // This ensures systemMessage.getMessage() returns the proper template message
-            if (this.message1 != null && !this.message1.isEmpty()) {
-                sysMsg.setMessage(this.message1);
-            }
+            // Update the systemMessage reference for this node
+            this.systemMessage = sysMsg;
 
-            // Update the systemMessage reference
-            this.systemMessage = sysMsg;            // Preserve the original message1 (from conversation_tree.json)
-            String basicMessage = this.message1;
-            
-            // Only set a default if it doesn't already have a value AND we're not processing a template response
-            // This avoids setting the generic "Information about category" message
-            if ((basicMessage == null || basicMessage.isEmpty()) && !hasDetails) {
-                // Leave it empty if there's no meaningful message to display
-                basicMessage = "";
-                this.message1 = basicMessage;
+            // message1 from the JSON definition (conversation_tree.json) is the primary prompt/statement for this node.
+            // It should NOT be overwritten by template processing.
+            // String originalMessage1 = this.message1; 
 
-                // Also update the SystemMessage
-                sysMsg.setMessage(basicMessage);
-            }
+            // message2 from the JSON definition (conversation_tree.json) is the TEMPLATE string.
+            String templateStringFromJson = this.message2; // This IS the template.
 
-            // Only try to apply template if we have details or error
-            if (hasDetails || errorMessage != null) {
-                // Create or get template based on category from the response
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                // If there's an error, message2 should reflect that.
+                // The JSON should define how errors are presented, e.g. by having a specific message2 for error nodes.
+                // For now, if an error occurs during server response, we can prepend it to the template, or use a specific error template if available.
+                // However, the user wants to remove hardcoded messages. So if `templateStringFromJson` is meant to show errors, it should.
+                // If not, the server's error message should be used directly if no template is defined for it.
+                // Let's assume `templateStringFromJson` can be a generic template and we might fill it with error details.
+                // Or, if no template given (empty message2), then just use the error.
+                 if (templateStringFromJson == null || templateStringFromJson.isEmpty()) {
+                    this.message2 = "Σφάλμα: " + errorMessage; // Fallback if no template for error.
+                 } else {
+                    // Try to process the existing templateStringFromJson with error info.
+                    // This assumes the template might have placeholders for errors.
                 if (msgTemplate == null) {
                     try {
-                        System.out.println("Creating template for category: " + category);
-                        msgTemplate = MsgTemplate.createTemplate(category);
+                            // Use this node's own category here as well if dealing with an error template defined in this node
+                        msgTemplate = MsgTemplate.createTemplate(this.category);
                     } catch (IllegalArgumentException e) {
-                        System.err
-                                .println("Failed to create template for category " + category + ": " + e.getMessage());
-                        // If we can't create a template, preserve message2 or use message1 as fallback
-                        if (this.message2 == null || this.message2.isEmpty()) {
-                            this.message2 = basicMessage;
-                        }
+                            System.err.println("Failed to create template for category " + this.category + " (for error handling): " + e.getMessage());
+                            this.message2 = "Σφάλμα: " + errorMessage; // Use error if template fails.
                         return true;
+                    }
+                }
+                    // We need a way for MsgTemplate to understand it's processing an error.
+                    // For now, let's assume valuesFromJson can extract an 'error' field if the template expects it.
+                    msgTemplate.valuesFromJson(jsonResponse); // Populate with error if structure allows
+                    this.message2 = msgTemplate.processTemplate(templateStringFromJson);
+                 }
+                System.out.println("ERROR in server response, message2 set to: " + this.message2);
+                return true;
+            }
+
+            // Only try to apply template if we have details
+            if (hasDetails) {
+                if (msgTemplate == null) {
+                    try {
+                        // Use this node's own category to create the template, 
+                        // as this.message2 (the template string) is designed for this node's category.
+                        System.out.println("Creating template for node's own category: " + this.category);
+                        msgTemplate = MsgTemplate.createTemplate(this.category); 
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Failed to create template for node category " + this.category + ": " + e.getMessage());
+                        // If we can't create a template, and message2 (template from JSON) is empty,
+                        // there's no template to process. message2 remains as defined in JSON (empty or not).
+                        // If message2 was supposed to be a template, it will remain unprocessed.
+                        // this.message2 = originalMessage1; // Fallback to message1 is not desired.
+                        return true; // Return true, but message2 is unchanged or error.
                     }
                 }
 
                 // Apply template to the message2 field in the node
-                if (msgTemplate.valuesFromJson(jsonResponse)) {
-                    // Use message2 from the node if it exists as the template
-                    // This uses the message_2 from conversation_tree.json with placeholders
-                    String templateStr = this.message2;                    // If message2 is empty or null, handle error specifically or use fallback
-                    // templates based on category
-                    if (templateStr == null || templateStr.isEmpty()) {
-                        // Handle error case specifically with proper error message
-                        if (errorMessage != null && !errorMessage.isEmpty()) {
-                            // Use actual error message instead of placeholder
-                            templateStr = "Error: " + errorMessage;
-                        } else {
-                            // Use details from JSON response to create a dynamic message based on MsgTemplate
-                            JSONObject details = jsonObj.optJSONObject("details");
-                            if (details != null) {
-                                // Extract formatted data from msgTemplate rather than hardcoding
-                                StringBuilder sb = new StringBuilder();
-                                
-                                // Get all available fields from the template
-                                if (msgTemplate != null) {
-                                    String formatStr = this.formatTemplateBasedOnCategory(category);
-                                    if (!formatStr.isEmpty()) {
-                                        templateStr = formatStr;
+                // using templateStringFromJson (which is this.message2 from JSON)
+                if (msgTemplate.valuesFromJson(jsonResponse)) { // Extracts values from JSON into template object
+                    if (templateStringFromJson == null || templateStringFromJson.isEmpty()) {
+                        // If message_2 in JSON is empty, it means there's no template defined for this node's successful response.
+                        // In this case, message2 for display should remain empty or be explicitly set by processMessageByState based on GIVE_INFO logic.
+                        // We should not attempt to process an empty template.
+                        this.message2 = ""; // Explicitly empty as no template was provided.
+                        System.out.println("No template string (message_2) defined in JSON for this node. message2 is empty.");
                                     } else {
-                                        // Fallback to direct extraction from JSON
-                                        JSONArray names = details.names();
-                                        if (names != null) {
-                                            for (int i = 0; i < names.length(); i++) {
-                                                String key = names.optString(i);
-                                                String value = details.optString(key);
-                                                if (value != null && !value.isEmpty()) {
-                                                    if (sb.length() > 0) sb.append(", ");
-                                                    sb.append(key).append(": ").append(value);
-                                                }
-                                            }
-                                        }
-                                        
-                                        String extractedInfo = sb.toString().trim();
-                                        if (!extractedInfo.isEmpty()) {
-                                            templateStr = extractedInfo;
-                                        } else {
-                                            // If we couldn't extract anything meaningful, use a minimal message
-                                            templateStr = category;
-                                        }
-                                    }
-                                } else {
-                                    // No template available
-                                    // Fallback to direct extraction from JSON
-                                    JSONArray names = details.names();
-                                    if (names != null) {
-                                        for (int i = 0; i < names.length(); i++) {
-                                            String key = names.optString(i);
-                                            String value = details.optString(key);
-                                            if (value != null && !value.isEmpty()) {
-                                                if (sb.length() > 0) sb.append(", ");
-                                                sb.append(key).append(": ").append(value);
-                                            }
-                                        }
-                                    }
-                                    
-                                    String extractedInfo = sb.toString().trim();
-                                    if (!extractedInfo.isEmpty()) {
-                                        templateStr = extractedInfo;
-                                    } else {
-                                        // If we couldn't extract anything meaningful, use a minimal message
-                                        templateStr = category;
-                                    }
-                                }
-                            } else {
-                                // No details available
-                                templateStr = "";
-                            }
-                        }
+                        String processedMessage = msgTemplate.processTemplate(templateStringFromJson);
+                        this.message2 = processedMessage; // Store the processed template in message2
+                        System.out.println("TEMPLATE APPLIED (using message_2 from JSON as template): " + processedMessage);
                     }
-
-                    // Process the template with values from our template object
-                    String processedMessage = msgTemplate.processTemplate(templateStr);
-                    this.message2 = processedMessage;
-                    
-                    // Update message1 as well to ensure consistency
-                    if (this.message1 == null || this.message1.isEmpty()) {
-                        this.message1 = this.message2;
-                    }                    System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
                 } else {
-                    System.out.println("Failed to parse JSON for template values");
-                    // Keep the original message2 if it exists, otherwise use message1
-                    if (this.message2 == null || this.message2.isEmpty()) {
-                        this.message2 = basicMessage;
-                    }
-                    return true;
+                    System.out.println("Failed to parse JSON for template values. message2 (template from JSON) remains unprocessed.");
+                    // If parsing fails, templateStringFromJson (this.message2) remains as it was from JSON.
+                    return true; // Still true, but template not applied.
                 }
             } else {
-                // If no details or error, just use the message as is without applying a
-                // template
-                System.out.println("No details in JSON response, skipping template application");
-
-                // Preserve existing message1 and message2
-                if (this.message2 == null || this.message2.isEmpty()) {
-                    this.message2 = basicMessage;
-                }
-
+                // No details in JSON response, and no error.
+                // This means the server call was successful but returned no data to populate a template.
+                // `this.message2` (which is the template string from JSON) should remain as is.
+                // If it was empty, it stays empty. If it had placeholders, they remain.
+                System.out.println("No details in JSON response, skipping template application. message2 (template from JSON) is unchanged.");
                 return true;
             }
         } catch (JSONException e) {
             System.err.println("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
-
-            // Try to preserve existing messages when processing fails
-            if (this.message1 != null && !this.message1.isEmpty()) {
-                if (this.message2 == null || this.message2.isEmpty()) {
-                    this.message2 = this.message1;
-                }
-                return true;
-            }
-            return false;
+            // In case of JSON error, message2 (template from JSON) remains as is.
+            return false; // Indicate failure
         } catch (Exception e) {
             System.err.println("Error updating system message with JSON: " + e.getMessage());
             e.printStackTrace();
-            return false;
+            return false; // Indicate failure
         }
-    }
-
-    /**
-     * Creates a format string with placeholders based on the node's category
-     * @param category The category to create a format string for
-     * @return A format string with appropriate placeholders
-     */
-    private String formatTemplateBasedOnCategory(String category) {
-        if (msgTemplate == null) {
-            return "";
-        }
-        
-        // Create placeholders based on the template type using the standard format:
-        // <placeholder_name> for each field
-        
-        if ("ΚΡΑΤΗΣΗ".equals(category)) {
-            return "Παράσταση: <show_name>, Αίθουσα: <room>, Ημέρα: <day>, Ώρα: <time>, Όνομα: <person_name>";
-        } 
-        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
-            return "Ακύρωση κράτησης με αριθμό: <reservation_number>, Κωδικός: <passcode>";
-        } 
-        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
-            return "Πληροφορίες για: <name>, Ημέρα: <day>, Ώρα: <time>";
-        } 
-        else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(category)) {
-            return "Αξιολόγηση για κράτηση: <reservation_number>, Βαθμολογία: <stars> αστέρια, Σχόλιο: <review>";
-        } 
-        else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
-            return "Προσφορά για: <show_name>, Ημερομηνία: <date>, Ηλικιακή κατηγορία: <age>, Άτομα: <no_of_people>";
-        }
-        
-        return "";
-    }
-
-    /**
-     * Ελέγχει αν το template του node έχει όλα τα απαραίτητα πεδία συμπληρωμένα
-     * για την κατηγορία του
-     * 
-     * @return true αν το template είναι πλήρες, false διαφορετικά
-     */
-    public boolean hasCompleteTemplateInformation() {
-        if (msgTemplate == null) {
-            return false;
-        }
-        
-        // Έλεγχος με βάση την κατηγορία
-        if ("ΚΡΑΤΗΣΗ".equals(category)) {
-            if (msgTemplate instanceof BookingTemplate) {
-                BookingTemplate bookingTemplate = (BookingTemplate) msgTemplate;
-                return !bookingTemplate.getShowName().isEmpty() && 
-                       !bookingTemplate.getDay().isEmpty() && 
-                       !bookingTemplate.getTime().isEmpty() && 
-                       !bookingTemplate.getPerson().getName().isEmpty();
-            }
-        } 
-        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
-            if (msgTemplate instanceof CancellationTemplate) {
-                CancellationTemplate cancelTemplate = (CancellationTemplate) msgTemplate;
-                return !cancelTemplate.getReservationNumber().isEmpty() && 
-                       !cancelTemplate.getPasscode().isEmpty();
-            }
-        } 
-        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
-            if (msgTemplate instanceof ShowInfoTemplate) {
-                ShowInfoTemplate infoTemplate = (ShowInfoTemplate) msgTemplate;
-                // Για πληροφορίες, θεωρούμε ότι έχουμε κάποιες πληροφορίες αν έχουμε τουλάχιστον ένα από τα βασικά πεδία
-                return !infoTemplate.getName().isEmpty() || 
-                       !infoTemplate.getDay().isEmpty() || 
-                       !infoTemplate.getTopic().isEmpty();
-            }
-        } 
-        else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(category)) {
-            if (msgTemplate instanceof ReviewTemplate) {
-                ReviewTemplate reviewTemplate = (ReviewTemplate) msgTemplate;
-                return !reviewTemplate.getReservationNumber().isEmpty() && 
-                       !reviewTemplate.getPasscode().isEmpty() && 
-                       reviewTemplate.getStars() > 0;
-            }
-        } 
-        else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
-            if (msgTemplate instanceof DiscountTemplate) {
-                DiscountTemplate discountTemplate = (DiscountTemplate) msgTemplate;
-                // Για προσφορές, θεωρούμε ότι έχουμε κάποιες πληροφορίες αν έχουμε τουλάχιστον ένα από τα βασικά πεδία
-                return !discountTemplate.getShowName().isEmpty() || 
-                       !discountTemplate.getAge().isEmpty() || 
-                       !discountTemplate.getDate().isEmpty() ||
-                       discountTemplate.getNumberOfPeople() > 0;
-            }
-        }
-        
-        return false;
     }
 
     /**
@@ -915,84 +609,60 @@ public class ChatbotNode {
         ConversationState.State newState = currentState; // Default to keeping the same state
         
         System.out.println("DEBUG: Handling node transition for node " + this.id);
-        System.out.println("DEBUG: Current state: " + currentState);
+        System.out.println("DEBUG: Current state (before): " + currentState + " for node " + this.id + " with category " + this.category);
         
-        // ===================================================================
-        // STATE TRANSITION LOGIC BASED ON NODE ID
-        // ===================================================================
-        
-        // ROOT NODE - Initialize to INITIAL state
+        // Root node always resets to INITIAL
         if ("root".equals(this.id)) {
             newState = ConversationState.State.INITIAL;
-            System.out.println("DEBUG: Setting state to INITIAL for root node");
         }
-        
-        // INFORMATION NODES - Set appropriate states for information flow
-        else if ("info_some".equals(this.id)) {
-            newState = ConversationState.State.GIVE_INFO;
-            System.out.println("DEBUG: Setting state to GIVE_INFO for info_some node");
-        }
-        else if ("info_none".equals(this.id)) {
+        // Level 1 nodes (main categories directly under root)
+        else if (this.getParent() != null && "root".equals(this.getParent().getId())) {
+            // These are the main service categories, typically start by needing info.
+            // The user's JSON will define the message_1 for these nodes (e.g., "Τι πληροφορίες θα θέλατε...")
+            // The state LLM_GET_INFO implies we expect to extract information from the user's *next* message.
+            if ("kratisi".equals(this.id) || "akyrosi".equals(this.id) || "plirofories".equals(this.id) || 
+                "axiologiseis_sxolia".equals(this.id) || "prosfores_ekptoseis".equals(this.id)) {
             newState = ConversationState.State.LLM_GET_INFO;
-            System.out.println("DEBUG: Setting state to LLM_GET_INFO for info_none node");
+            }
         }
-        
-        // BOOKING NODES - Set appropriate states for booking flow
-        else if ("booking_complete".equals(this.id)) {
+        // Specific node IDs for state setting based on conventions from conversation_tree.json
+        else if (this.id.endsWith("_confirmation")) { 
             newState = ConversationState.State.CONFIRMATION;
-            System.out.println("DEBUG: Setting state to CONFIRMATION for booking_complete node");
         }
-        else if ("booking_incomplete".equals(this.id)) {
+        else if (this.id.endsWith("_incomplete") || this.id.endsWith("_missing_info")) { 
             newState = ConversationState.State.LLM_GET_INFO;
-            System.out.println("DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node");
         }
-        
-        // CANCELLATION NODES - Set appropriate states for cancellation flow
-        else if ("cancel_complete".equals(this.id)) {
-            newState = ConversationState.State.CONFIRMATION;
-            System.out.println("DEBUG: Setting state to CONFIRMATION for cancel_complete node");
-        }
-        else if ("cancel_incomplete".equals(this.id)) {
-            newState = ConversationState.State.LLM_GET_INFO;
-            System.out.println("DEBUG: Setting state to LLM_GET_INFO for cancel_incomplete node");
-        }
-        
-        // REVIEW NODES - Set appropriate states for review flow
-        else if ("review_complete".equals(this.id)) {
-            newState = ConversationState.State.CONFIRMATION;
-            System.out.println("DEBUG: Setting state to CONFIRMATION for review_complete node");
-        }
-        else if ("review_incomplete".equals(this.id)) {
-            newState = ConversationState.State.LLM_GET_INFO;
-            System.out.println("DEBUG: Setting state to LLM_GET_INFO for review_incomplete node");
-        }
-        
-        // DISCOUNT NODES - Set appropriate states for discount flow
-        else if ("discount_some".equals(this.id)) {
+        else if (this.id.endsWith("_complete") || this.id.endsWith("_some") || this.id.endsWith("_details")) { 
+            // e.g., info_complete, booking_complete (before confirmation), info_some, show_details
+            // If template is full, it implies data is gathered and can be presented.
+            // The actual presentation of info (message_1 + message_2) is handled by handleConversationTurn.
+            // If this node is supposed to display collected info (e.g., "Here is what I found: <details>"),
+            // then GIVE_INFO is appropriate.
+            if (hasCompleteTemplateInformation() || "GIVE_INFO".equals(this.type)) { // explicit type from JSON or complete template
             newState = ConversationState.State.GIVE_INFO;
-            System.out.println("DEBUG: Setting state to GIVE_INFO for discount_some node");
-        }
-        else if ("discount_none".equals(this.id)) {
+            } else {
+                // If template is not complete and type isn't GIVE_INFO, it's likely still gathering.
             newState = ConversationState.State.LLM_GET_INFO;
-            System.out.println("DEBUG: Setting state to LLM_GET_INFO for discount_none node");
+            }
         }
-        
-        // CONFIRMATION NODES - Handle confirmation results
-        else if (this.id.contains("confirmed")) {
+        else if (this.id.endsWith("_confirmed")) { // e.g., booking_confirmed, info_confirmed (after user says yes)
+            // After confirmation, we typically give a final piece of info or a thank you.
             newState = ConversationState.State.GIVE_INFO;
-            System.out.println("DEBUG: Setting state to GIVE_INFO for confirmation node");
         }
-        else if (this.id.contains("rejected")) {
-            newState = ConversationState.State.INITIAL;
-            System.out.println("DEBUG: Setting state to INITIAL for rejection node");
+        else if (this.id.endsWith("_rejected") || this.id.endsWith("_cancelled")) { 
+            // After rejection, might give info about why, or reset.
+            newState = ConversationState.State.GIVE_INFO; // To show rejection message / next steps.
         }
-        
-        // If state changed, update the ConversationState singleton
+        else if ("exit_conversation".equals(this.id) || this.id.endsWith("_thank_you") || "EXIT".equals(this.type)) {
+            newState = ConversationState.State.EXIT;
+        }
+        // Add more specific rules as needed based on your conversation_tree.json structure
+
         if (newState != currentState) {
             conversationState.setCurrentState(newState);
-            System.out.println("DEBUG: State updated to: " + newState);
+            System.out.println("DEBUG: State updated for node " + this.id + " from " + currentState + " to: " + newState);
         } else {
-            System.out.println("DEBUG: State unchanged: " + currentState);
+            System.out.println("DEBUG: State unchanged for node " + this.id + ": " + currentState);
         }
         
         return newState;
@@ -1008,141 +678,84 @@ public class ChatbotNode {
         ConversationState conversationState = ConversationState.getInstance();
         ConversationState.State currentState = conversationState.getCurrentState();
         
-        System.out.println("DEBUG: Processing message with state: " + currentState);
-        System.out.println("DEBUG: Current node: " + this.id + ", Category: " + this.category);
-        
-        // Process message based on the current state
+        System.out.println("DEBUG: Processing message with state: " + currentState + " for node: " + this.id);
+        // Ensure jsonResponse is not null for server message types to avoid NPE in fillMsg2FromTemplate
+        if (messageType == ChatMessage.TYPE_SERVER && jsonResponse == null) {
+            System.err.println("ERROR: jsonResponse is null for a SERVER message type. Cannot process.");
+            // this.message2 might be set to an error or remain as per JSON if fillMsg2FromTemplate is not called or fails.
+            // If we return false, handleConversationTurn will use fallback.
+            // Or, we could try to set a generic error here.
+            // For now, let fillMsg2FromTemplate handle it, or subsequent logic.
+            // Let's ensure fillMsg2FromTemplate is robust to null jsonResponse if it's called.
+            // Better: if jsonResponse is null for server type, we should probably not proceed with template filling.
+             if (this.message2 == null || this.message2.isEmpty()){ // if message2 from JSON is also empty
+                this.message2 = "Προέκυψε ένα σφάλμα επεξεργασίας της απάντησης του διακομιστή."; // A non-JSON defined fallback.
+             } // else message2 from JSON will be used.
+            return false; // Indicate an issue.
+        }
+
+
+        // Always call fillMsg2FromTemplate if there's a server response to process or if it's a bot turn that might use templates.
+        // fillMsg2FromTemplate will populate this.message2 (the processed template)
+        // It uses this.message2 (from JSON) as the template string.
+        // It should only be called if there is a jsonResponse from the server.
+        // For bot turns, message2 is typically already set from JSON and doesn't need server data.
+        boolean templateProcessed = true; // Assume true for bot turns or if no server response to process
+        if (jsonResponse != null && !jsonResponse.isEmpty() && messageType == ChatMessage.TYPE_SERVER) {
+            templateProcessed = fillMsg2FromTemplate(jsonResponse, messageType);
+        } else if (messageType == ChatMessage.TYPE_BOT) {
+            // For bot turns, message1 and message2 are taken directly from the node's JSON definition.
+            // No server response to process for templating at this stage for this node.
+            System.out.println("DEBUG: Bot turn for node " + this.id + ". Using message1/message2 from JSON directly.");
+        }
+
+
+        // The role of processMessageByState is now less about setting message strings (they come from JSON via fillMsg2FromTemplate or directly)
+        // and more about ensuring the state-specific logic (like DB queries for GIVE_INFO) is hinted at.
+        // The actual messages (message1 as prefix, message2 as content) are assembled in handleConversationTurn.
+
         switch (currentState) {
             case INITIAL:
-                // In the initial state, just use the existing template processing
-                System.out.println("DEBUG: Processing message with INITIAL state");
-                return fillMsg2FromTemplate(jsonResponse, messageType);
+                System.out.println("DEBUG: Processing message with INITIAL state. Messages sourced from JSON.");
+                // message1 and message2 are already set from JSON. fillMsg2FromTemplate handles server responses.
+                break;
                 
             case LLM_GET_INFO:
-                // When we need to get info from the user with LLM help
-                System.out.println("DEBUG: Processing message with LLM_GET_INFO state");
-                
-                // Different handling based on category
-                if ("ΚΡΑΤΗΣΗ".equals(this.category)) {
-                    System.out.println("DEBUG: Processing booking info request");
-                    // TODO: Use LLM to extract booking information more effectively
-                }
-                else if ("ΑΚΥΡΩΣΗ".equals(this.category)) {
-                    System.out.println("DEBUG: Processing cancellation info request");
-                    // TODO: Use LLM to extract cancellation information more effectively
-                }
-                else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
-                    System.out.println("DEBUG: Processing show info request");
-                    // TODO: Use LLM to extract show information queries more effectively
-                }
-                else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(this.category)) {
-                    System.out.println("DEBUG: Processing review info request");
-                    // TODO: Use LLM to extract review information more effectively
-                }
-                
-                // For now, fall back to the template processing
-                boolean llmProcessed = fillMsg2FromTemplate(jsonResponse, messageType);
-                // Ensure message1 is also updated with meaningful content
-                if (llmProcessed && this.message1 == null || this.message1.isEmpty()) {
-                    this.message1 = "Χρειάζομαι περισσότερες πληροφορίες";
-                }
-                return llmProcessed;
+                System.out.println("DEBUG: Processing message with LLM_GET_INFO state. Messages/templates from JSON.");
+                // If jsonResponse was provided, fillMsg2FromTemplate has updated message2.
+                // If template is not complete, getMissingInfoPrompt will be called by handleConversationTurn.
+                break;
                 
             case GIVE_INFO:
-                // When we need to provide info to the user (database lookup)
-                System.out.println("DEBUG: GIVE_INFO state - Should search database with template data");
-                
-                // First apply the template to extract data
-                boolean templateApplied = fillMsg2FromTemplate(jsonResponse, messageType);
-                if (!templateApplied || msgTemplate == null) {
-                    System.out.println("DEBUG: Failed to apply template or no template available");
-                    return templateApplied;
-                }
-                
-                // Different database queries based on category
-                if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
-                    System.out.println("DEBUG: Should query show information from database");
-                    // TODO: Query database for show information using msgTemplate
-                    // Example:
-                    // if (msgTemplate instanceof ShowInfoTemplate) {
-                    //     ShowInfoTemplate infoTemplate = (ShowInfoTemplate) msgTemplate;
-                    //     String showName = infoTemplate.getName();
-                    //     String day = infoTemplate.getDay();
-                    //     // Query database with these parameters
-                    //     // Update message2 with results
-                    // }
-                }
-                else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.category)) {
-                    System.out.println("DEBUG: Should query discount information from database");
-                    // TODO: Query database for discount information using msgTemplate
-                }
-                
-                // Ensure message1 has meaningful content
-                if (this.message1 == null || this.message1.isEmpty()) {
-                    this.message1 = "Ορίστε οι πληροφορίες που ζητήσατε";
-                }
-                return true;
+                System.out.println("DEBUG: GIVE_INFO state. Message2 should contain results (from template or DB query).");
+                // If jsonResponse was provided, fillMsg2FromTemplate has updated message2 with server details.
+                // If this state implies a DB lookup is needed using data in msgTemplate, that would happen here.
+                // For example:
+                // if (msgTemplate != null && "ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
+                //     // String dbResults = queryDatabase(msgTemplate);
+                //     // this.message2 = dbResults; // Update message2 with actual results
+                // }
+                // For now, we assume fillMsg2FromTemplate handles direct server responses.
+                // If GIVE_INFO means "give info previously gathered and stored in message2", then it's fine.
+                break;
                 
             case CONFIRMATION:
-                // When we need to ask for confirmation
-                System.out.println("DEBUG: CONFIRMATION state - Should prepare confirmation message");
-                
-                // First apply the template
-                boolean success = fillMsg2FromTemplate(jsonResponse, messageType);
-                
-                // Then enhance the message to make it clear confirmation is needed
-                if (success) {
-                    // Different confirmation messages based on node/category
-                    String confirmationPrompt = "";
-                    if ("booking_complete".equals(this.id)) {
-                        // Add confirmation prompt to the end of message2
-                        confirmationPrompt = "\n\nΘέλετε να επιβεβαιώσετε αυτή την κράτηση; (ναι/όχι)";
-                    }
-                    else if ("cancel_complete".equals(this.id)) {
-                        // Add confirmation prompt for cancellation
-                        confirmationPrompt = "\n\nΘέλετε να επιβεβαιώσετε αυτήν την ακύρωση; (ναι/όχι)";
-                    }
-                    else if ("review_complete".equals(this.id)) {
-                        // Add confirmation prompt for review submission
-                        confirmationPrompt = "\n\nΘέλετε να υποβάλετε αυτή την αξιολόγηση; (ναι/όχι)";
-                    }
-                    
-                    // Add to both message1 and message2 for consistency
-                    if (!this.message1.contains(confirmationPrompt)) {
-                        this.message1 += confirmationPrompt;
-                    }
-                    
-                    if (!this.message2.contains(confirmationPrompt)) {
-                        this.message2 += confirmationPrompt;
-                    }
-                }
-                
-                return success;
+                System.out.println("DEBUG: CONFIRMATION state. Confirmation prompt should be in message1/message2 from JSON.");
+                // The prompt for confirmation (e.g., "Are you sure? (yes/no)")
+                // should be part of message1 or message2 of this node, as defined in conversation_tree.json.
+                // fillMsg2FromTemplate would have processed message2 if it's a template.
+                break;
                 
             case EXIT:
-                // When we're exiting the conversation
-                System.out.println("DEBUG: EXIT state - Should prepare exit message");
-                
-                // Apply template first
-                boolean templateSuccess = fillMsg2FromTemplate(jsonResponse, messageType);
-                
-                // Add exit message to both message fields
-                String exitMessage = "\n\nΕυχαριστούμε που χρησιμοποιήσατε το σύστημα του Jupiter Theater!";
-                if (!this.message1.contains(exitMessage)) {
-                    this.message1 += exitMessage;
-                }
-                
-                if (!this.message2.contains(exitMessage)) {
-                    this.message2 += exitMessage;
-                }
-                
-                return templateSuccess;
+                System.out.println("DEBUG: EXIT state. Exit message should be in message1/message2 from JSON.");
+                // Exit messages from JSON.
+                break;
                 
             default:
-                // Fallback to regular template processing
-                System.out.println("DEBUG: Unknown state - Falling back to template processing");
-                return fillMsg2FromTemplate(jsonResponse, messageType);
+                System.out.println("DEBUG: Unknown or default state. Messages/templates from JSON.");
+                break;
         }
+        return templateProcessed; // Return status of template processing if it occurred.
     }
 
     /**
@@ -1176,118 +789,84 @@ public class ChatbotNode {
      * Handles a complete conversation turn, processing the user message,
      * updating the conversation state, and formulating a response.
      * 
-     * @param jsonResponse JSON response from the server
+     * @param jsonResponse JSON response from the server (can be null if no server call was made for this turn)
      * @param messageType Type of message (BOT, SERVER)
      * @return A combined response message to show to the user
      */    public String handleConversationTurn(String jsonResponse, int messageType) {
         System.out.println("DEBUG: Handling conversation turn for node: " + this.id);
         
-        ConversationState.State state = handleNodeTransition();
-        System.out.println("DEBUG: Current state after transition: " + state);
+        ConversationState.State state = handleNodeTransition(); // This sets the state for the CURRENT node.
+        System.out.println("DEBUG: Current state after transition for node " + this.id + ": " + state);
         
-        boolean processed = processMessageByState(jsonResponse, messageType);
-        if (!processed) {
-            System.out.println("WARNING: Failed to process message for node: " + this.id);
-            return getMessage1() != null && !getMessage1().isEmpty() ? getMessage1() : fallback;
+        // processMessageByState will call fillMsg2FromTemplate if jsonResponse is present and applicable.
+        // fillMsg2FromTemplate (called within processMessageByState) is responsible for updating
+        // this.message2 if it's a template and jsonResponse contains data for it.
+        // If jsonResponse is null (e.g., when a node is just displaying its static message_1 after a transition),
+        // processMessageByState should not attempt to fill a template from null data.
+        boolean messageProcessedByState = processMessageByState(jsonResponse, messageType);
+        
+        if (!messageProcessedByState && jsonResponse != null) { // Only log warning if processing actual server data failed
+            System.out.println("WARNING: Failed to process server message for node: " + this.id + ". Using fallback or JSON-defined messages.");
         }
-        
+
+        // Retrieve messages from the node. 
+        // message1 is always from the JSON definition of this node.
+        // message2 is from the JSON definition *or* it has been updated by fillMsg2FromTemplate if jsonResponse was processed.
+        String nodeMessage1 = getMessage1(); 
+        String nodeMessage2 = getMessage2(); // This will be the processed template result if applicable.
+
+        System.out.println("DEBUG: handleConversationTurn: Node ID: " + this.id + ", State: " + state);
+        System.out.println("DEBUG: handleConversationTurn: Retrieved from node: message1 (from JSON): '" + nodeMessage1 + "'");
+        System.out.println("DEBUG: handleConversationTurn: Retrieved from node: message2 (from JSON or processed template): '" + nodeMessage2 + "'");
+
         String combinedMessage = "";
-        String detailsMessage = "";
 
-        if (messageType == ChatMessage.TYPE_SERVER) {
-            System.out.println("DEBUG: Server response. message2 (template applied): '" + getMessage2() + "', message1: '" + getMessage1() + "'");
-            detailsMessage = getMessage2();
-            if (detailsMessage == null || detailsMessage.isEmpty()) {
-                 // If message2 is empty, it implies template application might have yielded nothing, or no details were applicable.
-                 // We don't want to use message1 from the current node here if it's a generic prompt for information
-                 // that the server response was supposed to fulfill. Let detailsMessage remain empty or rely on specific prompts later.
-                 System.out.println("DEBUG: message2 from server response is empty.");
+        // Construct the message based on user's desired ""+"" or "text"+"" format
+        // This implies:
+        // - If message_1 is empty, use message_2.
+        // - If message_2 is empty, use message_1.
+        // - If both are present, concatenate them.
+
+        if (nodeMessage1 != null && !nodeMessage1.isEmpty()) {
+            combinedMessage = nodeMessage1;
+            if (nodeMessage2 != null && !nodeMessage2.isEmpty()) {
+                // Direct concatenation as per user's examples like "" + "message" or "message" + ""
+                // The JSON should define if a space or newline is implicitly part of message1 or message2.
+                combinedMessage += nodeMessage2;
             }
-        } else { // This is a BOT turn, not a direct server response processing for the current node.
-            System.out.println("DEBUG: Bot turn. message1: '" + getMessage1() + "', message2: '" + getMessage2() + "'");
-            combinedMessage = getMessage1(); // Primary message for bot turns
-            String message2Text = getMessage2();
-            // Append message2 if it's different and not a generic system prefix
-            if (message2Text != null && !message2Text.isEmpty() && !message2Text.equals(combinedMessage) &&
-                !message2Text.startsWith("Information about") &&
-                !message2Text.startsWith("Server response for category")) {
-                combinedMessage += "\n" + message2Text;
-            }
+        } else {
+            // nodeMessage1 is empty or null
+            combinedMessage = (nodeMessage2 != null) ? nodeMessage2 : "";
+        }
+        
+        // If, after combining, the message is still empty, use fallback.
+        if (combinedMessage.isEmpty()) {
+            System.out.println("DEBUG: Combined message (message_1 + message_2) is empty. Using fallback for node " + this.id);
+            combinedMessage = getFallback();
             if (combinedMessage == null || combinedMessage.isEmpty()) {
-                combinedMessage = fallback;
-            }
-            System.out.println("DEBUG: Combined message (bot turn, returning early): " + combinedMessage);
-            return combinedMessage; // For non-server triggered turns, this is usually it.
-        }
-
-        // Now, handle server response (detailsMessage) and potentially add missing info prompt
-        String missingInfoPromptText = "";
-        // Check states where we might need to ask for more info
-        if (state == ConversationState.State.LLM_GET_INFO) {
-            if (msgTemplate != null) {
-                missingInfoPromptText = getMissingInfoPrompt(); // Formatted as "Για να ολοκληρωθεί... <fields> ..."
-            }
-        }
-
-        // Construct the final message
-        if (detailsMessage != null && !detailsMessage.isEmpty()) {
-            combinedMessage = detailsMessage;
-            if (!missingInfoPromptText.isEmpty()) {
-                // Append missing info prompt if it's not already essentially in detailsMessage
-                if (!detailsMessage.contains(missingInfoPromptText.substring(0, Math.min(missingInfoPromptText.length(), 20)))) { // Check for partial overlap
-                    combinedMessage += "\n" + missingInfoPromptText;
-                }
-            }
-        } else { // No detailsMessage from server (or it was empty)
-            // Use the current node's message1 as a prefix if it exists and is relevant
-            String currentMessage1 = getMessage1();
-            if (!missingInfoPromptText.isEmpty()) {
-                if (currentMessage1 != null && !currentMessage1.isEmpty() && !currentMessage1.equals(missingInfoPromptText) && !missingInfoPromptText.contains(currentMessage1)) {
-                     // e.g. currentMessage1 = "Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες."
-                     // missingInfoPromptText = "Για να ολοκληρωθεί η κράτηση χρειάζομαι: <fields>..."
-                     // Check if currentMessage1 is the generic lead-in for the specific missing prompt.
-                    if (currentMessage1.startsWith("Για να ολοκληρωθεί η κράτησή σας")) {
-                        combinedMessage = missingInfoPromptText; // The prompt itself is comprehensive
-                    } else {
-                        combinedMessage = currentMessage1 + "\n" + missingInfoPromptText;
-                    }
-                } else {
-                    combinedMessage = missingInfoPromptText; // Only the prompt
-                }
-            } else if (currentMessage1 != null && !currentMessage1.isEmpty()) {
-                combinedMessage = currentMessage1; // No details, no missing info, just current node's message1
-            } else {
-                combinedMessage = fallback; // Absolute last resort
-            }
-        }
-
-        if (combinedMessage == null || combinedMessage.isEmpty()) {
-            combinedMessage = fallback; 
-        }
-
-        // Clean up welcome messages (existing logic)
-        if (!this.getId().equals("root") && 
-            (combinedMessage.contains("Καλωσορίσατε") || 
-             combinedMessage.contains("Καλώς ήρθατε") ||
-             combinedMessage.contains("Welcome"))) {
-            if (combinedMessage.length() < 50) {
-                combinedMessage = "Επεξεργάζομαι την ερώτησή σας...";
-            } else {
-                int firstLineBreak = combinedMessage.indexOf("\n");
-                if (firstLineBreak > 0) {
-                    combinedMessage = combinedMessage.substring(firstLineBreak + 1).trim();
-                }
-            }
-        }
-
-        // Add confirmation prompt if in CONFIRMATION state (restored logic)
-        if (state == ConversationState.State.CONFIRMATION) {
-            if (!combinedMessage.contains("(ναι/όχι)")) {
-                combinedMessage += "\n\nΠαρακαλώ επιβεβαιώστε (ναι/όχι).";
+                System.out.println("DEBUG: Fallback is also empty for node " + this.id + ". Setting to generic error.");
+                combinedMessage = "Συγγνώμη, δεν μπορώ να επεξεργαστώ το αίτημά σας αυτή τη στιγμή.";
             }
         }
         
-        System.out.println("DEBUG: Final combined message after all processing: " + combinedMessage);
+        // Append missing info prompt if in LLM_GET_INFO state and template is not yet complete.
+        if (state == ConversationState.State.LLM_GET_INFO) {
+            // Also check if message2 (the template string from JSON for this node) was initially defined.
+            // If message2 from JSON was empty, this node might be a general prompter, not an active template filler this turn.
+            boolean hasTemplateStringToFill = this.message2 != null && !this.message2.trim().isEmpty();
+
+            if (msgTemplate != null && !hasCompleteTemplateInformation() && hasTemplateStringToFill) {
+                String missingInfoPromptText = getMissingInfoPrompt();
+                if (!missingInfoPromptText.isEmpty()) {
+                    if (!combinedMessage.isEmpty() && !combinedMessage.endsWith("\n") && !missingInfoPromptText.startsWith("\n")) {
+                        combinedMessage += "\n"; // Add a separator if needed
+                    }
+                    combinedMessage += missingInfoPromptText;
+                }
+            }
+        }
+        
+        System.out.println("DEBUG: Final combined message for node " + this.id + ": \"" + combinedMessage + "\"");
         return combinedMessage;
     }
     
@@ -1300,12 +879,85 @@ public class ChatbotNode {
         if (msgTemplate == null) {
             return "";
         }
-
+        
         String missingFieldsGreek = msgTemplate.getMissingFieldsAsGreekString();
         if (missingFieldsGreek == null || missingFieldsGreek.isEmpty()) {
             return "";
         }
 
         return "Για να ολοκληρωθεί η κράτηση χρειάζομαι: " + missingFieldsGreek + ". Παρακαλώ δώστε τις πληροφορίες που λείπουν.";
+    }
+
+    /**
+     * Ελέγχει αν το template του node έχει όλα τα απαραίτητα πεδία συμπληρωμένα
+     * για την κατηγορία του
+     * 
+     * @return true αν το template είναι πλήρες, false διαφορετικά
+     */
+    public boolean hasCompleteTemplateInformation() {
+        if (msgTemplate == null) {
+            // If there's no template, we can't have complete information for it.
+            // However, if the node type is GIVE_INFO and it has no template, 
+            // it might be that it's designed to give static info from message1/message2 directly.
+            // For the purpose of LLM_GET_INFO, no template means it's not waiting for template fields.
+            // So, if the current state is LLM_GET_INFO and there's no template, it is effectively "complete"
+            // in the sense that it won't ask for more via getMissingInfoPrompt.
+            // This depends on how chooseNextNode handles this for LLM_GET_INFO state.
+            // For now, let's stick to: no template means no fields to check, so not "incomplete" in terms of missing fields.
+            // However, if the purpose of this method is strictly to check if a *defined* template is full, then this should be false.
+            // Let's assume it means "are all required fields of the *defined* template full?"
+            return false; 
+        }
+        
+        // Έλεγχος με βάση την κατηγορία
+        // The category for checking should be this.category (from JSON), not necessarily server's category for the turn.
+        String nodeCategory = this.getCategory();
+
+        if ("ΚΡΑΤΗΣΗ".equals(nodeCategory)) {
+            if (msgTemplate instanceof BookingTemplate) {
+                BookingTemplate bookingTemplate = (BookingTemplate) msgTemplate;
+                return !bookingTemplate.getShowName().isEmpty() && 
+                       !bookingTemplate.getDay().isEmpty() && 
+                       !bookingTemplate.getTime().isEmpty() && 
+                       (bookingTemplate.getPerson() != null && !bookingTemplate.getPerson().getName().isEmpty());
+            }
+        } 
+        else if ("ΑΚΥΡΩΣΗ".equals(nodeCategory)) {
+            if (msgTemplate instanceof CancellationTemplate) {
+                CancellationTemplate cancelTemplate = (CancellationTemplate) msgTemplate;
+                return !cancelTemplate.getReservationNumber().isEmpty() && 
+                       !cancelTemplate.getPasscode().isEmpty();
+            }
+        } 
+        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(nodeCategory)) {
+            if (msgTemplate instanceof ShowInfoTemplate) {
+                ShowInfoTemplate infoTemplate = (ShowInfoTemplate) msgTemplate;
+                // For show information, consider it complete if at least a name or topic is present.
+                // The user might just ask for "info on Hamlet" or "info on comedies".
+                return !infoTemplate.getName().isEmpty() || 
+                       !infoTemplate.getTopic().isEmpty();
+            }
+        } 
+        else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(nodeCategory)) {
+            if (msgTemplate instanceof ReviewTemplate) {
+                ReviewTemplate reviewTemplate = (ReviewTemplate) msgTemplate;
+                return !reviewTemplate.getReservationNumber().isEmpty() && 
+                       // !reviewTemplate.getPasscode().isEmpty() && // Passcode might be optional for initiating a review
+                       reviewTemplate.getStars() > 0;
+            }
+        } 
+        else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(nodeCategory)) {
+            if (msgTemplate instanceof DiscountTemplate) {
+                DiscountTemplate discountTemplate = (DiscountTemplate) msgTemplate;
+                // For discounts, any key piece of information is enough to consider it 'started'
+                return !discountTemplate.getShowName().isEmpty() || 
+                       !discountTemplate.getAge().isEmpty() || 
+                       !discountTemplate.getDate().isEmpty() ||
+                       discountTemplate.getNumberOfPeople() > 0;
+            }
+        }
+        
+        // If the category is not recognized or template type mismatch, assume incomplete or not applicable.
+        return false;
     }
 }
