@@ -410,10 +410,17 @@ public class ChatbotNode {
             }
 
             return null;
-        } // Case 2: If we're at a main category node, check for template completeness
+        }
+        // Case 2: If we're at a main category node, check for template completeness
         else if (validCategoryNode(this)) {
-            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness");            // Check if the template has complete information
+            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness"); // Check if
+                                                                                                           // the
+                                                                                                           // template
+                                                                                                           // has
+                                                                                                           // complete
+                                                                                                           // information
             boolean hasCompleteInfo = hasCompleteTemplateInformation();
+            System.out.println("DEBUG: Template completeness: " + hasCompleteInfo);
 
             // Detailed logging about the template state
             if (msgTemplate != null) {
@@ -421,12 +428,12 @@ public class ChatbotNode {
                 System.out.println("DEBUG: Template class: " + msgTemplate.getClass().getSimpleName() +
                         ", Missing fields count: " + missingFields.size() +
                         ", Category: " + this.category);
-                
+
                 if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.category)) {
-                    System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ category has " + 
+                    System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ category has " +
                             (missingFields.size() < 8 ? "SOME" : "NO") + " information available");
                 }
-                
+
                 if (!missingFields.isEmpty()) {
                     System.out.println("DEBUG: Missing fields: " + missingFields);
                 } else {
@@ -434,13 +441,6 @@ public class ChatbotNode {
                 }
             } else {
                 System.out.println("DEBUG: No template available");
-            }
-
-            // Fallback if template is null
-            if (!hasCompleteInfo && getMessageTemplate() == null) {
-                System.out.println("DEBUG: Template is null, using message text as fallback");
-                hasCompleteInfo = userMessageText.contains("complete") || userMessageText.contains("ολοκληρωμένη") ||
-                        userMessageText.contains("some") || userMessageText.contains("κάποιες");
             }
 
             System.out.println("DEBUG: Template completeness check result: " + hasCompleteInfo);
@@ -459,18 +459,21 @@ public class ChatbotNode {
             // Determine patterns based on category
             if ("ΚΡΑΤΗΣΗ".equals(this.getCategory()) || "ΑΚΥΡΩΣΗ".equals(this.getCategory())
                     || "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(this.getCategory())) {
-                completePattern = "complete";
-                incompletePattern = "incomplete";            } else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory()) || "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.getCategory())) {
-                completePattern = "some";
-                incompletePattern = "none";
-                System.out.println("DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'some' pattern for available info, 'none' for no info");
-                System.out.println("DEBUG: Template state: hasCompleteInfo=" + hasCompleteInfo + 
-                                 ", Will search for child with '" + (hasCompleteInfo ? completePattern : incompletePattern) + "' in ID");
-                  // Additional logging to show exactly what's in the template
-                if (msgTemplate != null && msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
-                    com.example.jupitertheaterapp.model.ShowInfoTemplate template = 
-                        (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
-                    
+                completePattern = "confirmation";
+                incompletePattern = "incomplete";
+            } else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory()) || "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.getCategory())) {
+                completePattern = "cofirmation";
+                incompletePattern = "incomplete";
+                System.out.println(
+                        "DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'cofirmation' pattern for available info, 'incomplete' for no info");
+                System.out.println("DEBUG: Template state: hasCompleteInfo=" + hasCompleteInfo +
+                        ", Will search for child with '" + (hasCompleteInfo ? completePattern : incompletePattern)
+                        + "' in ID");
+                // Additional logging to show exactly what's in the template
+                if (msgTemplate != null
+                        && msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
+                    com.example.jupitertheaterapp.model.ShowInfoTemplate template = (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
+
                     String name = template.getName().isEmpty() ? "" : template.getName().get(0);
                     String day = template.getDay().isEmpty() ? "" : template.getDay().get(0);
                     String topic = template.getTopic().isEmpty() ? "" : template.getTopic().get(0);
@@ -479,7 +482,7 @@ public class ChatbotNode {
                     String room = template.getRoom().isEmpty() ? "" : template.getRoom().get(0);
                     String duration = template.getDuration().isEmpty() ? "" : template.getDuration().get(0);
                     String stars = template.getStars().isEmpty() ? "" : template.getStars().get(0);
-                    
+
                     System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - ShowInfoTemplate content:");
                     System.out.println("DEBUG:   name: '" + name + "'");
                     System.out.println("DEBUG:   day: '" + day + "'");
@@ -489,40 +492,44 @@ public class ChatbotNode {
                     System.out.println("DEBUG:   cast: '" + cast + "'");
                     System.out.println("DEBUG:   duration: '" + duration + "'");
                     System.out.println("DEBUG:   stars: '" + stars + "'");
-                    
+
                     // Check if any fields are populated
-                    boolean hasAtLeastOneField = !name.isEmpty() || !day.isEmpty() || !topic.isEmpty() || !time.isEmpty() ||
-                                               !cast.isEmpty() || !room.isEmpty() || !duration.isEmpty() || !stars.isEmpty();
-                                               
+                    boolean hasAtLeastOneField = !name.isEmpty() || !day.isEmpty() || !topic.isEmpty()
+                            || !time.isEmpty() ||
+                            !cast.isEmpty() || !room.isEmpty() || !duration.isEmpty() || !stars.isEmpty();
+
                     System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - Has at least one field populated: " + hasAtLeastOneField);
                 }
                 // Add logging for the ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category as well
-                else if (msgTemplate != null && msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
-                    com.example.jupitertheaterapp.model.DiscountTemplate template = 
-                        (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
-                    
+                else if (msgTemplate != null
+                        && msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
+                    com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
+
                     // Get all field values
                     String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
                     int numberOfPeople = template.getNumberOfPeople();
                     String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
                     String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
-                    
+
                     System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - DiscountTemplate content:");
                     System.out.println("DEBUG:   showName: '" + showName + "'");
                     System.out.println("DEBUG:   numberOfPeople: " + numberOfPeople);
                     System.out.println("DEBUG:   age: '" + age + "'");
                     System.out.println("DEBUG:   date: '" + date + "'");
-                    
+
                     // Check if any fields are populated
-                    boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 || 
-                                              !age.isEmpty() || !date.isEmpty();
-                                               
-                    System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
-                    
+                    boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 ||
+                            !age.isEmpty() || !date.isEmpty();
+
+                    System.out.println(
+                            "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
+
                     if (hasAtLeastOneField) {
-                        System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has some information available - using discount_some");
+                        System.out.println(
+                                "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has some information available - using discount_some");
                     } else {
-                        System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has NO information available - using discount_none");
+                        System.out.println(
+                                "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has NO information available - using discount_none");
                     }
                 }
             }
@@ -538,20 +545,21 @@ public class ChatbotNode {
                 for (ChatbotNode child : getChildren()) {
                     System.out.println("DEBUG:   - Child ID: " + child.getId() +
                             ", matches pattern? " + child.getId().contains(patternToFind));
-                }                // Now try to find matching child
+                } // Now try to find matching child
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains(patternToFind)) {
                         System.out.println("DEBUG: Found matching child node: " + child.getId() +
                                 " for pattern: " + patternToFind);
-                        
+
                         if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory())) {
-                            if (patternToFind.equals("some")) {
-                                System.out.println("DEBUG: Selecting info_some node because information is available");
+                            if (patternToFind.equals("confirmation")) {
+                                System.out.println("DEBUG: Selecting info_confirmation node because information is available");
                             } else {
-                                System.out.println("DEBUG: Selecting info_none node because no information is available");
+                                System.out
+                                        .println("DEBUG: Selecting info_none node because no information is available");
                             }
                         }
-                        
+
                         return handleNodeSelectionWithState(child);
                     }
                 }
@@ -561,12 +569,12 @@ public class ChatbotNode {
             }
         }
 
-        // Case 3: If we're at a "complete/some" node, handle confirmation/rejection
-        else if (this.getId().contains("complete") || this.getId().contains("some")) {
-            System.out.println("DEBUG: At complete/some node: " + this.getId());
+        // Case 3: If we're at a "confirmation" node, handle confirmation/rejection
+        else if (this.getId().contains("confirmation")) {
+            System.out.println("DEBUG: At confirmation node: " + this.getId());
 
             if (isConfirmation) {
-                System.out.println("DEBUG: At complete/some node with confirmation");
+                System.out.println("DEBUG: At confirmation node with confirmation");
                 // Look for confirmation node
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains("confirmed")) {
@@ -575,7 +583,7 @@ public class ChatbotNode {
                     }
                 }
             } else if (isRejection) {
-                System.out.println("DEBUG: At complete/some node with rejection");
+                System.out.println("DEBUG: At confirmation node with rejection");
                 // Look for rejection node
                 for (ChatbotNode child : getChildren()) {
                     if (child.getId().contains("rejected") || child.getId().contains("cancel")) {
@@ -591,8 +599,8 @@ public class ChatbotNode {
         }
 
         // Case 4: If we're at an "incomplete/none" node, find node for more info
-        else if (this.getId().contains("incomplete") || this.getId().contains("none")) {
-            System.out.println("DEBUG: At incomplete/none node: " + this.getId());
+        else if (this.getId().contains("incomplete")) {
+            System.out.println("DEBUG: At incomplete node: " + this.getId());
 
             // Try to find a node specifically designed to gather more information
             for (ChatbotNode child : getChildren()) {
@@ -816,21 +824,22 @@ public class ChatbotNode {
                         }
                         return true;
                     }
-                }            
-                // Apply template to the message2 field in the node                
+                }
+                // Apply template to the message2 field in the node
                 if (msgTemplate.valuesFromJson(jsonResponse)) {
                     // Log missing fields after populating from JSON
                     List<String> missingFields = msgTemplate.getMissingFields();
-                    System.out.println("DEBUG: Template populated from JSON - Type: " + msgTemplate.getClass().getSimpleName() + 
-                                     ", Missing fields count: " + missingFields.size());
-                    
+                    System.out.println(
+                            "DEBUG: Template populated from JSON - Type: " + msgTemplate.getClass().getSimpleName() +
+                                    ", Missing fields count: " + missingFields.size());
+
                     if (missingFields.isEmpty()) {
                         System.out.println("DEBUG: Template is complete! All fields populated successfully.");
                     } else {
-                        System.out.println("DEBUG: Template still has missing fields: " + 
-                                         msgTemplate.getMissingFieldsAsGreekString());
+                        System.out.println("DEBUG: Template still has missing fields: " +
+                                msgTemplate.getMissingFieldsAsGreekString());
                     }
-                    
+
                     // Use message2 from the node if it exists as the template
                     // This uses the message_2 from conversation_tree.json with placeholders
                     String templateStr = this.message2;
@@ -893,8 +902,7 @@ public class ChatbotNode {
 
                 return true;
             }
-        } catch(JSONException e)
-        {
+        } catch (JSONException e) {
             System.err.println("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
 
@@ -906,19 +914,20 @@ public class ChatbotNode {
                 return true;
             }
             return false;
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Error updating system message with JSON: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
-    }    
+    }
+
     /**
      * Ελέγχει αν το template του node έχει όλα τα απαραίτητα πεδία συμπληρωμένα
      * για την κατηγορία του
      * 
      * @return true αν το template είναι πλήρες, false διαφορετικά
-     */    public boolean hasCompleteTemplateInformation() {
+     */
+    public boolean hasCompleteTemplateInformation() {
         if (msgTemplate == null) {
             System.out.println("DEBUG: Template is null, considering incomplete");
             return false;
@@ -926,16 +935,15 @@ public class ChatbotNode {
 
         // Use the getMissingFields method from MsgTemplate to check for completeness
         List<String> missingFields = msgTemplate.getMissingFields();
-        
+
         // Special handling for categories that need only partial information
-        
+
         // ΠΛΗΡΟΦΟΡΙΕΣ - Consider "some" information as complete (info_some node)
         if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
             // This is a ShowInfoTemplate, check if we have any populated fields at all
             if (msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
-                com.example.jupitertheaterapp.model.ShowInfoTemplate template = 
-                    (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
-                
+                com.example.jupitertheaterapp.model.ShowInfoTemplate template = (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
+
                 // Get all field values
                 String name = template.getName().isEmpty() ? "" : template.getName().get(0);
                 String day = template.getDay().isEmpty() ? "" : template.getDay().get(0);
@@ -945,7 +953,7 @@ public class ChatbotNode {
                 String room = template.getRoom().isEmpty() ? "" : template.getRoom().get(0);
                 String duration = template.getDuration().isEmpty() ? "" : template.getDuration().get(0);
                 String stars = template.getStars().isEmpty() ? "" : template.getStars().get(0);
-                
+
                 // Check if any fields are non-empty
                 boolean hasName = !name.isEmpty();
                 boolean hasDay = !day.isEmpty();
@@ -955,65 +963,69 @@ public class ChatbotNode {
                 boolean hasRoom = !room.isEmpty();
                 boolean hasDuration = !duration.isEmpty();
                 boolean hasStars = !stars.isEmpty();
-                
-                boolean hasAtLeastOneField = hasName || hasDay || hasTopic || hasTime || 
-                                           hasCast || hasRoom || hasDuration || hasStars;
-                
+
+                boolean hasAtLeastOneField = hasName || hasDay || hasTopic || hasTime ||
+                        hasCast || hasRoom || hasDuration || hasStars;
+
                 System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template field check - " +
                         "name: '" + name + "', day: '" + day + "', topic: '" + topic +
                         "', time: '" + time + "', cast: '" + cast + "', room: '" + room +
                         "', duration: '" + duration + "', stars: '" + stars + "'");
-                
+
                 System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template check - " +
-                        "Total fields: 8, Missing fields: " + missingFields.size() + 
+                        "Total fields: 8, Missing fields: " + missingFields.size() +
                         ", Has at least one field: " + hasAtLeastOneField);
-                        
+
                 if (hasAtLeastOneField) {
                     System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ has some information available - using info_some");
                 } else {
                     System.out.println("DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ has NO information available - using info_none");
                 }
-                
+
                 return hasAtLeastOneField;
             } else {
-                System.out.println("DEBUG: Expected ShowInfoTemplate but got " + 
-                                 msgTemplate.getClass().getSimpleName());
+                System.out.println("DEBUG: Expected ShowInfoTemplate but got " +
+                        msgTemplate.getClass().getSimpleName());
                 return false;
             }
         }
-        
-        // ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Consider "some" information as complete (discount_some node)
+
+        // ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Consider "some" information as complete
+        // (discount_some node)
         else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
             // This is a DiscountTemplate, check if we have any populated fields at all
             if (msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
-                com.example.jupitertheaterapp.model.DiscountTemplate template = 
-                    (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
-                
+                com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
+
                 // Get all field values
                 String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
                 int numberOfPeople = template.getNumberOfPeople();
                 String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
                 String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
-                
+
                 // Check if any fields are populated
-                boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 || 
-                                              !age.isEmpty() || !date.isEmpty();
-                                               
-                System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
-                
+                boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 ||
+                        !age.isEmpty() || !date.isEmpty();
+
+                System.out.println(
+                        "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
+
                 if (hasAtLeastOneField) {
-                    System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has some information available - using discount_some");
+                    System.out.println(
+                            "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has some information available - using discount_some");
                 } else {
-                    System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has NO information available - using discount_none");
+                    System.out
+                            .println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ has NO information available - using discount_none");
                 }
-                
+
                 return hasAtLeastOneField;
             } else {
-                System.out.println("DEBUG: Expected DiscountTemplate but got " + 
-                                 msgTemplate.getClass().getSimpleName());
+                System.out.println("DEBUG: Expected DiscountTemplate but got " +
+                        msgTemplate.getClass().getSimpleName());
                 return false;
-            }        }
-        
+            }
+        }
+
         // Normal behavior for other categories - all fields must be present
         boolean isComplete = missingFields.isEmpty();
 
@@ -1317,7 +1329,8 @@ public class ChatbotNode {
                 // the next node
                 if (msgTemplate != null) {
                     boolean populated = msgTemplate.valuesFromJson(jsonResponse);
-                    System.out.println("DEBUG: Template populated: " + populated);                    // Log missing fields after populating
+                    System.out.println("DEBUG: Template populated: " + populated); // Log missing fields after
+                                                                                   // populating
                     List<String> missingFields = msgTemplate.getMissingFields();
                     System.out.println("DEBUG: After JSON population - Missing fields: " + missingFields.size());
                     if (!missingFields.isEmpty()) {
@@ -1326,13 +1339,12 @@ public class ChatbotNode {
                     } else {
                         System.out.println("DEBUG: Template is complete - All fields populated");
                     }
-                      // Special case for ΠΛΗΡΟΦΟΡΙΕΣ
+                    // Special case for ΠΛΗΡΟΦΟΡΙΕΣ
                     if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
                         // Count populated fields more precisely
                         if (msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
-                            com.example.jupitertheaterapp.model.ShowInfoTemplate template = 
-                                (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
-                            
+                            com.example.jupitertheaterapp.model.ShowInfoTemplate template = (com.example.jupitertheaterapp.model.ShowInfoTemplate) msgTemplate;
+
                             // Get actual values to check
                             String name = template.getName().isEmpty() ? "" : template.getName().get(0);
                             String day = template.getDay().isEmpty() ? "" : template.getDay().get(0);
@@ -1342,32 +1354,35 @@ public class ChatbotNode {
                             String room = template.getRoom().isEmpty() ? "" : template.getRoom().get(0);
                             String duration = template.getDuration().isEmpty() ? "" : template.getDuration().get(0);
                             String stars = template.getStars().isEmpty() ? "" : template.getStars().get(0);
-                            
+
                             // Check if any fields are populated
-                            boolean hasAtLeastOneField = !name.isEmpty() || !day.isEmpty() || !topic.isEmpty() || !time.isEmpty() ||
-                                                       !cast.isEmpty() || !room.isEmpty() || !duration.isEmpty() || !stars.isEmpty();
-                            
-                            System.out.println("DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has " + 
+                            boolean hasAtLeastOneField = !name.isEmpty() || !day.isEmpty() || !topic.isEmpty()
+                                    || !time.isEmpty() ||
+                                    !cast.isEmpty() || !room.isEmpty() || !duration.isEmpty() || !stars.isEmpty();
+
+                            System.out.println("DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has " +
                                     (hasAtLeastOneField ? "SOME" : "NO") + " information available");
-                            System.out.println("DEBUG: Should navigate to: info_" + (hasAtLeastOneField ? "some" : "none"));
+                            System.out.println(
+                                    "DEBUG: Should navigate to: info_" + (hasAtLeastOneField ? "some" : "none"));
                         } else {
                             boolean hasAtLeastOneField = missingFields.size() < 8;
-                            System.out.println("DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has " + 
+                            System.out.println("DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has " +
                                     (hasAtLeastOneField ? "SOME" : "NO") + " information available");
-                            System.out.println("DEBUG: Should navigate to: info_" + (hasAtLeastOneField ? "some" : "none"));
+                            System.out.println(
+                                    "DEBUG: Should navigate to: info_" + (hasAtLeastOneField ? "some" : "none"));
                         }
                     }
-                    
+
                     // Special case for ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ
                     else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
                         if (msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
-                            com.example.jupitertheaterapp.model.DiscountTemplate template = 
-                                (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
-                            
+                            com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
+
                             boolean hasAtLeastOneField = missingFields.size() < template.getTotalFieldCount();
-                            System.out.println("DEBUG: For ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category - Template has " + 
+                            System.out.println("DEBUG: For ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category - Template has " +
                                     (hasAtLeastOneField ? "SOME" : "NO") + " information available");
-                            System.out.println("DEBUG: Should navigate to: discount_" + (hasAtLeastOneField ? "some" : "none"));
+                            System.out.println(
+                                    "DEBUG: Should navigate to: discount_" + (hasAtLeastOneField ? "some" : "none"));
                         }
                     }
                 }
@@ -1402,7 +1417,7 @@ public class ChatbotNode {
         String message2 = getMessage2();
         if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
             combinedMessage += "\n" + message2;
-        }        // 4. Add state-specific modifications to the response
+        } // 4. Add state-specific modifications to the response
         switch (state) {
             case CONFIRMATION:
                 // If we're in confirmation state but the message doesn't already include a
@@ -1411,7 +1426,7 @@ public class ChatbotNode {
                     combinedMessage += "\n\nΠαρακαλώ επιβεβαιώστε (ναι/όχι).";
                 }
                 break;
-                
+
             case LLM_GET_INFO:
                 // Don't add hardcoded prompt - use only messages from conversation tree
                 break;
