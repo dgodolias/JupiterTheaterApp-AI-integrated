@@ -310,23 +310,26 @@ public class ChatbotNode {
         }
 
         return path;
-    }
-
-    /**
+    }    /**
      * Choose the next node in the conversation based on the current state and user
      * message. Uses a robust approach without relying on level-based handler
      * functions.
      * 
+     * @param actualUserInput The actual user input before any processing
      * @return The next node in the conversation
      */
-    public ChatbotNode chooseNextNode() {
-        // Get the user message from this node
-        String userMessageText = "";
+    public ChatbotNode chooseNextNode(String actualUserInput) {
+        // Use the actual user input for decision making
+        String userMessageText = actualUserInput != null ? actualUserInput : "";
+        
+        // Also get the stored user message for fallback scenarios
+        String storedUserMessage = "";
         if (userMessage != null) {
-            userMessageText = userMessage.getMessage();
+            storedUserMessage = userMessage.getMessage();
         }
 
-        System.out.println("DEBUG: Choosing next node with user message: " + userMessageText);
+        System.out.println("DEBUG: Choosing next node with actual user input: " + userMessageText);
+        System.out.println("DEBUG: Stored user message: " + storedUserMessage);
         System.out.println("DEBUG: Current node ID: " + this.id + ", Category: " + this.category);
 
         // If no children, there's nowhere to go
@@ -361,22 +364,24 @@ public class ChatbotNode {
                 System.out.println("DEBUG: Confirmed valid server category: " + validCategory);
                 break;
             }
-        }
-
-        // Check for user confirmation or rejection keywords
+        }        // Check for user confirmation or rejection keywords
         boolean isConfirmation = userMessageText.toLowerCase().contains("yes") ||
                 userMessageText.toLowerCase().contains("confirm") ||
                 userMessageText.toLowerCase().contains("ναι") ||
-                userMessageText.toLowerCase().contains("επιβεβαιώνω");
+                userMessageText.toLowerCase().contains("επιβεβαιώνω") ||
+                userMessageText.toLowerCase().contains("ναί") ||
+                userMessageText.toLowerCase().contains("οκ") ||
+                userMessageText.toLowerCase().contains("ok");
 
         boolean isRejection = userMessageText.toLowerCase().contains("no") ||
                 userMessageText.toLowerCase().contains("cancel") ||
                 userMessageText.toLowerCase().contains("όχι") ||
-                userMessageText.toLowerCase().contains("ακύρωση");
+                userMessageText.toLowerCase().contains("ακύρωση") ||
+                userMessageText.toLowerCase().contains("όχι") ||
+                userMessageText.toLowerCase().contains("δεν") ||
+                userMessageText.toLowerCase().contains("άκυρο");
 
-        System.out.println("DEBUG: isConfirmation: " + isConfirmation + ", isRejection: " + isRejection);
-
-        // CASE-BASED NODE SELECTION APPROACH
+        System.out.println("DEBUG: isConfirmation: " + isConfirmation + ", isRejection: " + isRejection);        // CASE-BASED NODE SELECTION APPROACH
 
         // Case 1: If we're at the root node, we need to match with a category node
         if ("root".equals(this.id)) {
@@ -391,8 +396,7 @@ public class ChatbotNode {
                 }
             }
 
-            // If no direct match, try to find a child with matching category regardless of
-            // ID
+            // If no direct match, try to find a child with matching category regardless of ID
             if (this.category != null && !this.category.isEmpty()) {
                 for (ChatbotNode child : getChildren()) {
                     if (this.category.equals(child.getCategory())) {
@@ -411,9 +415,43 @@ public class ChatbotNode {
 
             return null;
         }
-        // Case 2: If we're at a main category node, check for template completeness
+        // Case 2: If we're at a "confirmation" node, handle confirmation/rejection
+        else if (this.getId().contains("confirmation")) {
+            System.out.println("DEBUG: At confirmation node: " + this.getId());
+
+            if (isConfirmation) {
+                System.out.println("DEBUG: At confirmation node with YES - going to root");
+                // YES: go to root (first child in the children array)
+                if (hasChildren() && getChildren().size() > 0) {
+                    ChatbotNode firstChild = getChildren().get(0);
+                    if ("root".equals(firstChild.getId())) {
+                        System.out.println("DEBUG: Found root node as first child: " + firstChild.getId());
+                        return handleNodeSelectionWithState(firstChild);
+                    }
+                }
+                // Fallback: look for root node in children
+                for (ChatbotNode child : getChildren()) {
+                    if ("root".equals(child.getId())) {
+                        System.out.println("DEBUG: Found root node: " + child.getId());
+                        return handleNodeSelectionWithState(child);
+                    }
+                }
+            } else if (isRejection) {
+                System.out.println("DEBUG: At confirmation node with NO - going to parent");
+                // NO: go to parent (which should be the main category node)
+                if (this.getParent() != null) {
+                    System.out.println("DEBUG: Found parent node: " + this.getParent().getId());
+                    return handleNodeSelectionWithState(this.getParent());
+                }
+            } else {
+                System.out.println("DEBUG: At confirmation node with OTHER input - staying at same node");
+                // OTHER: stay at the same confirmation node
+                return this;
+            }
+        }
+        // Case 3: If we're at a main category node, check for template completeness
         else if (validCategoryNode(this)) {
-            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness"); // Check if
+            System.out.println("DEBUG: At category node " + this.id + ", checking template completeness");// Check if
                                                                                                            // the
                                                                                                            // template
                                                                                                            // has
@@ -562,40 +600,9 @@ public class ChatbotNode {
 
                         return handleNodeSelectionWithState(child);
                     }
-                }
-
-                // If no match was found
+                }                // If no match was found
                 System.out.println("DEBUG: No child with pattern '" + patternToFind + "' was found!");
             }
-        }
-
-        // Case 3: If we're at a "confirmation" node, handle confirmation/rejection
-        else if (this.getId().contains("confirmation")) {
-            System.out.println("DEBUG: At confirmation node: " + this.getId());
-
-            if (isConfirmation) {
-                System.out.println("DEBUG: At confirmation node with confirmation");
-                // Look for confirmation node
-                for (ChatbotNode child : getChildren()) {
-                    if (child.getId().contains("confirmed")) {
-                        System.out.println("DEBUG: Found confirmation node: " + child.getId());
-                        return handleNodeSelectionWithState(child);
-                    }
-                }
-            } else if (isRejection) {
-                System.out.println("DEBUG: At confirmation node with rejection");
-                // Look for rejection node
-                for (ChatbotNode child : getChildren()) {
-                    if (child.getId().contains("rejected") || child.getId().contains("cancel")) {
-                        System.out.println("DEBUG: Found rejection node: " + child.getId());
-                        return handleNodeSelectionWithState(child);
-                    }
-                }
-            }
-
-            // If user hasn't confirmed or rejected yet, we stay at the current node
-            // by returning null (no navigation) or could return the most appropriate child
-            System.out.println("DEBUG: No confirmation/rejection detected, staying at current node");
         }
 
         // Case 4: If we're at an "incomplete/none" node, find node for more info

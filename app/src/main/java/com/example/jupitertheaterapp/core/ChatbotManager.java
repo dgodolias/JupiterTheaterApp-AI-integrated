@@ -781,11 +781,13 @@ public class ChatbotManager {
      * 
      * @param userMessage      The message from the user
      * @param responseCallback Callback to receive the response
-     */
-    public void getResponse(String userMessage, ResponseCallback responseCallback) {
+     */    public void getResponse(String userMessage, ResponseCallback responseCallback) {
         Log.d(TAG, "Getting response for user message: " + userMessage);
 
         try {
+            // Store the original user message for confirmation node navigation
+            final String originalUserMessage = userMessage;
+            
             // Create JSON request using the current node
             JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
 
@@ -805,11 +807,12 @@ public class ChatbotManager {
                         Log.d(TAG, "Initial JSON processing complete, template populated");
                         
                         // Set the category as user message for node navigation purposes
-                        currentNode.setUserMessage(category);
-
-                        // Try to get the next node based on category AND template completeness
-                        ChatbotNode nextNode = currentNode.chooseNextNode();
+                        currentNode.setUserMessage(category);                        // Try to get the next node based on category AND template completeness
+                        // Pass the original user input for proper confirmation node navigation
+                        Log.d(TAG, "Navigation debug - Original user input: '" + originalUserMessage + "', Server category: '" + category + "'");
+                        ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);
                         if (nextNode != null) {
+                            Log.d(TAG, "Navigation successful - Moving from '" + currentNode.getId() + "' to '" + nextNode.getId() + "'");
                             // Update the current node to the next one
                             currentNode = nextNode;
                             
