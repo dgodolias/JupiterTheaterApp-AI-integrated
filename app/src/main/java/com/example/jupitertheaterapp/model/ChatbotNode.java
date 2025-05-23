@@ -371,13 +371,11 @@ public class ChatbotNode {
                 userMessageText.toLowerCase().contains("επιβεβαιώνω") ||
                 userMessageText.toLowerCase().contains("ναί") ||
                 userMessageText.toLowerCase().contains("οκ") ||
-                userMessageText.toLowerCase().contains("ok");
-
-        boolean isRejection = userMessageText.toLowerCase().contains("no") ||
+                userMessageText.toLowerCase().contains("ok");        boolean isRejection = userMessageText.toLowerCase().contains("no") ||
                 userMessageText.toLowerCase().contains("cancel") ||
-                userMessageText.toLowerCase().contains("όχι") ||
+                userMessageText.toLowerCase().contains("όχι") ||  // with accent
+                userMessageText.toLowerCase().contains("οχι") ||  // without accent
                 userMessageText.toLowerCase().contains("ακύρωση") ||
-                userMessageText.toLowerCase().contains("όχι") ||
                 userMessageText.toLowerCase().contains("δεν") ||
                 userMessageText.toLowerCase().contains("άκυρο");
 

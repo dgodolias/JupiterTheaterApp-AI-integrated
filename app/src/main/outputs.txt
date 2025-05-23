@@ -1,390 +1,390 @@
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:12.489 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:18.316 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ξγ
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ξγ'},
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:18.316 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:18.317 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:18.317 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:18.317 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
-2025-05-23 17:57:18.317 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.319 24581-24634 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
-2025-05-23 17:57:18.319 24581-24634 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
-2025-05-23 17:57:18.322 24581-24634 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:18.322 24581-24634 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@4e59d29
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_confirmation
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.335 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_confirmation
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:18.336 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
-2025-05-23 17:57:18.336 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: 'ξγ', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ξγ
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 1
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: review_confirmation
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with OTHER input - staying at same node
-2025-05-23 17:57:18.336 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'review_confirmation' to 'review_confirmation'
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_confirmation
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_confirmation
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:18.336 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:18.336 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: review_confirmation
-2025-05-23 17:57:18.338 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-23 17:57:18.338 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: review_confirmation
-2025-05-23 17:57:18.339 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Ευχαριστούμε για την αξιολόγησή σας!
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=null,
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=null,
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Getting response for user message: ξγ
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Current node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ξγ'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
+  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ξγ"}
+  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@4e59d29
+  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Handling conversation turn for node: review_confirmation
+  DEBUG: Processing JSON response to populate template
+  DEBUG: Template populated: true
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
+  DEBUG: Template is complete! All fields populated successfully.
+  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node review_confirmation
+  DEBUG: Current state: INITIAL
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Initial JSON processing complete, template populated
+  Navigation debug - Original user input: 'ξγ', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
+  DEBUG: Choosing next node with actual user input: ξγ
+  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Available children count: 1
+  DEBUG: Available child nodes for matching:
+  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Path length: 3
+  DEBUG: Path from root to current node: 
+  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG: isConfirmation: false, isRejection: false
+  DEBUG: At confirmation node: review_confirmation
+  DEBUG: At confirmation node with OTHER input - staying at same node
+  Navigation successful - Moving from 'review_confirmation' to 'review_confirmation'
+  DEBUG: Handling conversation turn for node: review_confirmation
+  DEBUG: Processing JSON response to populate template
+  DEBUG: Template populated: true
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
+  DEBUG: Template is complete! All fields populated successfully.
+  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node review_confirmation
+  DEBUG: Current state: INITIAL
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Conversation turn processed for node: review_confirmation
+  Current state: INITIAL
+  Using system message from node: review_confirmation
+  Combined message: Ευχαριστούμε για την αξιολόγησή σας!
                                                                                                     Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:18.341 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:18.342 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:18.342 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:18.342 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:18.342 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:18.342 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:25.963 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:25.964 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: οχι
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:25.964 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='οχι'},
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
-2025-05-23 17:57:25.965 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.979 24581-24635 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
-2025-05-23 17:57:25.980 24581-24635 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
-2025-05-23 17:57:25.981 24581-24635 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:25.982 24581-24635 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:25.992 24581-24581 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@e42899d
-2025-05-23 17:57:25.992 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_confirmation
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_confirmation
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:25.993 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
-2025-05-23 17:57:25.993 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: 'οχι', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: οχι
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.993 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 1
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:25.994 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:25.995 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
-2025-05-23 17:57:25.995 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: review_confirmation
-2025-05-23 17:57:25.995 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with OTHER input - staying at same node
-2025-05-23 17:57:25.996 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'review_confirmation' to 'review_confirmation'
-2025-05-23 17:57:25.996 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_confirmation
-2025-05-23 17:57:25.997 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:25.998 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:26.000 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
-2025-05-23 17:57:26.000 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
-2025-05-23 17:57:26.000 24581-24581 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:26.001 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:26.001 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_confirmation
-2025-05-23 17:57:26.001 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:26.001 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:26.001 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:26.001 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: review_confirmation
-2025-05-23 17:57:26.001 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-23 17:57:26.001 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: review_confirmation
-2025-05-23 17:57:26.001 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Ευχαριστούμε για την αξιολόγησή σας!
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Getting response for user message: οχι
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Current node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='οχι'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
+  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"οχι"}
+  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@e42899d
+  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Handling conversation turn for node: review_confirmation
+  DEBUG: Processing JSON response to populate template
+  DEBUG: Template populated: true
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
+  DEBUG: Template is complete! All fields populated successfully.
+  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node review_confirmation
+  DEBUG: Current state: INITIAL
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Initial JSON processing complete, template populated
+  Navigation debug - Original user input: 'οχι', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
+  DEBUG: Choosing next node with actual user input: οχι
+  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Available children count: 1
+  DEBUG: Available child nodes for matching:
+  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Path length: 3
+  DEBUG: Path from root to current node: 
+  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG: isConfirmation: false, isRejection: false
+  DEBUG: At confirmation node: review_confirmation
+  DEBUG: At confirmation node with OTHER input - staying at same node
+  Navigation successful - Moving from 'review_confirmation' to 'review_confirmation'
+  DEBUG: Handling conversation turn for node: review_confirmation
+  DEBUG: Processing JSON response to populate template
+  DEBUG: Template populated: true
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
+  DEBUG: Template is complete! All fields populated successfully.
+  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node review_confirmation
+  DEBUG: Current state: INITIAL
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Conversation turn processed for node: review_confirmation
+  Current state: INITIAL
+  Using system message from node: review_confirmation
+  Combined message: Ευχαριστούμε για την αξιολόγησή σας!
                                                                                                     Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:26.002 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:26.003 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:26.003 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:26.003 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:26.003 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:32.046 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ναι
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    id='review_confirmation',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστούμε για την αξιολόγησή σας!',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ναι'},
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  }
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
-2025-05-23 17:57:32.046 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.048 24581-24636 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
-2025-05-23 17:57:32.048 24581-24636 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
-2025-05-23 17:57:32.050 24581-24636 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:32.050 24581-24636 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@561aaf8
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_confirmation
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
-2025-05-23 17:57:32.064 24581-24581 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_confirmation
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:32.065 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
-2025-05-23 17:57:32.065 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: 'ναι', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
-2025-05-23 17:57:32.065 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ναι
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 1
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: true, isRejection: false
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: review_confirmation
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with YES - going to root
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Found root node as first child: root
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: root, handling state transition
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node root
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to INITIAL for root node
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:32.066 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'review_confirmation' to 'root'
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: root
-2025-05-23 17:57:32.066 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value 5 at value of type java.lang.Integer cannot be converted to JSONArray
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:279)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:393)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:245)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:187)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1338)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:821)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:886)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-2025-05-23 17:57:32.067 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
-2025-05-23 17:57:32.068 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
-2025-05-23 17:57:32.071 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
-2025-05-23 17:57:32.071 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-2025-05-23 17:57:32.071 24581-24581 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
-2025-05-23 17:57:32.071 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-2025-05-23 17:57:32.071 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: false
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-2025-05-23 17:57:32.072 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-23 17:57:32.074 24581-24581 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value 5 at value of type java.lang.Integer cannot be converted to JSONArray
-2025-05-23 17:57:32.075 24581-24581 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
-2025-05-23 17:57:32.075 24581-24581 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-2025-05-23 17:57:32.075 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:279)
-2025-05-23 17:57:32.076 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:393)
-2025-05-23 17:57:32.076 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:245)
-2025-05-23 17:57:32.077 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:187)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:836)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1165)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1404)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:821)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:886)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-2025-05-23 17:57:32.078 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-2025-05-23 17:57:32.079 24581-24581 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  Failed to parse JSON for template values
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node root
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to INITIAL for root node
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-23 17:57:32.079 24581-24581 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-23 17:57:32.079 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: root
-2025-05-23 17:57:32.079 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-23 17:57:32.079 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: root
-2025-05-23 17:57:32.079 24581-24581 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: 
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Current Node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  Getting response for user message: ναι
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Current node: ChatbotNode{
+    id='review_confirmation',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='EXTRACT',
+    message1='Ευχαριστούμε για την αξιολόγησή σας!',
+    message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ναι'},
+    content='',
+    fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
+    childrenCount=1,
+    parent=axiologiseis_sxolia,
+    pendingChildIds=[],
+    msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+  }
+  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
+  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
+  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"ναι"}
+  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "DUMMY123", "pvalues": []}, "passcode": {"value": "12345", "pvalues": []}, "stars": {"value": 5, "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "This is a dummy review for testing.", "pvalues": []}}, "error": null}
+  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@561aaf8
+  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Handling conversation turn for node: review_confirmation
+  DEBUG: Processing JSON response to populate template
+  DEBUG: Template populated: true
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  DEBUG: Template populated from JSON - Type: ReviewTemplate, Missing fields count: 0
+  DEBUG: Template is complete! All fields populated successfully.
+  TEMPLATE APPLIED: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node review_confirmation
+  DEBUG: Current state: INITIAL
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Initial JSON processing complete, template populated
+  Navigation debug - Original user input: 'ναι', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
+  DEBUG: Choosing next node with actual user input: ναι
+  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Available children count: 1
+  DEBUG: Available child nodes for matching:
+  DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Path length: 3
+  DEBUG: Path from root to current node: 
+  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+  DEBUG: isConfirmation: true, isRejection: false
+  DEBUG: At confirmation node: review_confirmation
+  DEBUG: At confirmation node with YES - going to root
+  DEBUG: Found root node as first child: root
+  DEBUG: Selected next node: root, handling state transition
+  DEBUG: Handling node transition for node root
+  DEBUG: Current state: INITIAL
+  DEBUG: Setting state to INITIAL for root node
+  DEBUG: State unchanged: INITIAL
+  Navigation successful - Moving from 'review_confirmation' to 'root'
+  DEBUG: Handling conversation turn for node: root
+  DEBUG: Processing JSON response to populate template
+  org.json.JSONException: Value 5 at value of type java.lang.Integer cannot be converted to JSONArray
+  	at org.json.JSON.typeMismatch(JSON.java:101)
+  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:279)
+  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:393)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:245)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:187)
+  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1338)
+  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:821)
+  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:886)
+  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+  	at android.os.Handler.handleCallback(Handler.java:883)
+  	at android.os.Handler.dispatchMessage(Handler.java:100)
+  	at android.os.Looper.loop(Looper.java:214)
+  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+  	at java.lang.reflect.Method.invoke(Native Method)
+  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+  DEBUG: Template populated: false
+  DEBUG: After JSON population - Missing fields: 0
+  DEBUG: Template is complete - All fields populated
+  DEBUG: Processing message with state: INITIAL
+  DEBUG: Current node: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+  DEBUG: Processing message with INITIAL state
+  org.json.JSONException: Value 5 at value of type java.lang.Integer cannot be converted to JSONArray
+  	at org.json.JSON.typeMismatch(JSON.java:101)
+  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:279)
+  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:393)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:245)
+  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:187)
+  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:836)
+  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1165)
+  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1404)
+  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:821)
+  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:886)
+  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+  	at android.os.Handler.handleCallback(Handler.java:883)
+  	at android.os.Handler.dispatchMessage(Handler.java:100)
+  	at android.os.Looper.loop(Looper.java:214)
+  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+  	at java.lang.reflect.Method.invoke(Native Method)
+  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+  Failed to parse JSON for template values
+  DEBUG: First process result: true
+  DEBUG: Handling node transition for node root
+  DEBUG: Current state: INITIAL
+  DEBUG: Setting state to INITIAL for root node
+  DEBUG: State unchanged: INITIAL
+  DEBUG: Current state after transition: INITIAL
+  Conversation turn processed for node: root
+  Current state: INITIAL
+  Using system message from node: root
+  Combined message: 
                                                                                                     Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    id='root',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    parent=null,
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
-2025-05-23 17:57:32.081 24581-24581 System.out              com.example.jupitertheaterapp        I  }
+  Current Node: ChatbotNode{
+    id='root',
+    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+    type='CATEGORISE',
+    message1='',
+    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
+    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"DUMMY123","pvalues":[]},"passcode":{"value":"12345","pvalues":[]},"stars":{"value":5,"pvalues":[1,2,3,4,5]},"review":{"value":"This is a dummy review for testing.","pvalues":[]}}, error='null', type=2},
+    userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
+    content='',
+    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
+    childrenCount=5,
+    parent=null,
+    pendingChildIds=[],
+    msgTemplate=ShowInfoTemplate{name=[A Midsummer Night's Dream], day=[Friday, Saturday, Sunday], topic=[Comedy, Fantasy], time=[20:00, 15:00], cast=[George Dimitriou, Elena Papadaki, Nikos Ioannou], room=[Grand Hall], duration=[120 minutes], stars=[4]}
+  }
