@@ -784,8 +784,7 @@ public class ChatbotNode {
      * @return True if successful, false otherwise
      */
     public boolean fillMsg2FromTemplate(String jsonResponse, int messageType) {
-        try {
-            // First, parse the JSON to extract category, error, and details
+        try {            // First, parse the JSON to extract category, error, and details
             JSONObject jsonObj = new JSONObject(jsonResponse);
             boolean hasDetails = jsonObj.has("details") && !jsonObj.isNull("details");
             String category = jsonObj.optString("category", "unknown");
@@ -795,12 +794,22 @@ public class ChatbotNode {
             if (!category.isEmpty()) {
                 this.category = category;
             }
+            
+            // Always initialize the template if possible, even if there are no details
+            // This ensures we can process <missing> placeholders in message1 and message2
+            if (msgTemplate == null && !category.isEmpty() && !category.equals("unknown")) {
+                try {
+                    System.out.println("Creating template for category: " + category);
+                    msgTemplate = MsgTemplate.createTemplate(category);
+                    System.out.println("DEBUG: Created template: " + msgTemplate.getClass().getSimpleName());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Failed to create template for category " + category + ": " + e.getMessage());
+                }
+            }
 
             // Create a SystemMessage with the JSON response
             SystemMessage sysMsg = new SystemMessage(jsonResponse, messageType, true);
-            sysMsg.setCategory(category);
-
-            // Override the default message in SystemMessage with our original message
+            sysMsg.setCategory(category);            // Override the default message in SystemMessage with our original message
             // This ensures systemMessage.getMessage() returns the proper template message
             if (this.message1 != null && !this.message1.isEmpty()) {
                 sysMsg.setMessage(this.message1);
@@ -809,10 +818,22 @@ public class ChatbotNode {
             // Update the systemMessage reference
             this.systemMessage = sysMsg;
 
-            // Preserve the original message1 (from conversation_tree.json)
+            // Preserve the processed message1 (from conversation_tree.json)
             // Only set a default if it doesn't already have a value
-            String basicMessage = this.message1;
-
+            String basicMessage = this.message1;            // Debug template state before applying
+            if (msgTemplate != null) {
+                System.out.println("DEBUG: Current template before processing: " + msgTemplate.getClass().getSimpleName());
+                System.out.println("DEBUG: Missing fields: " + msgTemplate.getMissingFieldsAsGreekString());
+                
+                // Debug message placeholders
+                if (this.message1 != null && this.message1.contains("<missing>")) {
+                    System.out.println("DEBUG: message1 contains <missing> placeholder: " + this.message1);
+                }
+                if (this.message2 != null && this.message2.contains("<missing>")) {
+                    System.out.println("DEBUG: message2 contains <missing> placeholder: " + this.message2);
+                }
+            }
+            
             // Only try to apply template if we have details or error
             if (hasDetails || errorMessage != null) {
                 // Create or get template based on category from the response
@@ -879,11 +900,11 @@ public class ChatbotNode {
                                     break;
                             }
                         }
-                    }
-
-                    // Process the template with values from our template object
+                    }                    // Process the template with values from our template object
                     String processedMessage = msgTemplate.processTemplate(templateStr);
                     this.message2 = processedMessage;
+                    
+
 
                     System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
@@ -894,15 +915,34 @@ public class ChatbotNode {
                         this.message2 = basicMessage;
                     }
                     return true;
-                }
-            } else {
+                }            } else {
                 // If no details or error, just use the message as is without applying a
                 // template
                 System.out.println("No details in JSON response, skipping template application");
 
-                // Preserve existing message1 and message2
-                if (this.message2 == null || this.message2.isEmpty()) {
-                    this.message2 = basicMessage;
+                // Even with no details, we still need to process <missing> placeholders
+                // using the template if it exists
+                if (msgTemplate != null) {
+
+                    
+                    // Process message2 to replace <missing> placeholders
+                    if (this.message2 != null && !this.message2.isEmpty() && this.message2.contains("<missing>")) {
+                        this.message2 = msgTemplate.processTemplate(this.message2);
+                        System.out.println("DEBUG: Processed message2 with template (no details): " + this.message2);
+                    } else if (this.message2 == null || this.message2.isEmpty()) {
+                        this.message2 = basicMessage;
+                        
+                        // If basicMessage has <missing> placeholder, process it too
+                        if (this.message2 != null && this.message2.contains("<missing>")) {
+                            this.message2 = msgTemplate.processTemplate(this.message2);
+                            System.out.println("DEBUG: Processed fallback message with template: " + this.message2);
+                        }
+                    }
+                } else {
+                    // No template available, just preserve existing message1 and message2
+                    if (this.message2 == null || this.message2.isEmpty()) {
+                        this.message2 = basicMessage;
+                    }
                 }
 
                 return true;
