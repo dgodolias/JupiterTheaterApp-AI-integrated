@@ -68,6 +68,47 @@ public abstract class MsgTemplate {
     }
 
     /**
+     * Get a list of field names that have values (not missing)
+     * @return List of field names that have values
+     */
+    public abstract List<String> getExistingFields();
+    
+    /**
+     * Get a comma-separated string of existing field names in Greek
+     * @return Comma-separated string of existing field names in Greek
+     */
+    public String getExistingFieldsAsGreekString() {
+        List<String> existing = getExistingFields();
+        return getMissingFieldsInGreek(existing); // Reusing the same method for Greek translation
+    }
+
+    /**
+     * Abstract method to get a map of existing field names and their values
+     * @return Map with field names as keys and their values as values
+     */
+    public abstract Map<String, String> getExistingFieldsWithValues();
+    
+    /**
+     * Get a formatted string of existing field names with their values in Greek
+     * @return Formatted string of existing field names with values
+     */
+    public String getExistingFieldsWithValuesAsGreekString() {
+        Map<String, String> fieldsWithValues = getExistingFieldsWithValues();
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        for (Map.Entry<String, String> entry : fieldsWithValues.entrySet()) {
+            String fieldName = getGreekFieldName(entry.getKey());
+            String fieldValue = entry.getValue();
+            result.append(fieldName).append(": ").append(fieldValue);
+            if (i < fieldsWithValues.size() - 1) {
+                result.append(", ");
+            }
+            i++;
+        }
+        return result.toString();
+    }
+
+    /**
      * Processes a template string by replacing variable placeholders with actual
      * values
      * 
@@ -75,14 +116,20 @@ public abstract class MsgTemplate {
      *                       format
      * @return Processed string with all variables replaced with their values
      */
-    public abstract String processTemplate(String templateString);
-
-    // Special handler for the <missing> placeholder in templates
+    public abstract String processTemplate(String templateString);    // Special handler for the <missing> placeholder in templates
     protected String processMissingFieldsPlaceholder(String templateString) {
+        // Handle <missing> placeholder for missing fields
         if (templateString.contains("<missing>")) {
             String missingFieldsGreek = getMissingFieldsAsGreekString();
-            return templateString.replace("<missing>", missingFieldsGreek);
+            templateString = templateString.replace("<missing>", missingFieldsGreek);
         }
+        
+        // Handle <!missing> placeholder for existing fields with their values
+        if (templateString.contains("<!missing>")) {
+            String existingFieldsWithValuesGreek = getExistingFieldsWithValuesAsGreekString();
+            templateString = templateString.replace("<!missing>", existingFieldsWithValuesGreek);
+        }
+        
         return templateString;
     }
 
@@ -369,6 +416,50 @@ class ShowInfoTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getExistingFields() {
+        List<String> existingFields = new ArrayList<>();
+        if (!name.isEmpty()) existingFields.add("name");
+        if (!day.isEmpty()) existingFields.add("day");
+        if (!topic.isEmpty()) existingFields.add("topic");
+        if (!time.isEmpty()) existingFields.add("time");
+        if (!cast.isEmpty()) existingFields.add("cast");
+        if (!room.isEmpty()) existingFields.add("room");
+        if (!duration.isEmpty()) existingFields.add("duration");
+        if (!stars.isEmpty()) existingFields.add("stars");
+        return existingFields;
+    }
+
+    @Override
+    public Map<String, String> getExistingFieldsWithValues() {
+        Map<String, String> fieldsWithValues = new HashMap<>();
+        for (String n : name) {
+            fieldsWithValues.put("name", n);
+        }
+        for (String d : day) {
+            fieldsWithValues.put("day", d);
+        }
+        for (String t : topic) {
+            fieldsWithValues.put("topic", t);
+        }
+        for (String ti : time) {
+            fieldsWithValues.put("time", ti);
+        }
+        for (String c : cast) {
+            fieldsWithValues.put("cast", c);
+        }
+        for (String r : room) {
+            fieldsWithValues.put("room", r);
+        }
+        for (String du : duration) {
+            fieldsWithValues.put("duration", du);
+        }
+        for (String s : stars) {
+            fieldsWithValues.put("stars", s);
+        }
+        return fieldsWithValues;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
@@ -554,6 +645,32 @@ class BookingTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getExistingFields() {
+        List<String> existingFields = new ArrayList<>();
+        if (!showName.isEmpty()) existingFields.add("show_name");
+        if (!room.isEmpty()) existingFields.add("room");
+        if (!day.isEmpty()) existingFields.add("day");
+        if (!time.isEmpty()) existingFields.add("time");
+        if (!person.getName().isEmpty()) existingFields.add("person_name");
+        if (!person.getAge().isEmpty()) existingFields.add("person_age");
+        if (!person.getSeat().isEmpty()) existingFields.add("person_seat");
+        return existingFields;
+    }
+
+    @Override
+    public Map<String, String> getExistingFieldsWithValues() {
+        Map<String, String> fieldsWithValues = new HashMap<>();
+        fieldsWithValues.put("show_name", showName);
+        fieldsWithValues.put("room", room);
+        fieldsWithValues.put("day", day);
+        fieldsWithValues.put("time", time);
+        fieldsWithValues.put("person_name", person.getName());
+        fieldsWithValues.put("person_age", person.getAge());
+        fieldsWithValues.put("person_seat", person.getSeat());
+        return fieldsWithValues;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
@@ -700,6 +817,22 @@ class CancellationTemplate extends MsgTemplate {
     }
 
     @Override
+    public List<String> getExistingFields() {
+        List<String> existingFields = new ArrayList<>();
+        if (!reservationNumber.isEmpty()) existingFields.add("reservation_number");
+        if (!passcode.isEmpty()) existingFields.add("passcode");
+        return existingFields;
+    }
+
+    @Override
+    public Map<String, String> getExistingFieldsWithValues() {
+        Map<String, String> fieldsWithValues = new HashMap<>();
+        fieldsWithValues.put("reservation_number", reservationNumber);
+        fieldsWithValues.put("passcode", passcode);
+        return fieldsWithValues;
+    }
+
+    @Override
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
@@ -790,6 +923,32 @@ class DiscountTemplate extends MsgTemplate {
         if (age.isEmpty()) missingFields.add("age");
         if (date.isEmpty()) missingFields.add("date");
         return missingFields;
+    }
+
+    @Override
+    public List<String> getExistingFields() {
+        List<String> existingFields = new ArrayList<>();
+        if (!showName.isEmpty()) existingFields.add("show_name");
+        if (numberOfPeople > 0) existingFields.add("no_of_people");
+        if (!age.isEmpty()) existingFields.add("age");
+        if (!date.isEmpty()) existingFields.add("date");
+        return existingFields;
+    }
+
+    @Override
+    public Map<String, String> getExistingFieldsWithValues() {
+        Map<String, String> fieldsWithValues = new HashMap<>();
+        for (String s : showName) {
+            fieldsWithValues.put("show_name", s);
+        }
+        fieldsWithValues.put("no_of_people", String.valueOf(numberOfPeople));
+        for (String a : age) {
+            fieldsWithValues.put("age", a);
+        }
+        for (String d : date) {
+            fieldsWithValues.put("date", d);
+        }
+        return fieldsWithValues;
     }
 
     @Override
@@ -910,6 +1069,26 @@ class ReviewTemplate extends MsgTemplate {
         if (stars <= 0) missingFields.add("stars");
         // Review is optional, so we don't check for it
         return missingFields;
+    }
+
+    @Override
+    public List<String> getExistingFields() {
+        List<String> existingFields = new ArrayList<>();
+        if (!reservationNumber.isEmpty()) existingFields.add("reservation_number");
+        if (!passcode.isEmpty()) existingFields.add("passcode");
+        if (stars > 0) existingFields.add("stars");
+        // Review is optional, so we don't check for it
+        return existingFields;
+    }
+
+    @Override
+    public Map<String, String> getExistingFieldsWithValues() {
+        Map<String, String> fieldsWithValues = new HashMap<>();
+        fieldsWithValues.put("reservation_number", reservationNumber);
+        fieldsWithValues.put("passcode", passcode);
+        fieldsWithValues.put("stars", String.valueOf(stars));
+        fieldsWithValues.put("review", review);
+        return fieldsWithValues;
     }
 
     @Override
