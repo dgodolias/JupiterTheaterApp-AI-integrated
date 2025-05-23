@@ -106,17 +106,40 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         if (messageContent == null || messageContent.isEmpty()) {
             return;
         }
-        
-        // Skip adding generic messages
+          // Skip adding generic messages
         if (messageContent.startsWith("Information about") || 
             messageContent.startsWith("Server response for category")) {
             // Only extract and add if there's meaningful content after the colon
             int colonIndex = messageContent.indexOf(":");
             if (colonIndex > 0 && colonIndex < messageContent.length() - 1) {
                 String extractedContent = messageContent.substring(colonIndex + 1).trim();
-
+                if (extractedContent.isEmpty()) {
+                    return; // Skip if the extracted content is empty
+                }
+                // Create a new message with the extracted content rather than trying to modify the existing one
+                message = ChatMessage.createMessage(extractedContent, message.getType());
+                messageContent = extractedContent;
             } else {
                 // Skip the message if there's no colon to extract content after
+                return;
+            }
+        }
+        
+        // Skip welcome messages to nodes other than root (prevent duplicates)
+        if ((messageContent.contains("Καλωσορίσατε") || 
+             messageContent.contains("Καλώς ήρθατε") ||
+             messageContent.contains("Welcome")) && 
+            !messages.isEmpty()) {
+            // Not the first message, so likely a duplicate welcome message
+            // Only add if it contains unique content beyond the welcome message
+            boolean hasUniqueContent = true;
+            for (ChatMessage existingMsg : messages) {
+                if (existingMsg.getMessage().contains(messageContent)) {
+                    hasUniqueContent = false;
+                    break;
+                }
+            }
+            if (!hasUniqueContent) {
                 return;
             }
         }
@@ -127,6 +150,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
             if (lastMessage.getMessage().equals(messageContent)) {
                 // Skip adding duplicate message
                 return;
+            }
+            
+            // Also check for near-duplicates (one message containing the other)
+            if (lastMessage.getMessage().contains(messageContent) || 
+                messageContent.contains(lastMessage.getMessage())) {
+                // Only keep the longer message which likely has more information
+                if (messageContent.length() <= lastMessage.getMessage().length()) {
+                    // Skip adding this message since the last one contains it
+                    return;
+                } else {
+                    // Remove the last message and keep this one since it's more complete
+                    messages.remove(messages.size() - 1);
+                    notifyItemRemoved(messages.size());
+                }
             }
         }
         

@@ -784,52 +784,76 @@ public class ChatbotManager {
      */
     public void getResponse(String userMessage, ResponseCallback responseCallback) {
         Log.d(TAG, "Getting response for user message: " + userMessage);
+        final ChatbotNode previousNode = currentNode; // Keep track of the node before processing
 
         try {
-            // Create JSON request using the current node
             JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
-
-            // Update the current node with the user message
             currentNode.setUserMessage(userMessage);
+            System.out.println("Current node (before server request): " + currentNode);
 
-            System.out.println("Current node: " + currentNode);
-
-            // Always make the server request
             makeServerRequest(jsonRequest, new ServerRequestCallback() {
                 @Override
                 public void onSuccess(String category, String fullJsonResponse) {
-                    try {                        System.out.println("Server category response: " + category);
-                        System.out.println("Server response: " + fullJsonResponse);                        // This method handles state transition, message processing, and response building
-                        String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
-                        Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
-                        Log.d(TAG, "Current state: " + currentNode.getCurrentState());
-                        
+                    try {
+                        System.out.println("Server category response: " + category);
+                        System.out.println("Server response: " + fullJsonResponse);
 
-                        
-                        int messageType = currentNode.getSystemMessage().getType();
-                        // Debug logging
-                        Log.d(TAG, "Using system message from node: " + currentNode.getId());
-                        Log.d(TAG, "Combined message: " + combinedMessage);
-                        System.out.println("DEBUG: Combined message to display: " + combinedMessage);
-                          // First, send the response to the UI
-                        responseCallback.onResponseReceived(combinedMessage, messageType);
-                        System.out.println("DEBUG: Response sent to UI with message type: " + messageType);
-                        
-                        // Then try to get the next node based on category
-                        ChatbotNode nextNode = currentNode.chooseNextNode();
-                        System.out.println("DEBUG: Next node chosen: " + (nextNode != null ? nextNode.getId() : "null"));
-                        
-                        // If we successfully found a next node, update the current node
-                        if (nextNode != null) {
+                        String combinedMessageFromTurn = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                        Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId() + " resulting in: '" + combinedMessageFromTurn + "'");
+                        Log.d(TAG, "Current state: " + currentNode.getCurrentState());
+                        int messageType = currentNode.getSystemMessage().getType(); // Type from current node after turn
+
+                        ChatbotNode nextNode = currentNode.chooseNextNode(); // Determine next node based on current state
+                        System.out.println("DEBUG: Next node chosen after turn: " + (nextNode != null ? nextNode.getId() : "null"));
+
+                        boolean transitionedFromRoot = previousNode.getId().equals("root") && nextNode != null && !nextNode.getId().equals("root");
+
+                        if (transitionedFromRoot) {
+                            // If we transitioned away from root, the message from the new node is primary.
                             currentNode = nextNode;
-                            Log.d(TAG, "Advanced to next node: " + nextNode.getId());
-                            System.out.println("DEBUG: Advanced to next node: " + nextNode.getId());
-                            
-                            // Now, display the new node's message1 - this is critical for showing prompts for info
-                            if (nextNode.getMessage1() != null && !nextNode.getMessage1().isEmpty()) {
-                                String nextNodeMessage = nextNode.getMessage1();
-                                System.out.println("DEBUG: Showing next node's message: " + nextNodeMessage);
+                            Log.d(TAG, "Advanced from root to next node: " + nextNode.getId());
+                            System.out.println("DEBUG: Advanced from root to next node: " + nextNode.getId());
+
+                            String nextNodeMessage = nextNode.getMessage1(); // Typically, the prompt/question from the new node.
+                             if (nextNodeMessage == null || nextNodeMessage.isEmpty()) {
+                                // If message1 is empty, try to get a fuller message from handleConversationTurn for the new node
+                                // This might occur if the nextNode itself needs to process something (e.g. an initial state message)
+                                nextNodeMessage = nextNode.handleConversationTurn(null, ChatMessage.TYPE_BOT); // Pass null as no new server JSON
+                            }
+
+                            if (nextNodeMessage != null && !nextNodeMessage.isEmpty()) {
+                                System.out.println("DEBUG: Sending message from new node (post-root): " + nextNodeMessage);
                                 responseCallback.onResponseReceived(nextNodeMessage, ChatMessage.TYPE_BOT);
+                            } else {
+                                // Fallback if the new node somehow has no message
+                                responseCallback.onResponseReceived(currentNode.getFallback(), ChatMessage.TYPE_BOT);
+                            }
+                        } else {
+                            // Standard flow: send the combined message from the current node's turn processing.
+                            System.out.println("DEBUG: Sending combined message from current node's turn: " + combinedMessageFromTurn);
+                            responseCallback.onResponseReceived(combinedMessageFromTurn, messageType);
+                            System.out.println("DEBUG: Response sent to UI with message type: " + messageType);
+
+                            // If a next node is chosen and it's different, update current node and send its message1 if appropriate.
+                            if (nextNode != null && nextNode != currentNode) {
+                                currentNode = nextNode;
+                                Log.d(TAG, "Advanced to next node: " + nextNode.getId());
+                                System.out.println("DEBUG: Advanced to next node (non-root transition): " + nextNode.getId());
+
+                                String nextNodeMessage1 = nextNode.getMessage1();
+                                if (nextNodeMessage1 != null && !nextNodeMessage1.isEmpty()) {
+                                     // Avoid sending another message if it's identical to what was just sent
+                                    if (!nextNodeMessage1.equals(combinedMessageFromTurn)) {
+                                        System.out.println("DEBUG: Showing next node's message1: " + nextNodeMessage1);
+                                        responseCallback.onResponseReceived(nextNodeMessage1, ChatMessage.TYPE_BOT);
+                                    } else {
+                                         System.out.println("DEBUG: Skipping next node's message1 as it is identical to previously sent message.");
+                                    }
+                                } else {
+                                     System.out.println("DEBUG: Next node's message1 is empty, not sending.");
+                                }
+                            } else if (nextNode == currentNode) {
+                                System.out.println("DEBUG: Next node is same as current, no further message from nextNode.");
                             }
                         }
                     } catch (Exception e) {

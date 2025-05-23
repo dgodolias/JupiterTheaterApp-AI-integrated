@@ -1,5 +1,6 @@
 package com.example.jupitertheaterapp.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -692,9 +693,7 @@ public class ChatbotNode {
                 if (msgTemplate.valuesFromJson(jsonResponse)) {
                     // Use message2 from the node if it exists as the template
                     // This uses the message_2 from conversation_tree.json with placeholders
-                    String templateStr = this.message2;
-
-                    // If message2 is empty or null, handle error specifically or use fallback
+                    String templateStr = this.message2;                    // If message2 is empty or null, handle error specifically or use fallback
                     // templates based on category
                     if (templateStr == null || templateStr.isEmpty()) {
                         // Handle error case specifically with proper error message
@@ -702,32 +701,28 @@ public class ChatbotNode {
                             // Use actual error message instead of placeholder
                             templateStr = "Error: " + errorMessage;
                         } else {
-                            // Create a more specific template based on category
-                            switch (category) {                                case "ΚΡΑΤΗΣΗ":
-                                    templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
-                                    break;
-                                case "ΑΚΥΡΩΣΗ":
-                                    templateStr = "Cancellation information for reservation <reservation_number>.";
-                                    break;
-                                case "ΠΛΗΡΟΦΟΡΙΕΣ":
-                                    templateStr = "Information for show <n> on <day> at <time> in <room>.";
-                                    break;
-                                case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
-                                    templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
-                                    break;
-                                case "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ":
-                                    templateStr = "Discount information for show <show_name> on <date>.";
-                                    break;
-                                default:
-                                    // Use a more specific template if possible based on the details
-                                    JSONObject details = jsonObj.optJSONObject("details");
-                                    if (details != null) {
-                                        // Extract some fields from details for a better message
-                                        StringBuilder sb = new StringBuilder();
-                                        String[] commonFields = {"show_name", "day", "time", "room", "reservation_number"};
-                                        for (String field : commonFields) {
-                                            if (details.has(field)) {
-                                                sb.append(details.optString(field)).append(" ");
+                            // Use details from JSON response to create a dynamic message based on MsgTemplate
+                            JSONObject details = jsonObj.optJSONObject("details");
+                            if (details != null) {
+                                // Extract formatted data from msgTemplate rather than hardcoding
+                                StringBuilder sb = new StringBuilder();
+                                
+                                // Get all available fields from the template
+                                if (msgTemplate != null) {
+                                    String formatStr = this.formatTemplateBasedOnCategory(category);
+                                    if (!formatStr.isEmpty()) {
+                                        templateStr = formatStr;
+                                    } else {
+                                        // Fallback to direct extraction from JSON
+                                        JSONArray names = details.names();
+                                        if (names != null) {
+                                            for (int i = 0; i < names.length(); i++) {
+                                                String key = names.optString(i);
+                                                String value = details.optString(key);
+                                                if (value != null && !value.isEmpty()) {
+                                                    if (sb.length() > 0) sb.append(", ");
+                                                    sb.append(key).append(": ").append(value);
+                                                }
                                             }
                                         }
                                         
@@ -735,13 +730,36 @@ public class ChatbotNode {
                                         if (!extractedInfo.isEmpty()) {
                                             templateStr = extractedInfo;
                                         } else {
-                                            // Last resort - use the raw JSON as the message
-                                            templateStr = details.toString();
+                                            // If we couldn't extract anything meaningful, use a minimal message
+                                            templateStr = category;
                                         }
-                                    } else {
-                                        templateStr = "";
                                     }
-                                    break;
+                                } else {
+                                    // No template available
+                                    // Fallback to direct extraction from JSON
+                                    JSONArray names = details.names();
+                                    if (names != null) {
+                                        for (int i = 0; i < names.length(); i++) {
+                                            String key = names.optString(i);
+                                            String value = details.optString(key);
+                                            if (value != null && !value.isEmpty()) {
+                                                if (sb.length() > 0) sb.append(", ");
+                                                sb.append(key).append(": ").append(value);
+                                            }
+                                        }
+                                    }
+                                    
+                                    String extractedInfo = sb.toString().trim();
+                                    if (!extractedInfo.isEmpty()) {
+                                        templateStr = extractedInfo;
+                                    } else {
+                                        // If we couldn't extract anything meaningful, use a minimal message
+                                        templateStr = category;
+                                    }
+                                }
+                            } else {
+                                // No details available
+                                templateStr = "";
                             }
                         }
                     }
@@ -753,9 +771,7 @@ public class ChatbotNode {
                     // Update message1 as well to ensure consistency
                     if (this.message1 == null || this.message1.isEmpty()) {
                         this.message1 = this.message2;
-                    }
-
-                    System.out.println("TEMPLATE APPLIED: " + processedMessage);
+                    }                    System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
                 } else {
                     System.out.println("Failed to parse JSON for template values");
@@ -794,6 +810,38 @@ public class ChatbotNode {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Creates a format string with placeholders based on the node's category
+     * @param category The category to create a format string for
+     * @return A format string with appropriate placeholders
+     */
+    private String formatTemplateBasedOnCategory(String category) {
+        if (msgTemplate == null) {
+            return "";
+        }
+        
+        // Create placeholders based on the template type using the standard format:
+        // <placeholder_name> for each field
+        
+        if ("ΚΡΑΤΗΣΗ".equals(category)) {
+            return "Παράσταση: <show_name>, Αίθουσα: <room>, Ημέρα: <day>, Ώρα: <time>, Όνομα: <person_name>";
+        } 
+        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
+            return "Ακύρωση κράτησης με αριθμό: <reservation_number>, Κωδικός: <passcode>";
+        } 
+        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
+            return "Πληροφορίες για: <name>, Ημέρα: <day>, Ώρα: <time>";
+        } 
+        else if ("ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ".equals(category)) {
+            return "Αξιολόγηση για κράτηση: <reservation_number>, Βαθμολογία: <stars> αστέρια, Σχόλιο: <review>";
+        } 
+        else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
+            return "Προσφορά για: <show_name>, Ημερομηνία: <date>, Ηλικιακή κατηγορία: <age>, Άτομα: <no_of_people>";
+        }
+        
+        return "";
     }
 
     /**
@@ -1124,9 +1172,7 @@ public class ChatbotNode {
             System.out.println("DEBUG: No node selected, state unchanged");
         }
         return nextNode;
-    }
-
-    /**
+    }    /**
      * Handles a complete conversation turn, processing the user message,
      * updating the conversation state, and formulating a response.
      * 
@@ -1136,75 +1182,112 @@ public class ChatbotNode {
      */    public String handleConversationTurn(String jsonResponse, int messageType) {
         System.out.println("DEBUG: Handling conversation turn for node: " + this.id);
         
-        // 1. Update the state based on the current node
         ConversationState.State state = handleNodeTransition();
         System.out.println("DEBUG: Current state after transition: " + state);
         
-        // 2. Process the message according to the current state
         boolean processed = processMessageByState(jsonResponse, messageType);
         if (!processed) {
             System.out.println("WARNING: Failed to process message for node: " + this.id);
-            return "Sorry, I could not process that message properly.";
-        }        // 3. Skip the generic "Information about category" message and use only the real content
-        // Get the actual message content from node-specific fields
-        String combinedMessage;
+            return getMessage1() != null && !getMessage1().isEmpty() ? getMessage1() : fallback;
+        }
         
-        // If we're coming from a JSON response, prioritize message2 which contains the template-based message
+        String combinedMessage = "";
+        String detailsMessage = "";
+
         if (messageType == ChatMessage.TYPE_SERVER) {
-            System.out.println("DEBUG: Using primary node message from message2 field");
-            combinedMessage = getMessage2();
-            
-            // If message2 is empty, fall back to message1
-            if (combinedMessage == null || combinedMessage.isEmpty()) {
-                combinedMessage = getMessage1();
+            System.out.println("DEBUG: Server response. message2 (template applied): '" + getMessage2() + "', message1: '" + getMessage1() + "'");
+            detailsMessage = getMessage2();
+            if (detailsMessage == null || detailsMessage.isEmpty()) {
+                 // If message2 is empty, it implies template application might have yielded nothing, or no details were applicable.
+                 // We don't want to use message1 from the current node here if it's a generic prompt for information
+                 // that the server response was supposed to fulfill. Let detailsMessage remain empty or rely on specific prompts later.
+                 System.out.println("DEBUG: message2 from server response is empty.");
             }
-        } else {
-            // Otherwise for regular bot messages, prioritize message1
-            System.out.println("DEBUG: Using primary node message from message1 field");
-            combinedMessage = getMessage1();
-            
-            // Only add message2 if it exists and is different from message1
+        } else { // This is a BOT turn, not a direct server response processing for the current node.
+            System.out.println("DEBUG: Bot turn. message1: '" + getMessage1() + "', message2: '" + getMessage2() + "'");
+            combinedMessage = getMessage1(); // Primary message for bot turns
             String message2Text = getMessage2();
-            if (message2Text != null && !message2Text.isEmpty() && !message2Text.equals(combinedMessage) && 
-                // Skip generic messages that contain no useful information
-                !message2Text.startsWith("Information about") && 
+            // Append message2 if it's different and not a generic system prefix
+            if (message2Text != null && !message2Text.isEmpty() && !message2Text.equals(combinedMessage) &&
+                !message2Text.startsWith("Information about") &&
                 !message2Text.startsWith("Server response for category")) {
                 combinedMessage += "\n" + message2Text;
             }
+            if (combinedMessage == null || combinedMessage.isEmpty()) {
+                combinedMessage = fallback;
+            }
+            System.out.println("DEBUG: Combined message (bot turn, returning early): " + combinedMessage);
+            return combinedMessage; // For non-server triggered turns, this is usually it.
         }
-        
-        // Make sure we have some content
-        if (combinedMessage == null || combinedMessage.isEmpty()) {
-            combinedMessage = "Επεξεργάζομαι την ερώτησή σας...";
+
+        // Now, handle server response (detailsMessage) and potentially add missing info prompt
+        String missingInfoPromptText = "";
+        // Check states where we might need to ask for more info
+        if (state == ConversationState.State.LLM_GET_INFO) {
+            if (msgTemplate != null) {
+                missingInfoPromptText = getMissingInfoPrompt(); // Formatted as "Για να ολοκληρωθεί... <fields> ..."
+            }
         }
-        
-        // 4. Add state-specific modifications to the response
-        switch (state) {
-            case CONFIRMATION:
-                // If we're in confirmation state but the message doesn't already include a prompt
-                if (!combinedMessage.contains("(ναι/όχι)")) {
-                    combinedMessage += "\n\nΠαρακαλώ επιβεβαιώστε (ναι/όχι).";
+
+        // Construct the final message
+        if (detailsMessage != null && !detailsMessage.isEmpty()) {
+            combinedMessage = detailsMessage;
+            if (!missingInfoPromptText.isEmpty()) {
+                // Append missing info prompt if it's not already essentially in detailsMessage
+                if (!detailsMessage.contains(missingInfoPromptText.substring(0, Math.min(missingInfoPromptText.length(), 20)))) { // Check for partial overlap
+                    combinedMessage += "\n" + missingInfoPromptText;
                 }
-                break;
-                
-            case LLM_GET_INFO:
-                // If we're trying to get information, make sure it's clear what we need
-                if (msgTemplate != null) {
-                    // Add a prompt based on what information is missing
-                    String missingInfoPrompt = getMissingInfoPrompt();
-                    if (!missingInfoPrompt.isEmpty() && !combinedMessage.contains(missingInfoPrompt)) {
-                        combinedMessage += "\n\n" + missingInfoPrompt;
+            }
+        } else { // No detailsMessage from server (or it was empty)
+            // Use the current node's message1 as a prefix if it exists and is relevant
+            String currentMessage1 = getMessage1();
+            if (!missingInfoPromptText.isEmpty()) {
+                if (currentMessage1 != null && !currentMessage1.isEmpty() && !currentMessage1.equals(missingInfoPromptText) && !missingInfoPromptText.contains(currentMessage1)) {
+                     // e.g. currentMessage1 = "Για να ολοκληρωθεί η κράτησή σας, χρειάζομαι περισσότερες πληροφορίες."
+                     // missingInfoPromptText = "Για να ολοκληρωθεί η κράτηση χρειάζομαι: <fields>..."
+                     // Check if currentMessage1 is the generic lead-in for the specific missing prompt.
+                    if (currentMessage1.startsWith("Για να ολοκληρωθεί η κράτησή σας")) {
+                        combinedMessage = missingInfoPromptText; // The prompt itself is comprehensive
+                    } else {
+                        combinedMessage = currentMessage1 + "\n" + missingInfoPromptText;
                     }
+                } else {
+                    combinedMessage = missingInfoPromptText; // Only the prompt
                 }
-                break;
-            
-            // Other state-specific modifications can be added here
-            default:
-                // No additional modifications for other states
-                break;
+            } else if (currentMessage1 != null && !currentMessage1.isEmpty()) {
+                combinedMessage = currentMessage1; // No details, no missing info, just current node's message1
+            } else {
+                combinedMessage = fallback; // Absolute last resort
+            }
+        }
+
+        if (combinedMessage == null || combinedMessage.isEmpty()) {
+            combinedMessage = fallback; 
+        }
+
+        // Clean up welcome messages (existing logic)
+        if (!this.getId().equals("root") && 
+            (combinedMessage.contains("Καλωσορίσατε") || 
+             combinedMessage.contains("Καλώς ήρθατε") ||
+             combinedMessage.contains("Welcome"))) {
+            if (combinedMessage.length() < 50) {
+                combinedMessage = "Επεξεργάζομαι την ερώτησή σας...";
+            } else {
+                int firstLineBreak = combinedMessage.indexOf("\n");
+                if (firstLineBreak > 0) {
+                    combinedMessage = combinedMessage.substring(firstLineBreak + 1).trim();
+                }
+            }
+        }
+
+        // Add confirmation prompt if in CONFIRMATION state (restored logic)
+        if (state == ConversationState.State.CONFIRMATION) {
+            if (!combinedMessage.contains("(ναι/όχι)")) {
+                combinedMessage += "\n\nΠαρακαλώ επιβεβαιώστε (ναι/όχι).";
+            }
         }
         
-        System.out.println("DEBUG: Combined message: " + combinedMessage);
+        System.out.println("DEBUG: Final combined message after all processing: " + combinedMessage);
         return combinedMessage;
     }
     
@@ -1217,42 +1300,12 @@ public class ChatbotNode {
         if (msgTemplate == null) {
             return "";
         }
-        
-        StringBuilder prompt = new StringBuilder("Χρειάζομαι περισσότερες πληροφορίες: ");
-        
-        if ("ΚΡΑΤΗΣΗ".equals(category)) {
-            if (msgTemplate instanceof BookingTemplate) {
-                BookingTemplate template = (BookingTemplate) msgTemplate;
-                if (template.getShowName().isEmpty()) {
-                    prompt.append("Ποια παράσταση σας ενδιαφέρει; ");
-                }
-                if (template.getDay().isEmpty()) {
-                    prompt.append("Ποια ημέρα θέλετε να κάνετε κράτηση; ");
-                }
-                if (template.getTime().isEmpty()) {
-                    prompt.append("Τι ώρα θέλετε να παρακολουθήσετε την παράσταση; ");
-                }
-                if (template.getPerson() == null || template.getPerson().getName().isEmpty()) {
-                    prompt.append("Σε ποιο όνομα θα είναι η κράτηση; ");
-                }
-            }
-        } 
-        else if ("ΑΚΥΡΩΣΗ".equals(category)) {
-            if (msgTemplate instanceof CancellationTemplate) {
-                CancellationTemplate template = (CancellationTemplate) msgTemplate;
-                if (template.getReservationNumber().isEmpty()) {
-                    prompt.append("Ποιος είναι ο αριθμός της κράτησής σας; ");
-                }
-                if (template.getPasscode().isEmpty()) {
-                    prompt.append("Ποιος είναι ο κωδικός της κράτησής σας; ");
-                }
-            }
+
+        String missingFieldsGreek = msgTemplate.getMissingFieldsAsGreekString();
+        if (missingFieldsGreek == null || missingFieldsGreek.isEmpty()) {
+            return "";
         }
-        else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
-            // For information requests, we can be more flexible
-            prompt = new StringBuilder("Για ποια παράσταση, ημερομηνία ή θέμα θέλετε πληροφορίες;");
-        }
-        
-        return prompt.toString();
+
+        return "Για να ολοκληρωθεί η κράτηση χρειάζομαι: " + missingFieldsGreek + ". Παρακαλώ δώστε τις πληροφορίες που λείπουν.";
     }
 }
