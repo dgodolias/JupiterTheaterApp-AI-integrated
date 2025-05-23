@@ -795,18 +795,26 @@ public class ChatbotManager {
             System.out.println("Current node: " + currentNode);
 
             // Always make the server request
-            makeServerRequest(jsonRequest, new ServerRequestCallback() {
-                @Override
+            makeServerRequest(jsonRequest, new ServerRequestCallback() {                @Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
+                        // IMPORTANT - First populate the template with the server response
+                        // Process the JSON and populate the template for the current node
+                        // This ensures template data is available before making navigation decisions
+                        String initialResponse = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
+                        Log.d(TAG, "Initial JSON processing complete, template populated");
+                        
                         // Set the category as user message for node navigation purposes
                         currentNode.setUserMessage(category);
 
-                        // Try to get the next node based on category
+                        // Try to get the next node based on category AND template completeness
                         ChatbotNode nextNode = currentNode.chooseNextNode();
-                        if (nextNode != null) {                            // Update the current node to the next one
-                            currentNode = nextNode;                               // Use the comprehensive conversation turn handler to process the message
-                            // This method handles state transition, message processing, and response building
+                        if (nextNode != null) {
+                            // Update the current node to the next one
+                            currentNode = nextNode;
+                            
+                            // Now process the conversation turn for the new node
+                            // This handles state transition, message processing, and response building
                             String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
                             Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
                             Log.d(TAG, "Current state: " + currentNode.getCurrentState());

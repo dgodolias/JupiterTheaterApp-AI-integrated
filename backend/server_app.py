@@ -18,7 +18,7 @@ from information_extractor import (
 DUMMY_RESPONSES = True
 
 # Set to True to use full dummy data, False for partial dummy data
-DUMMY_FULL = True
+DUMMY_FULL = False
 
 def get_dummy_category():
     """Returns a random category from the predefined list to save LLM API calls."""
