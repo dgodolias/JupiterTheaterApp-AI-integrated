@@ -798,24 +798,40 @@ public class ChatbotManager {
             makeServerRequest(jsonRequest, new ServerRequestCallback() {
                 @Override
                 public void onSuccess(String category, String fullJsonResponse) {
-                    try {
-                        System.out.println("Server category response: " + category);
-                        System.out.println("Server response: " + fullJsonResponse);
-                        // This method handles state transition, message processing, and response building
+                    try {                        System.out.println("Server category response: " + category);
+                        System.out.println("Server response: " + fullJsonResponse);                        // This method handles state transition, message processing, and response building
                         String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
                         Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
                         Log.d(TAG, "Current state: " + currentNode.getCurrentState());
                         
-                        int messageType = currentNode.getSystemMessage().getType();
 
+                        
+                        int messageType = currentNode.getSystemMessage().getType();
                         // Debug logging
                         Log.d(TAG, "Using system message from node: " + currentNode.getId());
                         Log.d(TAG, "Combined message: " + combinedMessage);
-
+                        System.out.println("DEBUG: Combined message to display: " + combinedMessage);
+                          // First, send the response to the UI
                         responseCallback.onResponseReceived(combinedMessage, messageType);
-                        combinedMessage = currentNode.getMessage1()+"\n" + currentNode.getMessage2();
-                        // Try to get the next node based on category
+                        System.out.println("DEBUG: Response sent to UI with message type: " + messageType);
+                        
+                        // Then try to get the next node based on category
                         ChatbotNode nextNode = currentNode.chooseNextNode();
+                        System.out.println("DEBUG: Next node chosen: " + (nextNode != null ? nextNode.getId() : "null"));
+                        
+                        // If we successfully found a next node, update the current node
+                        if (nextNode != null) {
+                            currentNode = nextNode;
+                            Log.d(TAG, "Advanced to next node: " + nextNode.getId());
+                            System.out.println("DEBUG: Advanced to next node: " + nextNode.getId());
+                            
+                            // Now, display the new node's message1 - this is critical for showing prompts for info
+                            if (nextNode.getMessage1() != null && !nextNode.getMessage1().isEmpty()) {
+                                String nextNodeMessage = nextNode.getMessage1();
+                                System.out.println("DEBUG: Showing next node's message: " + nextNodeMessage);
+                                responseCallback.onResponseReceived(nextNodeMessage, ChatMessage.TYPE_BOT);
+                            }
+                        }
                     } catch (Exception e) {
                         Log.e(TAG, "Error processing server response", e);
                         responseCallback.onResponseReceived("Συγγνώμη, προέκυψε ένα σφάλμα.", ChatMessage.TYPE_BOT);

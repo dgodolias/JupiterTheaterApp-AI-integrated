@@ -1,6 +1,7 @@
 package com.example.jupitertheaterapp.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.example.jupitertheaterapp.ui.adapter.ChatAdapter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private ChatbotManager chatbotManager;
     private RecyclerView messagesRecyclerView;
     private EditText userInputEditText;
@@ -64,9 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
                 // Get response from chatbot manager (handles both local and server logic
                 // internally)
-                chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {
-                    @Override
+                chatbotManager.getResponse(userMessage, new ChatbotManager.ResponseCallback() {                    @Override
                     public void onResponseReceived(String response, int messageType) {
+                        // Log received response for debugging
+                        Log.d(TAG, "Response received: " + response);
+                        System.out.println("DEBUG: MainActivity received response: " + response);
+                        System.out.println("DEBUG: Response message type: " + messageType);
+                        
                         // Add the response to the chat
                         addMessage(response, messageType);
 
@@ -110,11 +116,18 @@ public class MainActivity extends AppCompatActivity {
 
             return WindowInsetsCompat.CONSUMED;
         });        // Always using server responses
-    }
-
-    private void addMessage(String message, int type) {
+    }    private void addMessage(String message, int type) {
+        // Log the message being added
+        Log.d(TAG, "Adding message to chat: " + message + " (type: " + type + ")");
+        System.out.println("DEBUG: Adding message to chat: " + message);
+        
         // Use factory method to create proper message subtype
         ChatMessage chatMessage = ChatMessage.createMessage(message, type);
+        
+        // Log the created message object
+        System.out.println("DEBUG: Created message object: " + chatMessage.getMessage());
+        
+        // Add to adapter and scroll
         chatAdapter.addMessage(chatMessage);
         messagesRecyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
     }

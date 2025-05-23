@@ -80,16 +80,14 @@ class SystemMessage extends ChatMessage {
     public SystemMessage(String message) {
         this(message, TYPE_BOT);
     }
-    
-    // Constructor for server responses with JSON
+      // Constructor for server responses with JSON
     public SystemMessage(JSONObject jsonResponse, int type) {
         super(type, jsonResponse.optString("category", "-"));
         this.error = jsonResponse.optString("error", null);
         this.details = jsonResponse.optJSONObject("details");
-        // Set a default message based on category
-        this.message = "Server response for category: " + this.category;
-    }
-      // Constructor accepting server response as a JSON string
+        // Don't set a default generic message to avoid the "Server response for category" text
+        this.message = "";
+    }// Constructor accepting server response as a JSON string
     public SystemMessage(String jsonString, int type, boolean isJson) {
         super(type);
         if (isJson) {
@@ -98,8 +96,10 @@ class SystemMessage extends ChatMessage {
                 this.category = jsonResponse.optString("category", "-");
                 this.error = jsonResponse.optString("error", null);
                 this.details = jsonResponse.optJSONObject("details");
-                // Set a default message based on category
-                this.message = "Server response for category: " + this.category;
+                
+                // Don't set a default message - this prevents the "Server response for category" text
+                // Instead, leave message null/empty so handleConversationTurn will use message1/message2 only
+                this.message = ""; 
             } catch (JSONException e) {
                 this.message = "Error parsing server response";
                 e.printStackTrace();
@@ -107,8 +107,10 @@ class SystemMessage extends ChatMessage {
         } else {
             this.message = jsonString;
         }
-    }      @Override
+    }    @Override
     public String getMessage() {
+        // Debug logging for message content
+        System.out.println("DEBUG: SystemMessage.getMessage() returning: " + message);
         return message;
     }
       public JSONObject getDetails() {
@@ -120,6 +122,8 @@ class SystemMessage extends ChatMessage {
     }
     
     public void setMessage(String message) {
+        // Debug logging for message updates
+        System.out.println("DEBUG: SystemMessage.setMessage() setting message to: " + message);
         this.message = message;
     }
     

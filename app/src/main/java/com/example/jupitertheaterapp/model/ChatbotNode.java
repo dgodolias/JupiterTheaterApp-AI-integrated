@@ -632,8 +632,7 @@ public class ChatbotNode {
      * @param jsonResponse The JSON response from the server as a string
      * @param messageType  The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
-     */
-    public boolean fillMsg2FromTemplate(String jsonResponse, int messageType) {
+     */    public boolean fillMsg2FromTemplate(String jsonResponse, int messageType) {
         try {
             // First, parse the JSON to extract category, error, and details
             JSONObject jsonObj = new JSONObject(jsonResponse);
@@ -657,13 +656,14 @@ public class ChatbotNode {
             }
 
             // Update the systemMessage reference
-            this.systemMessage = sysMsg;
-
-            // Preserve the original message1 (from conversation_tree.json)
-            // Only set a default if it doesn't already have a value
+            this.systemMessage = sysMsg;            // Preserve the original message1 (from conversation_tree.json)
             String basicMessage = this.message1;
-            if (basicMessage == null || basicMessage.isEmpty()) {
-                basicMessage = "Information about " + category;
+            
+            // Only set a default if it doesn't already have a value AND we're not processing a template response
+            // This avoids setting the generic "Information about category" message
+            if ((basicMessage == null || basicMessage.isEmpty()) && !hasDetails) {
+                // Leave it empty if there's no meaningful message to display
+                basicMessage = "";
                 this.message1 = basicMessage;
 
                 // Also update the SystemMessage
@@ -703,15 +703,14 @@ public class ChatbotNode {
                             templateStr = "Error: " + errorMessage;
                         } else {
                             // Create a more specific template based on category
-                            switch (category) {
-                                case "ΚΡΑΤΗΣΗ":
+                            switch (category) {                                case "ΚΡΑΤΗΣΗ":
                                     templateStr = "Booking information for show <show_name> at <room> on <day> at <time>.";
                                     break;
                                 case "ΑΚΥΡΩΣΗ":
                                     templateStr = "Cancellation information for reservation <reservation_number>.";
                                     break;
                                 case "ΠΛΗΡΟΦΟΡΙΕΣ":
-                                    templateStr = "Information about show <n> on <day> at <time> in <room>.";
+                                    templateStr = "Information for show <n> on <day> at <time> in <room>.";
                                     break;
                                 case "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
                                     templateStr = "Review information for reservation <reservation_number>: <stars> stars.";
@@ -720,7 +719,28 @@ public class ChatbotNode {
                                     templateStr = "Discount information for show <show_name> on <date>.";
                                     break;
                                 default:
-                                    templateStr = "Information for <category>: <details>";
+                                    // Use a more specific template if possible based on the details
+                                    JSONObject details = jsonObj.optJSONObject("details");
+                                    if (details != null) {
+                                        // Extract some fields from details for a better message
+                                        StringBuilder sb = new StringBuilder();
+                                        String[] commonFields = {"show_name", "day", "time", "room", "reservation_number"};
+                                        for (String field : commonFields) {
+                                            if (details.has(field)) {
+                                                sb.append(details.optString(field)).append(" ");
+                                            }
+                                        }
+                                        
+                                        String extractedInfo = sb.toString().trim();
+                                        if (!extractedInfo.isEmpty()) {
+                                            templateStr = extractedInfo;
+                                        } else {
+                                            // Last resort - use the raw JSON as the message
+                                            templateStr = details.toString();
+                                        }
+                                    } else {
+                                        templateStr = "";
+                                    }
                                     break;
                             }
                         }
@@ -729,6 +749,11 @@ public class ChatbotNode {
                     // Process the template with values from our template object
                     String processedMessage = msgTemplate.processTemplate(templateStr);
                     this.message2 = processedMessage;
+                    
+                    // Update message1 as well to ensure consistency
+                    if (this.message1 == null || this.message1.isEmpty()) {
+                        this.message1 = this.message2;
+                    }
 
                     System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
@@ -931,8 +956,7 @@ public class ChatbotNode {
      * @param jsonResponse The JSON response from the server
      * @param messageType The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
-     */
-    public boolean processMessageByState(String jsonResponse, int messageType) {
+     */    public boolean processMessageByState(String jsonResponse, int messageType) {
         ConversationState conversationState = ConversationState.getInstance();
         ConversationState.State currentState = conversationState.getCurrentState();
         
@@ -969,7 +993,12 @@ public class ChatbotNode {
                 }
                 
                 // For now, fall back to the template processing
-                return fillMsg2FromTemplate(jsonResponse, messageType);
+                boolean llmProcessed = fillMsg2FromTemplate(jsonResponse, messageType);
+                // Ensure message1 is also updated with meaningful content
+                if (llmProcessed && this.message1 == null || this.message1.isEmpty()) {
+                    this.message1 = "Χρειάζομαι περισσότερες πληροφορίες";
+                }
+                return llmProcessed;
                 
             case GIVE_INFO:
                 // When we need to provide info to the user (database lookup)
@@ -1000,6 +1029,10 @@ public class ChatbotNode {
                     // TODO: Query database for discount information using msgTemplate
                 }
                 
+                // Ensure message1 has meaningful content
+                if (this.message1 == null || this.message1.isEmpty()) {
+                    this.message1 = "Ορίστε οι πληροφορίες που ζητήσατε";
+                }
                 return true;
                 
             case CONFIRMATION:
@@ -1012,17 +1045,27 @@ public class ChatbotNode {
                 // Then enhance the message to make it clear confirmation is needed
                 if (success) {
                     // Different confirmation messages based on node/category
+                    String confirmationPrompt = "";
                     if ("booking_complete".equals(this.id)) {
                         // Add confirmation prompt to the end of message2
-                        this.message2 += "\n\nΘέλετε να επιβεβαιώσετε αυτή την κράτηση; (ναι/όχι)";
+                        confirmationPrompt = "\n\nΘέλετε να επιβεβαιώσετε αυτή την κράτηση; (ναι/όχι)";
                     }
                     else if ("cancel_complete".equals(this.id)) {
                         // Add confirmation prompt for cancellation
-                        this.message2 += "\n\nΘέλετε να επιβεβαιώσετε αυτήν την ακύρωση; (ναι/όχι)";
+                        confirmationPrompt = "\n\nΘέλετε να επιβεβαιώσετε αυτήν την ακύρωση; (ναι/όχι)";
                     }
                     else if ("review_complete".equals(this.id)) {
                         // Add confirmation prompt for review submission
-                        this.message2 += "\n\nΘέλετε να υποβάλετε αυτή την αξιολόγηση; (ναι/όχι)";
+                        confirmationPrompt = "\n\nΘέλετε να υποβάλετε αυτή την αξιολόγηση; (ναι/όχι)";
+                    }
+                    
+                    // Add to both message1 and message2 for consistency
+                    if (!this.message1.contains(confirmationPrompt)) {
+                        this.message1 += confirmationPrompt;
+                    }
+                    
+                    if (!this.message2.contains(confirmationPrompt)) {
+                        this.message2 += confirmationPrompt;
                     }
                 }
                 
@@ -1035,8 +1078,15 @@ public class ChatbotNode {
                 // Apply template first
                 boolean templateSuccess = fillMsg2FromTemplate(jsonResponse, messageType);
                 
-                // Add exit message
-                this.message2 += "\n\nΕυχαριστούμε που χρησιμοποιήσατε το σύστημα του Jupiter Theater!";
+                // Add exit message to both message fields
+                String exitMessage = "\n\nΕυχαριστούμε που χρησιμοποιήσατε το σύστημα του Jupiter Theater!";
+                if (!this.message1.contains(exitMessage)) {
+                    this.message1 += exitMessage;
+                }
+                
+                if (!this.message2.contains(exitMessage)) {
+                    this.message2 += exitMessage;
+                }
                 
                 return templateSuccess;
                 
@@ -1083,8 +1133,7 @@ public class ChatbotNode {
      * @param jsonResponse JSON response from the server
      * @param messageType Type of message (BOT, SERVER)
      * @return A combined response message to show to the user
-     */
-    public String handleConversationTurn(String jsonResponse, int messageType) {
+     */    public String handleConversationTurn(String jsonResponse, int messageType) {
         System.out.println("DEBUG: Handling conversation turn for node: " + this.id);
         
         // 1. Update the state based on the current node
@@ -1096,13 +1145,37 @@ public class ChatbotNode {
         if (!processed) {
             System.out.println("WARNING: Failed to process message for node: " + this.id);
             return "Sorry, I could not process that message properly.";
+        }        // 3. Skip the generic "Information about category" message and use only the real content
+        // Get the actual message content from node-specific fields
+        String combinedMessage;
+        
+        // If we're coming from a JSON response, prioritize message2 which contains the template-based message
+        if (messageType == ChatMessage.TYPE_SERVER) {
+            System.out.println("DEBUG: Using primary node message from message2 field");
+            combinedMessage = getMessage2();
+            
+            // If message2 is empty, fall back to message1
+            if (combinedMessage == null || combinedMessage.isEmpty()) {
+                combinedMessage = getMessage1();
+            }
+        } else {
+            // Otherwise for regular bot messages, prioritize message1
+            System.out.println("DEBUG: Using primary node message from message1 field");
+            combinedMessage = getMessage1();
+            
+            // Only add message2 if it exists and is different from message1
+            String message2Text = getMessage2();
+            if (message2Text != null && !message2Text.isEmpty() && !message2Text.equals(combinedMessage) && 
+                // Skip generic messages that contain no useful information
+                !message2Text.startsWith("Information about") && 
+                !message2Text.startsWith("Server response for category")) {
+                combinedMessage += "\n" + message2Text;
+            }
         }
         
-        // 3. Combine message1 and message2 with a newline between them
-        String combinedMessage = getMessage1();
-        String message2 = getMessage2();
-        if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
-            combinedMessage += "\n" + message2;
+        // Make sure we have some content
+        if (combinedMessage == null || combinedMessage.isEmpty()) {
+            combinedMessage = "Επεξεργάζομαι την ερώτησή σας...";
         }
         
         // 4. Add state-specific modifications to the response
@@ -1131,6 +1204,7 @@ public class ChatbotNode {
                 break;
         }
         
+        System.out.println("DEBUG: Combined message: " + combinedMessage);
         return combinedMessage;
     }
     
