@@ -31,8 +31,11 @@ public class ChatbotManager {
     private ChatbotNode currentNode;
     private ConversationState conversationState;
     private Client client; // Client for server communications
+    private static ChatbotManager instance;
 
     public ChatbotManager(Context context) {
+        instance = this;  // Store instance reference
+
         nodeMap = new HashMap<>();
         conversationState = ConversationState.getInstance();
         Log.d(TAG, "Conversation State: ");
@@ -41,6 +44,17 @@ public class ChatbotManager {
 
         // Initialize the client for server communications
         client = new Client(this);
+
+        // Initialize the database
+        SimpleDatabase.getInstance().initialize(context);
+    }
+
+    /**
+     * Gets the singleton instance of the ChatbotManager
+     * @return The ChatbotManager instance
+     */
+    public static synchronized ChatbotManager getInstance() {
+        return instance;
     }
 
     private void loadConversationTree(Context context) {
@@ -929,4 +943,40 @@ public class ChatbotManager {
      * @param userMessage      The user's message
      * @param responseCallback Callback to receive the response
      */
+    public String processResultsTag(String message, String category, MsgTemplate template) {
+        // Check if message contains <results> tag
+        if (message == null || !message.contains("<results>")) {
+            return message; // No processing needed
+        }
+        
+        // Get the database instance
+        SimpleDatabase db = SimpleDatabase.getInstance();
+        
+        // Get the corresponding table for this category
+        String tableName = db.getCategoryTableMapping(category);
+        if (tableName == null) {
+            Log.e(TAG, "No table mapping found for category: " + category);
+            return message.replace("<results>", "Δεν βρέθηκαν αποτελέσματα.");
+        }
+        
+        // Check if template has queryable fields
+        if (template == null || !template.hasQueryableFields()) {
+            Log.e(TAG, "Template has no queryable fields for category: " + category);
+            return message.replace("<results>", "Δεν υπάρχουν επαρκή στοιχεία για αναζήτηση.");
+        }
+        
+        // Query the database
+        JSONArray results = db.queryRecords(tableName, template);
+        
+        // Format the results
+        String formattedResults;
+        if (results == null || results.length() == 0) {
+            formattedResults = "Δεν βρέθηκαν αποτελέσματα που να ταιριάζουν με τα κριτήρια σας.";
+        } else {
+            formattedResults = db.formatResults(results);
+        }
+        
+        // Replace the <results> tag with formatted results
+        return message.replace("<results>", formattedResults);
+    }
 }

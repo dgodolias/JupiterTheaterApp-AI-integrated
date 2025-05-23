@@ -80,13 +80,31 @@ public abstract class MsgTemplate {
     public String getExistingFieldsAsGreekString() {
         List<String> existing = getExistingFields();
         return getMissingFieldsInGreek(existing); // Reusing the same method for Greek translation
-    }
-
-    /**
+    }    /**
      * Abstract method to get a map of existing field names and their values
      * @return Map with field names as keys and their values as values
      */
     public abstract Map<String, String> getExistingFieldsWithValues();
+    
+    /**
+     * Get a map of field names to their values list for database queries
+     * @return Map with field names as keys and list of values as values
+     */
+    public abstract Map<String, List<String>> getFieldValuesMap();
+    
+    /**
+     * Checks if the template has any non-empty field values that can be used for queries
+     * @return true if at least one field has values, false otherwise
+     */
+    public boolean hasQueryableFields() {
+        Map<String, List<String>> fieldValues = getFieldValuesMap();
+        for (List<String> values : fieldValues.values()) {
+            if (values != null && !values.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
     
     /**
      * Get a formatted string of existing field names with their values in Greek
@@ -491,6 +509,20 @@ class ShowInfoTemplate extends MsgTemplate {
         return templateString;
     }
 
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        fieldsMap.put("name", name);
+        fieldsMap.put("day", day);
+        fieldsMap.put("topic", topic);
+        fieldsMap.put("time", time);
+        fieldsMap.put("cast", cast);
+        fieldsMap.put("room", room);
+        fieldsMap.put("duration", duration);
+        fieldsMap.put("stars", stars);
+        return fieldsMap;
+    }
+
     // Get the total number of fields in this template
     public int getTotalFieldCount() {
         return 8; // name, day, topic, time, cast, room, duration, stars
@@ -685,6 +717,59 @@ class BookingTemplate extends MsgTemplate {
         return templateString;
     }
 
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        
+        // Convert single string values to lists for consistent interface
+        if (showName != null && !showName.isEmpty()) {
+            List<String> showNameList = new ArrayList<>();
+            showNameList.add(showName);
+            fieldsMap.put("show_name", showNameList);
+        } else {
+            fieldsMap.put("show_name", new ArrayList<>());
+        }
+        
+        if (room != null && !room.isEmpty()) {
+            List<String> roomList = new ArrayList<>();
+            roomList.add(room);
+            fieldsMap.put("room", roomList);
+        } else {
+            fieldsMap.put("room", new ArrayList<>());
+        }
+        
+        if (day != null && !day.isEmpty()) {
+            List<String> dayList = new ArrayList<>();
+            dayList.add(day);
+            fieldsMap.put("day", dayList);
+        } else {
+            fieldsMap.put("day", new ArrayList<>());
+        }
+        
+        if (time != null && !time.isEmpty()) {
+            List<String> timeList = new ArrayList<>();
+            timeList.add(time);
+            fieldsMap.put("time", timeList);
+        } else {
+            fieldsMap.put("time", new ArrayList<>());
+        }
+        
+        // Add person data if available
+        if (person != null) {
+            if (person.getName() != null && !person.getName().isEmpty()) {
+                List<String> personNameList = new ArrayList<>();
+                personNameList.add(person.getName());
+                fieldsMap.put("person_name", personNameList);
+            } else {
+                fieldsMap.put("person_name", new ArrayList<>());
+            }
+            
+            // Add other person fields as needed
+        }
+        
+        return fieldsMap;
+    }
+
     // Person inner class for booking
     public static class Person {
         private String name;
@@ -842,6 +927,30 @@ class CancellationTemplate extends MsgTemplate {
         return templateString;
     }
 
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        
+        // Convert single string values to lists for consistency
+        if (reservationNumber != null && !reservationNumber.isEmpty()) {
+            List<String> reservationList = new ArrayList<>();
+            reservationList.add(reservationNumber);
+            fieldsMap.put("reservation_id", reservationList);  // Use "reservation_id" to match the field in JSON
+        } else {
+            fieldsMap.put("reservation_id", new ArrayList<>());
+        }
+        
+        if (passcode != null && !passcode.isEmpty()) {
+            List<String> passcodeList = new ArrayList<>();
+            passcodeList.add(passcode);
+            fieldsMap.put("passcode", passcodeList);
+        } else {
+            fieldsMap.put("passcode", new ArrayList<>());
+        }
+        
+        return fieldsMap;
+    }
+
     // Getters
     public String getReservationNumber() {
         return reservationNumber;
@@ -967,6 +1076,25 @@ class DiscountTemplate extends MsgTemplate {
             templateString = replaceTemplateVariable(templateString, "date", d);
         }
         return templateString;
+    }
+
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        fieldsMap.put("show_name", showName);
+        fieldsMap.put("age", age);
+        fieldsMap.put("date", date);
+        
+        // Handle numeric value
+        if (numberOfPeople > 0) {
+            List<String> peopleList = new ArrayList<>();
+            peopleList.add(String.valueOf(numberOfPeople));
+            fieldsMap.put("no_of_people", peopleList);
+        } else {
+            fieldsMap.put("no_of_people", new ArrayList<>());
+        }
+        
+        return fieldsMap;
     }
 
     // Get the total number of fields in this template
@@ -1101,6 +1229,45 @@ class ReviewTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
         templateString = replaceTemplateVariable(templateString, "review", review);
         return templateString;
+    }
+
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        
+        if (reservationNumber != null && !reservationNumber.isEmpty()) {
+            List<String> reservationList = new ArrayList<>();
+            reservationList.add(reservationNumber);
+            fieldsMap.put("reservation_id", reservationList);
+        } else {
+            fieldsMap.put("reservation_id", new ArrayList<>());
+        }
+        
+        if (passcode != null && !passcode.isEmpty()) {
+            List<String> passcodeList = new ArrayList<>();
+            passcodeList.add(passcode);
+            fieldsMap.put("passcode", passcodeList);
+        } else {
+            fieldsMap.put("passcode", new ArrayList<>());
+        }
+        
+        if (stars > 0) {
+            List<String> starsList = new ArrayList<>();
+            starsList.add(String.valueOf(stars));
+            fieldsMap.put("stars", starsList);
+        } else {
+            fieldsMap.put("stars", new ArrayList<>());
+        }
+        
+        if (review != null && !review.isEmpty()) {
+            List<String> reviewList = new ArrayList<>();
+            reviewList.add(review);
+            fieldsMap.put("comment", reviewList);  // Assuming "comment" is the field name in JSON
+        } else {
+            fieldsMap.put("comment", new ArrayList<>());
+        }
+        
+        return fieldsMap;
     }
 
     // Getters

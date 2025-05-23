@@ -1,5 +1,7 @@
 package com.example.jupitertheaterapp.model;
 
+import com.example.jupitertheaterapp.core.ChatbotManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -140,14 +142,25 @@ public class ChatbotNode {
     public String getMessage() {
         // Return message1 from the node directly
         return message1 != null ? message1 : "";
-    }
-
-    /**
+    }    /**
      * Gets message_2 (the alternative message format, often all caps)
+     * If the message contains a <results> tag, it will be processed to include database query results
      */
     public String getMessage2() {
         // Return message2 from the node directly
-        return message2 != null ? message2 : "";
+        String result = message2 != null ? message2 : "";
+        
+        // Check if the message contains a <results> tag and if this is a complete node (has template)
+        if (result.contains("<results>") && msgTemplate != null) {
+            // Get the ChatbotManager instance
+            ChatbotManager manager = ChatbotManager.getInstance();
+            if (manager != null) {
+                // Process the <results> tag with the template
+                result = manager.processResultsTag(result, category, msgTemplate);
+            }
+        }
+        
+        return result;
     }
 
     /**
