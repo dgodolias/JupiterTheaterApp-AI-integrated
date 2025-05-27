@@ -830,9 +830,69 @@ public class ChatbotManager {
                     userMessage.toLowerCase().contains("ok");
             
             boolean isAtConfirmationNode = currentNode.getId().contains("confirmation");
-            
-            if (isAtConfirmationNode && isConfirmation) {
+              if (isAtConfirmationNode && isConfirmation) {
                 Log.d(TAG, "User confirmed at confirmation node - navigating to root without server request");
+                
+                // PERFORM DATABASE OPERATIONS BEFORE NAVIGATION
+                // Check which type of confirmation and execute appropriate database operation
+                String currentNodeId = currentNode.getId();
+                if (currentNode.getMessageTemplate() != null) {
+                    Log.d(TAG, "Performing database operation for node: " + currentNodeId);
+                    
+                    SimpleDatabase database = SimpleDatabase.getInstance();
+                    boolean operationSuccess = false;
+                    
+                    switch (currentNodeId) {
+                        case "booking_confirmation":
+                            Log.d(TAG, "Adding booking to database");
+                            operationSuccess = database.addBooking(currentNode.getMessageTemplate());
+                            if (operationSuccess) {
+                                Log.d(TAG, "Booking successfully added to database");
+                                // Log the current count for verification
+                                Log.d(TAG, "Bookings table now has " + database.getTableRecordCount("bookings") + " records");
+                            } else {
+                                Log.e(TAG, "Failed to add booking to database");
+                            }
+                            break;
+                            
+                        case "cancel_confirmation":
+                            Log.d(TAG, "Removing booking from database");
+                            operationSuccess = database.removeBooking(currentNode.getMessageTemplate());
+                            if (operationSuccess) {
+                                Log.d(TAG, "Booking successfully removed from database");
+                                Log.d(TAG, "Bookings table now has " + database.getTableRecordCount("bookings") + " records");
+                            } else {
+                                Log.e(TAG, "Failed to remove booking from database");
+                            }
+                            break;
+                            
+                        case "review_confirmation":
+                            Log.d(TAG, "Adding review to database");
+                            operationSuccess = database.addReview(currentNode.getMessageTemplate());
+                            if (operationSuccess) {
+                                Log.d(TAG, "Review successfully added to database");
+                                Log.d(TAG, "Reviews table now has " + database.getTableRecordCount("reviews") + " records");
+                            } else {
+                                Log.e(TAG, "Failed to add review to database");
+                            }
+                            break;
+                            
+                        default:
+                            Log.d(TAG, "No database operation needed for node: " + currentNodeId);
+                            operationSuccess = true; // No operation needed, consider it successful
+                            break;
+                    }
+                    
+                    // Log operation result and current database state
+                    if (operationSuccess) {
+                        Log.d(TAG, "Database operation completed successfully for " + currentNodeId);
+                        database.logDatabaseState(); // Log current state for debugging
+                    } else {
+                        Log.w(TAG, "Database operation failed for " + currentNodeId + " - continuing with navigation");
+                    }
+                } else {
+                    Log.w(TAG, "No template available for database operation at node: " + currentNodeId);
+                }
                 
                 // Directly navigate to the next node (which should be root)
                 ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);

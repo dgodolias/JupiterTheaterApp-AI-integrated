@@ -10,7 +10,8 @@
         "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "A12", "pvalues": []}
       },
-      "reservation_id": {"value": "RES12345", "pvalues": []}
+      "reservation_id": {"value": "RES12345", "pvalues": []},
+      "reservation_password": {"value": "pass123", "pvalues": []}
     },
     {
       "show_name": {"value": "Αντιγόνη", "pvalues": []},
@@ -22,7 +23,8 @@
         "age": {"value": "> 65", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "B5", "pvalues": []}
       },
-      "reservation_id": {"value": "RES23456", "pvalues": []}
+      "reservation_id": {"value": "RES23456", "pvalues": []},
+      "reservation_password": {"value": "pass345", "pvalues": []}
     },
     {
       "show_name": {"value": "Η Γυναίκα της Ζάκυνθος", "pvalues": []},
@@ -34,7 +36,8 @@
         "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "C8", "pvalues": []}
       },
-      "reservation_id": {"value": "RES34567", "pvalues": []}
+      "reservation_id": {"value": "RES34567", "pvalues": []},
+      "reservation_password": {"value": "pass678", "pvalues": []}
     },
     {
       "show_name": {"value": "Τα Μάτια της Νύχτας", "pvalues": []},
@@ -46,7 +49,8 @@
         "age": {"value": "< 18", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "D15", "pvalues": []}
       },
-      "reservation_id": {"value": "RES45678", "pvalues": []}
+      "reservation_id": {"value": "RES45678", "pvalues": []},
+      "reservation_password": {"value": "pass910", "pvalues": []}
     },
     {
       "show_name": {"value": "Ο Γλάρος", "pvalues": []},
@@ -58,7 +62,8 @@
         "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "F3", "pvalues": []}
       },
-      "reservation_id": {"value": "RES56789", "pvalues": []}
+      "reservation_id": {"value": "RES56789", "pvalues": []},
+      "reservation_password": {"value": "pass112", "pvalues": []}
     }
   ]
 }

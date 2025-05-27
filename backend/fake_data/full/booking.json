@@ -1,11 +1,11 @@
 {
     "show_name": {"value": "Romeo and Juliet", "pvalues": []},
-    "room": {"value": "Main Theater", "pvalues": []},
+    "room": {"value": "", "pvalues": []},
     "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]},
-    "time": {"value": "19:30", "pvalues": []},
+    "time": {"value": "", "pvalues": []},
     "person": {
         "name": {"value": "Maria Papadopoulos", "pvalues": []},
-        "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]},
+        "age": {"value": "", "pvalues": ["< 18", "> 18", "> 65"]},
         "seat": {"value": "B12", "pvalues": []}
     }
 }

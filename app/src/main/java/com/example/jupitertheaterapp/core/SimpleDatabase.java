@@ -7,11 +7,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
+import java.util.UUID;
 
 import com.example.jupitertheaterapp.model.MsgTemplate;
 
@@ -20,6 +23,7 @@ public class SimpleDatabase {
     
     // Data tables stored as JSONObject for simplicity
     private Map<String, JSONArray> tables;
+    private Context context; // Store context for file operations
     
     // Singleton instance
     private static SimpleDatabase instance;
@@ -43,6 +47,7 @@ public class SimpleDatabase {
      * @param context The application context
      */
     public void initialize(Context context) {
+        this.context = context; // Store context for later use
         loadJsonFile(context, "sample_shows.json", "shows");
         loadJsonFile(context, "sample_bookings.json", "bookings");
         loadJsonFile(context, "sample_discounts.json", "discounts");
@@ -279,5 +284,227 @@ public class SimpleDatabase {
         }
         
         return sb.toString();
+    }
+    
+    /**
+     * Add a new booking to the database
+     * @param template The message template containing booking data
+     * @return True if booking was added successfully
+     */
+    public boolean addBooking(MsgTemplate template) {
+        try {
+            JSONObject newBooking = createBookingFromTemplate(template);
+            
+            // Add to in-memory table
+            JSONArray bookingsTable = tables.get("bookings");
+            if (bookingsTable != null) {
+                bookingsTable.put(newBooking);
+                Log.d(TAG, "Added new booking to in-memory database");
+                
+                // Write to internal storage for verification
+                writeTableToInternalStorage("bookings", "test_bookings.json");
+                return true;
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error adding booking: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Remove a booking from the database
+     * @param template The message template containing booking criteria to remove
+     * @return True if booking was removed successfully
+     */
+    public boolean removeBooking(MsgTemplate template) {
+        try {
+            JSONArray bookingsTable = tables.get("bookings");
+            if (bookingsTable == null) return false;
+            
+            // Find and remove matching booking
+            for (int i = 0; i < bookingsTable.length(); i++) {
+                JSONObject booking = bookingsTable.getJSONObject(i);
+                if (matchesTemplate(booking, template)) {
+                    bookingsTable.remove(i);
+                    Log.d(TAG, "Removed booking from in-memory database");
+                    
+                    // Write to internal storage for verification
+                    writeTableToInternalStorage("bookings", "test_bookings.json");
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error removing booking: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Add a new review to the database
+     * @param template The message template containing review data
+     * @return True if review was added successfully
+     */
+    public boolean addReview(MsgTemplate template) {
+        try {
+            JSONObject newReview = createReviewFromTemplate(template);
+            
+            // Add to in-memory table
+            JSONArray reviewsTable = tables.get("reviews");
+            if (reviewsTable != null) {
+                reviewsTable.put(newReview);
+                Log.d(TAG, "Added new review to in-memory database");
+                
+                // Write to internal storage for verification
+                writeTableToInternalStorage("reviews", "test_reviews.json");
+                return true;
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error adding review: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Create a booking JSON object from template data
+     * @param template The message template containing booking data
+     * @return JSONObject representing the booking
+     */
+    private JSONObject createBookingFromTemplate(MsgTemplate template) throws JSONException {
+        JSONObject booking = new JSONObject();
+        Map<String, List<String>> fields = template.getFieldValuesMap();
+        
+        // Generate unique reservation ID and password
+        String reservationId = "RES" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        String reservationPassword = "pass" + (int)(Math.random() * 1000);
+        
+        Log.d(TAG, "Created booking with ID: " + reservationId + " and password: " + reservationPassword);
+        
+        // Add all fields from template
+        for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
+            String fieldName = entry.getKey();
+            List<String> values = entry.getValue();
+            
+            if (values != null && !values.isEmpty()) {
+                String value = values.get(0); // Take first value
+                
+                // Handle nested person object
+                if (fieldName.equals("name") || fieldName.equals("age") || fieldName.equals("seat")) {
+                    if (!booking.has("person")) {
+                        booking.put("person", new JSONObject());
+                    }
+                    JSONObject person = booking.getJSONObject("person");
+                    JSONObject fieldObj = new JSONObject();
+                    fieldObj.put("value", value);
+                    fieldObj.put("pvalues", new JSONArray());
+                    person.put(fieldName, fieldObj);
+                } else {
+                    // Regular field
+                    JSONObject fieldObj = new JSONObject();
+                    fieldObj.put("value", value);
+                    fieldObj.put("pvalues", new JSONArray());
+                    booking.put(fieldName, fieldObj);
+                }
+            }
+        }
+        
+        // Add reservation ID and password
+        JSONObject resIdObj = new JSONObject();
+        resIdObj.put("value", reservationId);
+        resIdObj.put("pvalues", new JSONArray());
+        booking.put("reservation_id", resIdObj);
+        
+        JSONObject resPassObj = new JSONObject();
+        resPassObj.put("value", reservationPassword);
+        resPassObj.put("pvalues", new JSONArray());
+        booking.put("reservation_password", resPassObj);
+        
+        return booking;
+    }
+
+    /**
+     * Create a review JSON object from template data
+     * @param template The message template containing review data
+     * @return JSONObject representing the review
+     */
+    private JSONObject createReviewFromTemplate(MsgTemplate template) throws JSONException {
+        JSONObject review = new JSONObject();
+        Map<String, List<String>> fields = template.getFieldValuesMap();
+        
+        // Add all fields from template
+        for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
+            String fieldName = entry.getKey();
+            List<String> values = entry.getValue();
+            
+            if (values != null && !values.isEmpty()) {
+                String value = values.get(0); // Take first value
+                
+                JSONObject fieldObj = new JSONObject();
+                fieldObj.put("value", value);
+                fieldObj.put("pvalues", new JSONArray());
+                review.put(fieldName, fieldObj);
+            }
+        }
+        
+        return review;
+    }
+
+    /**
+     * Write a table to internal storage for testing/verification
+     * @param tableName The name of the table
+     * @param filename The filename to write to
+     */
+    private void writeTableToInternalStorage(String tableName, String filename) {
+        if (context == null) {
+            Log.w(TAG, "Context is null, cannot write to internal storage");
+            return;
+        }
+        
+        try {
+            JSONArray table = tables.get(tableName);
+            if (table == null) {
+                Log.w(TAG, "Table " + tableName + " not found");
+                return;
+            }
+            
+            // Create the JSON structure
+            JSONObject root = new JSONObject();
+            root.put(tableName, table);
+            
+            // Write to internal storage
+            File file = new File(context.getFilesDir(), filename);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(root.toString(2).getBytes());
+            fos.close();
+            
+            Log.d(TAG, "Successfully wrote " + tableName + " table to " + filename);
+            Log.d(TAG, "File location: " + file.getAbsolutePath());
+            Log.d(TAG, "Table now contains " + table.length() + " records");
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing table to internal storage: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Get the current count of records in a table - useful for testing
+     * @param tableName The name of the table
+     * @return The number of records in the table
+     */
+    public int getTableRecordCount(String tableName) {
+        JSONArray table = tables.get(tableName);
+        return table != null ? table.length() : 0;
+    }
+
+    /**
+     * Log current database state - useful for debugging
+     */
+    public void logDatabaseState() {
+        Log.d(TAG, "=== DATABASE STATE ===");
+        for (Map.Entry<String, JSONArray> entry : tables.entrySet()) {
+            String tableName = entry.getKey();
+            JSONArray table = entry.getValue();
+            Log.d(TAG, "Table '" + tableName + "': " + table.length() + " records");
+        }
+        Log.d(TAG, "=====================");
     }
 }

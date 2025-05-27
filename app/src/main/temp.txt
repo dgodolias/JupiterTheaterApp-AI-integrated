@@ -1,329 +1,584 @@
-  Current Node: ChatbotNode{
-    id='root',
-    category='-',
-    type='CATEGORISE',
-    message1='',
-    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-    userMessage=null,
-    content='',
-    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-    childrenCount=5,
-    parent=null,
-    pendingChildIds=[],
-    msgTemplate=null
-  }
-  Getting response for user message: γ
-  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"γ"}
-  Current node: ChatbotNode{
-    id='root',
-    category='-',
-    type='CATEGORISE',
-    message1='',
-    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
-    userMessage=UserMessage{category='-'type=0, message='γ'},
-    content='',
-    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-    childrenCount=5,
-    parent=null,
-    pendingChildIds=[],
-    msgTemplate=null
-  }
-  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"γ"}
-  Sent to server: {"type":"CATEGORISE","category":"-","message":"γ"}
-  JSON SENT TO SERVER: {"type":"CATEGORISE","category":"-","message":"γ"}
-  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": null, "error": null}
-  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": null, "error": null}
-  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@b6212fb
-  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
-  DEBUG: Handling conversation turn for node: root
-  DEBUG: Processing JSON response to populate template
-  DEBUG: Root node - skipping template creation
-  DEBUG: Processing message with state: INITIAL
-  DEBUG: Current node: root, Category: -
-  DEBUG: Processing message with INITIAL state
-  No details in JSON response, skipping template application
-  DEBUG: First process result: true
-  DEBUG: Handling node transition for node root
-  DEBUG: Current state: INITIAL
-  DEBUG: Setting state to INITIAL for root node
-  DEBUG: State unchanged: INITIAL
-  DEBUG: Current state after transition: INITIAL
-  Initial JSON processing complete, template populated
-  Navigation debug - Original user input: 'γ', Server category: 'ΚΡΑΤΗΣΗ'
-  DEBUG: Choosing next node with actual user input: γ
-  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
-  DEBUG: Current node ID: root, Category: -
-  DEBUG: Available children count: 5
-  DEBUG: Available child nodes for matching:
-  DEBUG:   - ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-  DEBUG:   - ID: kratisi, Category: ΚΡΑΤΗΣΗ
-  DEBUG:   - ID: akyrosi, Category: ΑΚΥΡΩΣΗ
-  DEBUG:   - ID: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
-  DEBUG:   - ID: prosfores_ekptoseis, Category: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ
-  DEBUG: Path length: 1
-  DEBUG: Path from root to current node: 
-  DEBUG:   - root (-)
-  DEBUG: isConfirmation: false, isRejection: false
-  DEBUG: At root node, looking for category match
-  DEBUG: No category match at root, returning first child: plirofories
-  DEBUG: Selected next node: plirofories, handling state transition
-  DEBUG: Handling node transition for node plirofories
-  DEBUG: Current state: INITIAL
-  DEBUG: State unchanged: INITIAL
-  Navigation successful - Moving from 'root' to 'plirofories'
-  DEBUG: Handling conversation turn for node: plirofories
-  DEBUG: Processing JSON response to populate template
-  Details is null, skipping template population
-  DEBUG: Template populated: true
-  DEBUG: After JSON population - Missing fields: 8
-  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has NO information available
-  DEBUG: Should navigate to: info_none
-  DEBUG: Processing message with state: INITIAL
-  DEBUG: Current node: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-  DEBUG: Processing message with INITIAL state
-  DEBUG: Current template before processing: ShowInfoTemplate
-  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  No details in JSON response, skipping template application
-  DEBUG: First process result: true
-  DEBUG: Handling node transition for node plirofories
-  DEBUG: Current state: INITIAL
-  DEBUG: State unchanged: INITIAL
-  DEBUG: Current state after transition: INITIAL
-  Conversation turn processed for node: plirofories
-  Current state: INITIAL
-  Using system message from node: plirofories
-  Combined message: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
-  Current Node: ChatbotNode{
-    id='plirofories',
-    category='ΚΡΑΤΗΣΗ',
-    type='EXTRACT',
-    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details=null, error='null', type=2},
-    userMessage=null,
-    content='',
-    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
-    childrenCount=2,
-    parent=root,
-    pendingChildIds=[],
-    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
-  }
-  Installing profile for com.example.jupitertheaterapp
-  Current Node: ChatbotNode{
-    id='plirofories',
-    category='ΚΡΑΤΗΣΗ',
-    type='EXTRACT',
-    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details=null, error='null', type=2},
-    userMessage=null,
-    content='',
-    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
-    childrenCount=2,
-    parent=root,
-    pendingChildIds=[],
-    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
-  }
-  Getting response for user message: φ
-  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
-  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
-  Current node: ChatbotNode{
-    id='plirofories',
-    category='ΚΡΑΤΗΣΗ',
-    type='EXTRACT',
-    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
-    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details=null, error='null', type=2},
-    userMessage=UserMessage{category='-'type=0, message='φ'},
-    content='',
-    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
-    childrenCount=2,
-    parent=root,
-    pendingChildIds=[],
-    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
-  }
-  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
-  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
-  Sent to server: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
-  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
-  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "", "pvalues": []}}}, "error": null}
-  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "", "pvalues": []}}}, "error": null}
-  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@ea95263
-  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
-  DEBUG: Handling conversation turn for node: plirofories
-  DEBUG: Processing JSON response to populate template
-  org.json.JSONException: Value  at value of type java.lang.String cannot be converted to JSONArray
-  	at org.json.JSON.typeMismatch(JSON.java:101)
-  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:314)
-  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:404)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:280)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:222)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1425)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:826)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:906)
-  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-  	at android.os.Handler.handleCallback(Handler.java:883)
-  	at android.os.Handler.dispatchMessage(Handler.java:100)
-  	at android.os.Looper.loop(Looper.java:214)
-  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-  	at java.lang.reflect.Method.invoke(Native Method)
-  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-  DEBUG: Template populated: false
-  DEBUG: After JSON population - Missing fields: 8
-  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: Processing message with state: INITIAL
-  DEBUG: Current node: plirofories, Category: ΚΡΑΤΗΣΗ
-  DEBUG: Processing message with INITIAL state
-  DEBUG: Current template before processing: ShowInfoTemplate
-  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  org.json.JSONException: Value  at value of type java.lang.String cannot be converted to JSONArray
-  	at org.json.JSON.typeMismatch(JSON.java:101)
-  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:314)
-  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:404)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:280)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:222)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:867)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1215)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1491)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:826)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:906)
-  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-  	at android.os.Handler.handleCallback(Handler.java:883)
-  	at android.os.Handler.dispatchMessage(Handler.java:100)
-  	at android.os.Looper.loop(Looper.java:214)
-  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-  	at java.lang.reflect.Method.invoke(Native Method)
-  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-  Failed to parse JSON for template values
-  DEBUG: First process result: true
-  DEBUG: Handling node transition for node plirofories
-  DEBUG: Current state: INITIAL
-  DEBUG: State unchanged: INITIAL
-  DEBUG: Current state after transition: INITIAL
-  Initial JSON processing complete, template populated
-  Navigation debug - Original user input: 'φ', Server category: 'ΚΡΑΤΗΣΗ'
-  DEBUG: Choosing next node with actual user input: φ
-  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
-  DEBUG: Current node ID: plirofories, Category: ΚΡΑΤΗΣΗ
-  DEBUG: Available children count: 2
-  DEBUG: Available child nodes for matching:
-  DEBUG:   - ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-  DEBUG:   - ID: info_incomplete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-  DEBUG: Path length: 2
-  DEBUG: Path from root to current node: 
-  DEBUG:   - root (-)
-  DEBUG:   - plirofories (ΚΡΑΤΗΣΗ)
-  DEBUG: isConfirmation: false, isRejection: false
-  DEBUG: At category node plirofories, checking template completeness
-  DEBUG: Template completeness check - Category: ΚΡΑΤΗΣΗ, Node ID: plirofories, Template type: ShowInfoTemplate, Missing fields: 8, isComplete: false
-  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: Template completeness: false
-  DEBUG: Template class: ShowInfoTemplate, Missing fields count: 8, Category: ΚΡΑΤΗΣΗ
-  DEBUG: Missing fields: [name, day, topic, time, cast, room, duration, stars]
-  DEBUG: Template completeness check result: false
-  DEBUG: Current template state:
-  DEBUG:   - Class: ShowInfoTemplate
-  DEBUG:   - Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG:   - Has complete info: false
-  DEBUG: Looking for child with pattern: incomplete based on completeness check: false
-  DEBUG: Available children to match pattern:
-  DEBUG:   - Child ID: info_confirmation, matches pattern? false
-  DEBUG:   - Child ID: info_incomplete, matches pattern? true
-  DEBUG: Found matching child node: info_incomplete for pattern: incomplete
-  DEBUG: Selected next node: info_incomplete, handling state transition
-  DEBUG: Both nodes have templates. Merging template data from plirofories to info_incomplete
-  DEBUG: Before merge - Source template (plirofories): missing: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: Before merge - Target template (info_incomplete): missing: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: Merging template data from ShowInfoTemplate
-  DEBUG: After merge - Target template (info_incomplete): missing: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: Handling node transition for node info_incomplete
-  DEBUG: Current state: INITIAL
-  DEBUG: State unchanged: INITIAL
-  Navigation successful - Moving from 'plirofories' to 'info_incomplete'
-  DEBUG: Handling conversation turn for node: info_incomplete
-  DEBUG: Processing JSON response to populate template
-  org.json.JSONException: Value  at value of type java.lang.String cannot be converted to JSONArray
-  	at org.json.JSON.typeMismatch(JSON.java:101)
-  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:314)
-  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:404)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:280)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:222)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1425)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:841)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:906)
-  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-  	at android.os.Handler.handleCallback(Handler.java:883)
-  	at android.os.Handler.dispatchMessage(Handler.java:100)
-  	at android.os.Looper.loop(Looper.java:214)
-  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-  	at java.lang.reflect.Method.invoke(Native Method)
-  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-  DEBUG: Template populated: false
-  DEBUG: After JSON population - Missing fields: 8
-  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has NO information available
-  DEBUG: Should navigate to: info_none
-  DEBUG: Processing message with state: INITIAL
-  DEBUG: Current node: info_incomplete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-  DEBUG: Processing message with INITIAL state
-  DEBUG: Current template before processing: ShowInfoTemplate
-  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-  DEBUG: message2 contains <missing> placeholder: Για να σας δώσω πληροφορίες, χρειάζομαι τουλάχιστον ένα από τα εξής: <missing>. Παρακαλώ προσδιορίστε τι θα θέλατε να μάθετε.
-  org.json.JSONException: Value  at value of type java.lang.String cannot be converted to JSONArray
-  	at org.json.JSON.typeMismatch(JSON.java:101)
-  	at org.json.JSONObject.getJSONArray(JSONObject.java:598)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.extractStringListValue(MsgTemplate.java:314)
-  	at com.example.jupitertheaterapp.model.ShowInfoTemplate.populateFromJsonObject(MsgTemplate.java:404)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:280)
-  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:222)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:867)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1215)
-  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1491)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:841)
-  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:906)
-  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
-  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
-  	at android.os.Handler.handleCallback(Handler.java:883)
-  	at android.os.Handler.dispatchMessage(Handler.java:100)
-  	at android.os.Looper.loop(Looper.java:214)
-  	at android.app.ActivityThread.main(ActivityThread.java:7356)
-  	at java.lang.reflect.Method.invoke(Native Method)
-  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
-  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
-  Failed to parse JSON for template values
-  DEBUG: First process result: true
-  DEBUG: Handling node transition for node info_incomplete
-  DEBUG: Current state: INITIAL
-  DEBUG: State unchanged: INITIAL
-  DEBUG: Current state after transition: INITIAL
-  Conversation turn processed for node: info_incomplete
-  Current state: INITIAL
-  Using system message from node: info_incomplete
-  Combine  Για να σας δώσω πληροφορίες, χρειάζομαι τουλάχιστον ένα από τα εξής: <missing>. Παρακαλώ προσδιορίστε τι θα θέλατε να μάθετε.
-  Current Node: ChatbotNode{
-    id='info_incomplete',
-    category='ΚΡΑΤΗΣΗ',
-    type='EXTRACT',
-    message1='Δεν έχω αρκετές πληροφορίες για να απαντήσω στο ερώτημά σας.',
-    message2='Για να σας δώσω πληροφορίες, χρειάζομαι τουλάχιστον ένα από τα εξής: <missing>. Παρακαλώ προσδιορίστε τι θα θέλατε να μάθετε.',
-    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"","pvalues":[]}}}, error='null', type=2},
-    userMessage=null,
-    content='',
-    fallback='Χρειάζομαι περισσότερες λεπτομέρειες για να σας παρέχω ακριβείς πληροφορίες. Μπορείτε να με ρωτήσετε για συγκεκριμένες παραστάσεις, ημερομηνίες, ή άλλες πληροφορίες.',
-    childrenCount=0,
-    parent=plirofories,
-    pendingChildIds=[],
-    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
-  }
+                                                                                                    Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+                                                                                                     Θέλετε να επιβεβαιώσετε την κράτηση;
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    id='booking_confirmation',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"","pvalues":[]}}}, error='null', type=2},
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+2025-05-27 22:19:23.164 12420-12420 System.out              com.example.jupitertheaterapp        I  }
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I    id='booking_confirmation',
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:25.419 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"","pvalues":[]}}}, error='null', type=2},
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I  }
+2025-05-27 22:19:25.420 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ι
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"ι"}
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    id='booking_confirmation',
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:25.420 12420-12420 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"","pvalues":[]}}}, error='null', type=2},
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ι'},
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I  }
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"ι"}
+2025-05-27 22:19:25.421 12420-12420 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.424 12420-12470 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"ι"}
+2025-05-27 22:19:25.424 12420-12470 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"ι"}
+2025-05-27 22:19:25.428 12420-12470 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
+2025-05-27 22:19:25.428 12420-12470 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@113f0b5
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: booking_confirmation
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: LLM_GET_INFO
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.441 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with LLM_GET_INFO state
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing booking info request
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: BookingTemplate
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: 
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 0
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node booking_confirmation
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: LLM_GET_INFO
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: LLM_GET_INFO
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: LLM_GET_INFO
+2025-05-27 22:19:25.442 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
+2025-05-27 22:19:25.442 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: 'ι', Server category: 'ΚΡΑΤΗΣΗ'
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ι
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 2
+2025-05-27 22:19:25.442 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: root, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - kratisi (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - booking_confirmation (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: booking_confirmation
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with OTHER input - staying at same node
+2025-05-27 22:19:25.443 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'booking_confirmation' to 'booking_confirmation'
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: booking_confirmation
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 0
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete - All fields populated
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: LLM_GET_INFO
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with LLM_GET_INFO state
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing booking info request
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: BookingTemplate
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: 
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 0
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Template is complete! All fields populated successfully.
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node booking_confirmation
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: LLM_GET_INFO
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: LLM_GET_INFO
+2025-05-27 22:19:25.443 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: LLM_GET_INFO
+2025-05-27 22:19:25.443 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: booking_confirmation
+2025-05-27 22:19:25.443 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Current state: LLM_GET_INFO
+2025-05-27 22:19:25.443 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: booking_confirmation
+2025-05-27 22:19:25.443 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.
+                                                                                                    Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+                                                                                                     Θέλετε να επιβεβαιώσετε την κράτηση;
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    id='booking_confirmation',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΚΡΑΤΗΣΗ'},
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+2025-05-27 22:19:25.444 12420-12420 System.out              com.example.jupitertheaterapp        I  }
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    id='booking_confirmation',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Επιβεβαίωση κράτησης: Παράσταση "Romeo and Juliet", στην αίθουσα Main Theater, την Saturday στις 19:30. Η κράτηση θα γίνει στο όνομα Maria Papadopoulos, ηλικιακή κατηγορία > 18, θέση B12. 
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΚΡΑΤΗΣΗ'},
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=kratisi,
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='Main Theater', day='Saturday', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+2025-05-27 22:19:28.390 12420-12420 System.out              com.example.jupitertheaterapp        I  }
+2025-05-27 22:19:28.390 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ναι
+2025-05-27 22:19:28.390 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  User confirmed at confirmation node - navigating to root without server request
+2025-05-27 22:19:28.390 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Performing database operation for node: booking_confirmation
+2025-05-27 22:19:28.390 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Adding booking to database
+2025-05-27 22:19:28.393 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  Created booking with ID: RESA71F25AD and password: pass256
+2025-05-27 22:19:28.393 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  Added new booking to in-memory database
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  Writing bookings table to sample_bookings.json
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  Updated sample_bookings.json content: {
+                                                                                                      "bookings": [
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Ο Μάγος του Οζ",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Απόλλων",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Παρασκευή",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "19:30",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Ελένη Παπαδοπούλου",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 18",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "A12",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES12345",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass123",
+                                                                                                            "pvalues": []
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Αντιγόνη",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Αθηνά",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Σάββατο",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "20:00",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Γιώργος Αντωνιάδης",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 65",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "B5",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES23456",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass345",
+                                                                                                            "pvalues": []
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Η Γυναίκα της Ζάκυνθος",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Ζευς",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Κυριακή",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "19:00",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Αλέξανδρος Μαρκόπουλος",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 18",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "C8",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES34567",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass678",
+                                                                                                            "pvalues": [
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  === SIMULATED FILE WRITE ===
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  File: sample_bookings.json
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  Content: {
+                                                                                                      "bookings": [
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Ο Μάγος του Οζ",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Απόλλων",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Παρασκευή",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "19:30",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Ελένη Παπαδοπούλου",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 18",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "A12",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES12345",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass123",
+                                                                                                            "pvalues": []
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Αντιγόνη",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Αθηνά",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Σάββατο",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "20:00",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Γιώργος Αντωνιάδης",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 65",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "B5",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES23456",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass345",
+                                                                                                            "pvalues": []
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          "show_name": {
+                                                                                                            "value": "Η Γυναίκα της Ζάκυνθος",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "room": {
+                                                                                                            "value": "Αίθουσα Ζευς",
+                                                                                                            "pvalues": [
+                                                                                                              "Αίθουσα Απόλλων",
+                                                                                                              "Αίθουσα Ζευς",
+                                                                                                              "Αίθουσα Αθηνά"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "day": {
+                                                                                                            "value": "Κυριακή",
+                                                                                                            "pvalues": [
+                                                                                                              "Δευτέρα",
+                                                                                                              "Τρίτη",
+                                                                                                              "Τετάρτη",
+                                                                                                              "Πέμπτη",
+                                                                                                              "Παρασκευή",
+                                                                                                              "Σάββατο",
+                                                                                                              "Κυριακή"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "time": {
+                                                                                                            "value": "19:00",
+                                                                                                            "pvalues": [
+                                                                                                              "18:00",
+                                                                                                              "19:00",
+                                                                                                              "19:30",
+                                                                                                              "20:00",
+                                                                                                              "21:00"
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          "person": {
+                                                                                                            "name": {
+                                                                                                              "value": "Αλέξανδρος Μαρκόπουλος",
+                                                                                                              "pvalues": []
+                                                                                                            },
+                                                                                                            "age": {
+                                                                                                              "value": "> 18",
+                                                                                                              "pvalues": [
+                                                                                                                "< 18",
+                                                                                                                "> 18",
+                                                                                                                "> 65"
+                                                                                                              ]
+                                                                                                            },
+                                                                                                            "seat": {
+                                                                                                              "value": "C8",
+                                                                                                              "pvalues": []
+                                                                                                            }
+                                                                                                          },
+                                                                                                          "reservation_id": {
+                                                                                                            "value": "RES34567",
+                                                                                                            "pvalues": []
+                                                                                                          },
+                                                                                                          "reservation_password": {
+                                                                                                            "value": "pass678",
+                                                                                                            "pvalues": []
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          
+2025-05-27 22:19:28.395 12420-12420 SimpleDatabase          com.example.jupitertheaterapp        D  === END FILE WRITE ===
+2025-05-27 22:19:28.395 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Booking successfully added to database
+2025-05-27 22:19:28.395 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Database operation completed successfully for booking_confirmation
+2025-05-27 22:19:28.395 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ναι
+2025-05-27 22:19:28.395 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 2
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: root, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - kratisi (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG:   - booking_confirmation (ΚΡΑΤΗΣΗ)
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: true, isRejection: false
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: booking_confirmation
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with YES - going to root
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Found root node as first child: root
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: root, handling state transition
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Next node is root. Clearing its message template.
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node root
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: LLM_GET_INFO
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to INITIAL for root node
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  DEBUG: State updated to: INITIAL
+2025-05-27 22:19:28.396 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Successfully navigating to root node - skipping server communication
+2025-05-27 22:19:28.396 12420-12420 ChatbotManager          com.example.jupitertheaterapp        D  Returning root message without server request: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    id='root',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    category='ΚΡΑΤΗΣΗ',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    type='CATEGORISE',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details=null, error='null', type=2},
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ΚΡΑΤΗΣΗ'},
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    childrenCount=5,
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    parent=null,
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I    msgTemplate=null
+2025-05-27 22:19:28.396 12420-12420 System.out              com.example.jupitertheaterapp        I  }
