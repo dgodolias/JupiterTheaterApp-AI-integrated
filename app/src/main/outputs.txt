@@ -1,752 +1,241 @@
- D  Conversation State: 
- D  INITIAL
- D  Starting to resolve node references. Node map size: 18
- D  After resolving references, root node has 5 children
- D  Conversation tree loaded successfully
- D  Attempting to connect to 192.168.1.18:65432
- D  Connected to server successfully
- W  Accessing hidden method Landroid/view/View;->getViewRootImpl()Landroid/view/ViewRootImpl; (greylist, reflection, allowed)
- W  Accessing hidden field Landroid/view/View$AttachInfo;->mVisibleInsets:Landroid/graphics/Rect; (greylist, reflection, allowed)
- W  Accessing hidden field Landroid/view/ViewRootImpl;->mAttachInfo:Landroid/view/View$AttachInfo; (greylist, reflection, allowed)
- D  HostConnection::get() New Host Connection established 0xe1e69280, tid 29672
- D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
- W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
- D  setVertexArrayObject: set vao to 0 (0) 0 0
- D  eglCreateContext: 0xe1e1a2a0: maj 2 min 0 rcv 2
- D  eglMakeCurrent: 0xe1e1a2a0: ver 2 0 (tinfo 0xe1e0f2e0)
- W  mapper 3.x is not supported
- D  createUnique: call
- D  HostConnection::get() New Host Connection established 0xe1e69410, tid 29672
- D  HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV420_888_to_NV21 ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_2 
- D  allocate: Ask for block of size 0x1000
- D  allocate: ioctl allocate returned offset 0x3ff1fc000 size 0x2000
- D  eglMakeCurrent: 0xe1e1a2a0: ver 2 0 (tinfo 0xe1e0f2e0)
- D  setVertexArrayObject: set vao to 0 (0) 1 0
- I  Flattened final assist data: 1392 bytes, containing 1 windows, 7 views
- D  Installing profile for com.example.jupitertheaterapp
- I  Current Node: ChatbotNode{
- I    id='root',
- I    category='-',
- I    type='CATEGORISE',
- I    message1='',
- I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
- I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
- I    userMessage=null,
- I    content='',
- I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
- I    childrenCount=5,
- I    parent=null,
- I    pendingChildIds=[],
- I    msgTemplate=null
- I  }
- D  Getting response for user message: ση
- I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"ση"}
- I  Current node: ChatbotNode{
- I    id='root',
- I    category='-',
- I    type='CATEGORISE',
- I    message1='',
- I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
- I    systemMessage=SystemMessage{category='-', details=null, error='null', type=1},
- I    userMessage=UserMessage{category='-'type=0, message='ση'},
- I    content='',
- I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
- I    childrenCount=5,
- I    parent=null,
- I    pendingChildIds=[],
- I    msgTemplate=null
- I  }
- I  CREATED CATEGORISE REQUEST: {"type":"CATEGORISE","category":"-","message":"ση"}
- D  Sent to server: {"type":"CATEGORISE","category":"-","message":"ση"}
- I  JSON SENT TO SERVER: {"type":"CATEGORISE","category":"-","message":"ση"}
- D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": null, "error": null}
- I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": null, "error": null}
- I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@6bc48c7
- I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Handling conversation turn for node: root
- I  DEBUG: Processing JSON response to populate template
- I  DEBUG: Created new template for category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  Details is null, skipping template population
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 8
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: root, Category: -
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
- I  No details in JSON response, skipping template application
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node root
- I  DEBUG: Current state: INITIAL
- I  DEBUG: Setting state to INITIAL for root node
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Initial JSON processing complete, template populated
- D  Navigation debug - Original user input: 'ση', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
- I  DEBUG: Choosing next node with actual user input: ση
- I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Current node ID: root, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Available children count: 5
- I  DEBUG: Available child nodes for matching:
- I  DEBUG:   - ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG:   - ID: kratisi, Category: ΚΡΑΤΗΣΗ
- I  DEBUG:   - ID: akyrosi, Category: ΑΚΥΡΩΣΗ
- I  DEBUG:   - ID: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
- I  DEBUG:   - ID: prosfores_ekptoseis, Category: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ
- I  DEBUG: Path length: 1
- I  DEBUG: Path from root to current node: 
- I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG: isConfirmation: false, isRejection: false
- I  DEBUG: At root node, looking for category match
- I  DEBUG: Found child with matching category: plirofories
- I  DEBUG: Selected next node: plirofories, handling state transition
- I  DEBUG: Handling node transition for node plirofories
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- D  Navigation successful - Moving from 'root' to 'plirofories'
- I  DEBUG: Handling conversation turn for node: plirofories
- I  DEBUG: Processing JSON response to populate template
- I  Details is null, skipping template population
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 8
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has NO information available
- I  DEBUG: Should navigate to: info_none
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
- I  No details in JSON response, skipping template application
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node plirofories
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Conversation turn processed for node: plirofories
- D  Current state: INITIAL
- D  Using system message from node: plirofories
- D  Combined message: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
- I  Current Node: ChatbotNode{
- I    id='plirofories',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details=null, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
- I    childrenCount=2,
- I    parent=root,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
- I  }
- I  Current Node: ChatbotNode{
- I    id='plirofories',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details=null, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
- I    childrenCount=2,
- I    parent=root,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
- I  }
- D  Getting response for user message: ηγ
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ηγ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- I  Current node: ChatbotNode{
- I    id='plirofories',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    message2='Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details=null, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ηγ'},
- I    content='',
- I    fallback='Το Θέατρο Jupiter είναι ένας κορυφαίος χώρος για θεατρικές παραστάσεις. Ποιες συγκεκριμένες πληροφορίες αναζητάτε;',
- I    childrenCount=2,
- I    parent=root,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
- I  }
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ηγ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ηγ"}
- I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ηγ"}
- D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@3caf253
- I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Handling conversation turn for node: plirofories
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Τι πληροφορίες θα θέλατε να μάθετε για το θέατρό μας;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node plirofories
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Initial JSON processing complete, template populated
- D  Navigation debug - Original user input: 'ηγ', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
- I  DEBUG: Choosing next node with actual user input: ηγ
- I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Current node ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Available children count: 2
- I  DEBUG: Available child nodes for matching:
- I  DEBUG:   - ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG:   - ID: info_incomplete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Path length: 2
- I  DEBUG: Path from root to current node: 
- I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG: isConfirmation: false, isRejection: false
- I  DEBUG: At category node plirofories, checking template completeness
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template field check - name: '', day: '', topic: 'Comedy', time: '', cast: 'Elena Papadaki', room: '', duration: '120 minutes', stars: ''
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template check - Total fields: 8, Missing fields: 5, Has at least one field: true
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ has some information available - using info_some
- I  DEBUG: Template completeness: true
- I  DEBUG: Template class: ShowInfoTemplate, Missing fields count: 5, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ category has SOME information available
- I  DEBUG: Missing fields: [name, day, time, room, stars]
- I  DEBUG: Template completeness check result: true
- I  DEBUG: Current template state:
- I  DEBUG:   - Class: ShowInfoTemplate
- I  DEBUG:   - Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG:   - Has complete info: true
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'cofirmation' pattern for available info, 'incomplete' for no info
- I  DEBUG: Template state: hasCompleteInfo=true, Will search for child with 'cofirmation' in ID
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - ShowInfoTemplate content:
- I  DEBUG:   name: ''
- I  DEBUG:   day: ''
- I  DEBUG:   time: ''
- I  DEBUG:   room: ''
- I  DEBUG:   topic: 'Comedy'
- I  DEBUG:   cast: 'Elena Papadaki'
- I  DEBUG:   duration: '120 minutes'
- I  DEBUG:   stars: ''
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - Has at least one field populated: true
- I  DEBUG: Looking for child with pattern: cofirmation based on completeness check: true
- I  DEBUG: Available children to match pattern:
- I  DEBUG:   - Child ID: info_confirmation, matches pattern? false
- I  DEBUG:   - Child ID: info_incomplete, matches pattern? false
- I  DEBUG: No child with pattern 'cofirmation' was found!
- I  DEBUG: Found child with matching category: info_confirmation
- I  DEBUG: Selected next node: info_confirmation, handling state transition
- I  DEBUG: Handling node transition for node info_confirmation
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- D  Navigation successful - Moving from 'plirofories' to 'info_confirmation'
- I  DEBUG: Handling conversation turn for node: info_confirmation
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_confirmation
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Conversation turn processed for node: info_confirmation
- D  Current state: INITIAL
- D  Using system message from node: info_confirmation
- D  Combined message: 
-                                                                                                    Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
-                                                                                                     
-                                                                                                     Σωστά;
- I  Current Node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  Current Node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- D  Getting response for user message: ξγτ
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξγτ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- I  Current node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ξγτ'},
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξγτ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξγτ"}
- I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξγτ"}
- D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@60514c0
- I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Handling conversation turn for node: info_confirmation
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_confirmation
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Initial JSON processing complete, template populated
- D  Navigation debug - Original user input: 'ξγτ', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
- I  DEBUG: Choosing next node with actual user input: ξγτ
- I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Current node ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Available children count: 1
- I  DEBUG: Available child nodes for matching:
- I  DEBUG:   - ID: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Path length: 3
- I  DEBUG: Path from root to current node: 
- I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - info_confirmation (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG: isConfirmation: false, isRejection: false
- I  DEBUG: At confirmation node: info_confirmation
- I  DEBUG: At confirmation node with OTHER input - staying at same node
- D  Navigation successful - Moving from 'info_confirmation' to 'info_confirmation'
- I  DEBUG: Handling conversation turn for node: info_confirmation
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_confirmation
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Conversation turn processed for node: info_confirmation
- D  Current state: INITIAL
- D  Using system message from node: info_confirmation
- D  Combined message: 
-                                                                                                    Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
-                                                                                                     
-                                                                                                     Σωστά;
- I  Current Node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ΠΛΗΡΟΦΟΡΙΕΣ'},
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  Current Node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ΠΛΗΡΟΦΟΡΙΕΣ'},
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- D  Getting response for user message: ναι
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- I  Current node: ChatbotNode{
- I    id='info_confirmation',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='',
- I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ναι'},
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=plirofories,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
- I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
- D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@7e72df0
- I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Handling conversation turn for node: info_confirmation
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, διάρκεια: 120 minutes, ηθοποιοί: Elena Papadaki, θέμα: Comedy. 
- I   
- I   Σωστά;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_confirmation
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Initial JSON processing complete, template populated
- D  Navigation debug - Original user input: 'ναι', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
- I  DEBUG: Choosing next node with actual user input: ναι
- I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Current node ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Available children count: 1
- I  DEBUG: Available child nodes for matching:
- I  DEBUG:   - ID: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Path length: 3
- I  DEBUG: Path from root to current node: 
- I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - info_confirmation (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG: isConfirmation: true, isRejection: false
- I  DEBUG: At confirmation node: info_confirmation
- I  DEBUG: At confirmation node with YES - going to root
- I  DEBUG: Found child with matching category: info_complete
- I  DEBUG: Selected next node: info_complete, handling state transition
- I  DEBUG: Handling node transition for node info_complete
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- D  Navigation successful - Moving from 'info_confirmation' to 'info_complete'
- I  DEBUG: Handling conversation turn for node: info_complete
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: <results>. 
- I   Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_complete
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Conversation turn processed for node: info_complete
- D  Current state: INITIAL
- D  Using system message from node: info_complete
- D  Combined message: Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:
-                                                                                                    <results>. 
-                                                                                                     Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!
- I  Current Node: ChatbotNode{
- I    id='info_complete',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:',
- I    message2='<results>. 
- I   Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=info_confirmation,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  Current Node: ChatbotNode{
- I    id='info_complete',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:',
- I    message2='<results>. 
- I   Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=null,
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=info_confirmation,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- D  Getting response for user message: ξ
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- I  Current node: ChatbotNode{
- I    id='info_complete',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='EXTRACT',
- I    message1='Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:',
- I    message2='<results>. 
- I   Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ξ'},
- I    content='',
- I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. Μπορώ να σας βοηθήσω με κάτι άλλο;',
- I    childrenCount=1,
- I    parent=info_confirmation,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
- I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξ"}
- I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
- D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξ"}
- I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ξ"}
- D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": []}, "day": {"value": [], "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "topic": {"value": ["Comedy"], "pvalues": []}, "time": {"value": [], "pvalues": []}, "cast": {"value": ["Elena Papadaki"], "pvalues": []}, "room": {"value": [], "pvalues": []}, "duration": {"value": ["120 minutes"], "pvalues": []}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5, ">3", "<4"]}}, "error": null}
- I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@cf24f52
- I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Handling conversation turn for node: info_complete
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: <results>. 
- I   Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node info_complete
- I  DEBUG: Current state: INITIAL
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Initial JSON processing complete, template populated
- D  Navigation debug - Original user input: 'ξ', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
- I  DEBUG: Choosing next node with actual user input: ξ
- I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Current node ID: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Available children count: 1
- I  DEBUG: Available child nodes for matching:
- I  DEBUG:   - ID: root, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Path length: 4
- I  DEBUG: Path from root to current node: 
- I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - info_confirmation (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG:   - info_complete (ΠΛΗΡΟΦΟΡΙΕΣ)
- I  DEBUG: isConfirmation: false, isRejection: false
- I  DEBUG: At category node info_complete, checking template completeness
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template field check - name: '', day: '', topic: 'Comedy', time: '', cast: 'Elena Papadaki', room: '', duration: '120 minutes', stars: ''
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template check - Total fields: 8, Missing fields: 5, Has at least one field: true
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ has some information available - using info_some
- I  DEBUG: Template completeness: true
- I  DEBUG: Template class: ShowInfoTemplate, Missing fields count: 5, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ category has SOME information available
- I  DEBUG: Missing fields: [name, day, time, room, stars]
- I  DEBUG: Template completeness check result: true
- I  DEBUG: Current template state:
- I  DEBUG:   - Class: ShowInfoTemplate
- I  DEBUG:   - Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG:   - Has complete info: true
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'cofirmation' pattern for available info, 'incomplete' for no info
- I  DEBUG: Template state: hasCompleteInfo=true, Will search for child with 'cofirmation' in ID
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - ShowInfoTemplate content:
- I  DEBUG:   name: ''
- I  DEBUG:   day: ''
- I  DEBUG:   time: ''
- I  DEBUG:   room: ''
- I  DEBUG:   topic: 'Comedy'
- I  DEBUG:   cast: 'Elena Papadaki'
- I  DEBUG:   duration: '120 minutes'
- I  DEBUG:   stars: ''
- I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - Has at least one field populated: true
- I  DEBUG: Looking for child with pattern: cofirmation based on completeness check: true
- I  DEBUG: Available children to match pattern:
- I  DEBUG:   - Child ID: root, matches pattern? false
- I  DEBUG: No child with pattern 'cofirmation' was found!
- I  DEBUG: Found child with matching category: root
- I  DEBUG: Selected next node: root, handling state transition
- I  DEBUG: Handling node transition for node root
- I  DEBUG: Current state: INITIAL
- I  DEBUG: Setting state to INITIAL for root node
- I  DEBUG: State unchanged: INITIAL
- D  Navigation successful - Moving from 'info_complete' to 'root'
- I  DEBUG: Handling conversation turn for node: root
- I  DEBUG: Processing JSON response to populate template
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated: true
- I  DEBUG: After JSON population - Missing fields: 5
- I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
- I  DEBUG: Should navigate to: info_some
- I  DEBUG: Processing message with state: INITIAL
- I  DEBUG: Current node: root, Category: ΠΛΗΡΟΦΟΡΙΕΣ
- I  DEBUG: Processing message with INITIAL state
- I  DEBUG: Current template before processing: ShowInfoTemplate
- I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  Skipping non-integer value in pvalues: >3
- I  Skipping non-integer value in pvalues: <4
- I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 5
- I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, ώρα, αίθουσα, βαθμολογία
- I  TEMPLATE APPLIED: Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
- I  DEBUG: First process result: true
- I  DEBUG: Handling node transition for node root
- I  DEBUG: Current state: INITIAL
- I  DEBUG: Setting state to INITIAL for root node
- I  DEBUG: State unchanged: INITIAL
- I  DEBUG: Current state after transition: INITIAL
- D  Conversation turn processed for node: root
- D  Current state: INITIAL
- D  Using system message from node: root
- D  Combined message: 
-                                                                                                    Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
- I  Current Node: ChatbotNode{
- I    id='root',
- I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
- I    type='CATEGORISE',
- I    message1='',
- I    message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
- I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":[]},"day":{"value":[],"pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"topic":{"value":["Comedy"],"pvalues":[]},"time":{"value":[],"pvalues":[]},"cast":{"value":["Elena Papadaki"],"pvalues":[]},"room":{"value":[],"pvalues":[]},"duration":{"value":["120 minutes"],"pvalues":[]},"stars":{"value":[],"pvalues":[1,2,3,4,5,">3","<4"]}}, error='null', type=2},
- I    userMessage=UserMessage{category='-'type=0, message='ΠΛΗΡΟΦΟΡΙΕΣ'},
- I    content='',
- I    fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
- I    childrenCount=5,
- I    parent=null,
- I    pendingChildIds=[],
- I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[Comedy], time=[], cast=[Elena Papadaki], room=[], duration=[120 minutes], stars=[]}
- I  }
+  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "Romeo and Juliet", "pvalues": []}, "room": {"value": "", "pvalues": []}, "day": {"value": "Saturday", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "", "pvalues": []}, "person": {"name": {"value": "Maria Papadopoulos", "pvalues": []}, "age": {"value": "", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "B12", "pvalues": []}}}, "error": null}
+    I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@b846f19
+    I  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
+    I  DEBUG: Handling conversation turn for node: kratisi
+    I  DEBUG: Processing JSON response to populate template
+    I  DEBUG: Template populated: true
+    I  DEBUG: After JSON population - Missing fields: 3
+    I  DEBUG: Missing fields in Greek: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG: Processing message with state: INITIAL
+    I  DEBUG: Current node: kratisi, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Processing message with INITIAL state
+    I  DEBUG: Current template before processing: BookingTemplate
+    I  DEBUG: Missing fields: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 3
+    I  DEBUG: Template still has missing fields: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  TEMPLATE APPLIED: Πείτε μας τα απαραίτητα στοιχεία όνομα παράστασης, αίθουσα, ημέρα, ώρα, όνομα, ηλικιακή κατηγορία, θέση για να κάνετε κράτηση!
+    I  DEBUG: First process result: true
+    I  DEBUG: Handling node transition for node kratisi
+    I  DEBUG: Current state: INITIAL
+    I  DEBUG: State unchanged: INITIAL
+    I  DEBUG: Current state after transition: INITIAL
+    D  Initial JSON processing complete, template populated
+    D  Navigation debug - Original user input: 'γ', Server category: 'ΚΡΑΤΗΣΗ'
+    I  DEBUG: Choosing next node with actual user input: γ
+    I  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
+    I  DEBUG: Current node ID: kratisi, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Available children count: 2
+    I  DEBUG: Available child nodes for matching:
+    I  DEBUG:   - ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG:   - ID: booking_incomplete, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Path length: 2
+    I  DEBUG: Path from root to current node: 
+    I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
+    I  DEBUG:   - kratisi (ΚΡΑΤΗΣΗ)
+    I  DEBUG: isConfirmation: false, isRejection: false
+    I  DEBUG: At category node kratisi, checking template completeness
+    I  DEBUG: Template completeness check - Category: ΚΡΑΤΗΣΗ, Node ID: kratisi, Template type: BookingTemplate, Missing fields: 3, isComplete: false
+    I  DEBUG: Missing fields in Greek: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG: Template completeness: false
+    I  DEBUG: Template class: BookingTemplate, Missing fields count: 3, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Missing fields: [room, time, person_age]
+    I  DEBUG: Template completeness check result: false
+    I  DEBUG: Current template state:
+    I  DEBUG:   - Class: BookingTemplate
+    I  DEBUG:   - Missing fields: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG:   - Has complete info: false
+    I  DEBUG: Looking for child with pattern: incomplete based on completeness check: false
+    I  DEBUG: Available children to match pattern:
+    I  DEBUG:   - Child ID: booking_confirmation, matches pattern? false
+    I  DEBUG:   - Child ID: booking_incomplete, matches pattern? true
+    I  DEBUG: Found matching child node: booking_incomplete for pattern: incomplete
+    I  DEBUG: Selected next node: booking_incomplete, handling state transition
+    I  DEBUG: Both nodes have templates. Merging template data from kratisi to booking_incomplete
+    I  DEBUG: Merging template data from BookingTemplate
+    I  DEBUG: Handling node transition for node booking_incomplete
+    I  DEBUG: Current state: INITIAL
+    I  DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node
+    I  DEBUG: State updated to: LLM_GET_INFO
+    D  Navigation successful - Moving from 'kratisi' to 'booking_incomplete'
+    I  DEBUG: Handling conversation turn for node: booking_incomplete
+    I  DEBUG: Processing JSON response to populate template
+    I  DEBUG: Template populated: true
+    I  DEBUG: After JSON population - Missing fields: 3
+    I  DEBUG: Missing fields in Greek: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG: Processing message with state: LLM_GET_INFO
+    I  DEBUG: Current node: booking_incomplete, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Processing message with LLM_GET_INFO state
+    I  DEBUG: Processing booking info request
+    I  DEBUG: Current template before processing: BookingTemplate
+    I  DEBUG: Missing fields: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  DEBUG: message2 contains <missing> placeholder: Για να ολοκληρωθεί η κράτηση χρειάζομαι: <missing>. Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+    I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 3
+    I  DEBUG: Template still has missing fields: αίθουσα, ώρα, ηλικιακή κατηγορία
+    I  TEMPLATE APPLIED: Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+    I  DEBUG: First process result: true
+    I  DEBUG: Handling node transition for node booking_incomplete
+    I  DEBUG: Current state: LLM_GET_INFO
+    I  DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node
+    I  DEBUG: State unchanged: LLM_GET_INFO
+    I  DEBUG: Current state after transition: LLM_GET_INFO
+    D  Conversation turn processed for node: booking_incomplete
+    D  Current state: LLM_GET_INFO
+    D  Using system message from node: booking_incomplete
+    D  Combined message: 
+       Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+    I  Current Node: ChatbotNode{
+    I    id='booking_incomplete',
+    I    category='ΚΡΑΤΗΣΗ',
+    I    type='EXTRACT',
+    I    message1='',
+    I    message2='Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.',
+    I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
+    I    userMessage=null,
+    I    content='',
+    I    fallback='Παρακαλώ δώστε όλες τις πληροφορίες που χρειάζονται για την κράτηση: όνομα παράστασης, αίθουσα, ημέρα, ώρα, όνομα, ηλικιακή κατηγορία, και θέση.',
+    I    childrenCount=2,
+    I    parent=kratisi,
+    I    pendingChildIds=[],
+    I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='', day='Saturday', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7931bde}
+    I  }
+    I  Current Node: ChatbotNode{
+    I    id='booking_incomplete',
+    I    category='ΚΡΑΤΗΣΗ',
+    I    type='EXTRACT',
+    I    message1='',
+    I    message2='Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.',
+    I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
+    I    userMessage=null,
+    I    content='',
+    I    fallback='Παρακαλώ δώστε όλες τις πληροφορίες που χρειάζονται για την κράτηση: όνομα παράστασης, αίθουσα, ημέρα, ώρα, όνομα, ηλικιακή κατηγορία, και θέση.',
+    I    childrenCount=2,
+    I    parent=kratisi,
+    I    pendingChildIds=[],
+    I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='', day='Saturday', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7931bde}
+    I  }
+    D  Getting response for user message: φ
+    I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
+    I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
+    I  Current node: ChatbotNode{
+    I    id='booking_incomplete',
+    I    category='ΚΡΑΤΗΣΗ',
+    I    type='EXTRACT',
+    I    message1='',
+    I    message2='Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.',
+    I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"Romeo and Juliet","pvalues":[]},"room":{"value":"","pvalues":[]},"day":{"value":"Saturday","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"","pvalues":[]},"person":{"name":{"value":"Maria Papadopoulos","pvalues":[]},"age":{"value":"","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"B12","pvalues":[]}}}, error='null', type=2},
+    I    userMessage=UserMessage{category='-'type=0, message='φ'},
+    I    content='',
+    I    fallback='Παρακαλώ δώστε όλες τις πληροφορίες που χρειάζονται για την κράτηση: όνομα παράστασης, αίθουσα, ημέρα, ώρα, όνομα, ηλικιακή κατηγορία, και θέση.',
+    I    childrenCount=2,
+    I    parent=kratisi,
+    I    pendingChildIds=[],
+    I    msgTemplate=BookingTemplate{showName='Romeo and Juliet', room='', day='Saturday', time='', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@7931bde}
+    I  }
+    I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
+    I  CATEGORY FOR EXTRACT: ΚΡΑΤΗΣΗ
+    D  Sent to server: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
+    I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΚΡΑΤΗΣΗ","message":"φ"}
+    D  Received from server: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "", "pvalues": []}}}, "error": null}
+    I  JSON RECEIVED FROM SERVER: {"category": "ΚΡΑΤΗΣΗ", "details": {"show_name": {"value": "", "pvalues": []}, "room": {"value": "Main Theater", "pvalues": []}, "day": {"value": "", "pvalues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}, "time": {"value": "19:30", "pvalues": []}, "person": {"name": {"value": "", "pvalues": []}, "age": {"value": "> 18", "pvalues": ["< 18", "> 18", "> 65"]}, "seat": {"value": "", "pvalues": []}}}, "error": null}
+    I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@82c388e
+    I  CATEGORY FROM SERVER: ΚΡΑΤΗΣΗ
+    I  DEBUG: Handling conversation turn for node: booking_incomplete
+    I  DEBUG: Processing JSON response to populate template
+    I  DEBUG: Template populated: true
+    I  DEBUG: After JSON population - Missing fields: 0
+    I  DEBUG: Template is complete - All fields populated
+    I  DEBUG: Processing message with state: LLM_GET_INFO
+    I  DEBUG: Current node: booking_incomplete, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Processing message with LLM_GET_INFO state
+    I  DEBUG: Processing booking info request
+    I  DEBUG: Current template before processing: BookingTemplate
+    I  DEBUG: Missing fields: 
+    I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 0
+    I  DEBUG: Template is complete! All fields populated successfully.
+    I  TEMPLATE APPLIED: Για να ολοκληρωθεί η κράτηση χρειάζομαι: αίθουσα, ώρα, ηλικιακή κατηγορία. Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+    I  DEBUG: First process result: true
+    I  DEBUG: Handling node transition for node booking_incomplete
+    I  DEBUG: Current state: LLM_GET_INFO
+    I  DEBUG: Setting state to LLM_GET_INFO for booking_incomplete node
+    I  DEBUG: State unchanged: LLM_GET_INFO
+    I  DEBUG: Current state after transition: LLM_GET_INFO
+    D  Initial JSON processing complete, template populated
+    D  Navigation debug - Original user input: 'φ', Server category: 'ΚΡΑΤΗΣΗ'
+    I  DEBUG: Choosing next node with actual user input: φ
+    I  DEBUG: Stored user message: ΚΡΑΤΗΣΗ
+    I  DEBUG: Current node ID: booking_incomplete, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Available children count: 2
+    I  DEBUG: Available child nodes for matching:
+    I  DEBUG:   - ID: booking_incomplete, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG:   - ID: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Path length: 3
+    I  DEBUG: Path from root to current node: 
+    I  DEBUG:   - root (ΚΡΑΤΗΣΗ)
+    I  DEBUG:   - kratisi (ΚΡΑΤΗΣΗ)
+    I  DEBUG:   - booking_incomplete (ΚΡΑΤΗΣΗ)
+    I  DEBUG: isConfirmation: false, isRejection: false
+    I  DEBUG: At category node booking_incomplete, checking template completeness
+    I  DEBUG: Template completeness check - Category: ΚΡΑΤΗΣΗ, Node ID: booking_incomplete, Template type: BookingTemplate, Missing fields: 0, isComplete: true
+    I  DEBUG: All required fields are present in the template
+    I  DEBUG: Template completeness: true
+    I  DEBUG: Template class: BookingTemplate, Missing fields count: 0, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Template has all required fields populated
+    I  DEBUG: Template completeness check result: true
+    I  DEBUG: Current template state:
+    I  DEBUG:   - Class: BookingTemplate
+    I  DEBUG:   - Missing fields: 
+    I  DEBUG:   - Has complete info: true
+    I  DEBUG: Looking for child with pattern: confirmation based on completeness check: true
+    I  DEBUG: Available children to match pattern:
+    I  DEBUG:   - Child ID: booking_incomplete, matches pattern? false
+    I  DEBUG:   - Child ID: booking_confirmation, matches pattern? true
+    I  DEBUG: Found matching child node: booking_confirmation for pattern: confirmation
+    I  DEBUG: Selected next node: booking_confirmation, handling state transition
+    I  DEBUG: Both nodes have templates. Merging template data from booking_incomplete to booking_confirmation
+    I  DEBUG: Merging template data from BookingTemplate
+    I  DEBUG: Handling node transition for node booking_confirmation
+    I  DEBUG: Current state: LLM_GET_INFO
+    I  DEBUG: State unchanged: LLM_GET_INFO
+    D  Navigation successful - Moving from 'booking_incomplete' to 'booking_confirmation'
+    I  DEBUG: Handling conversation turn for node: booking_confirmation
+    I  DEBUG: Processing JSON response to populate template
+    I  DEBUG: Template populated: true
+    I  DEBUG: After JSON population - Missing fields: 4
+    I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, όνομα, θέση
+    I  DEBUG: Processing message with state: LLM_GET_INFO
+    I  DEBUG: Current node: booking_confirmation, Category: ΚΡΑΤΗΣΗ
+    I  DEBUG: Processing message with LLM_GET_INFO state
+    I  DEBUG: Processing booking info request
+    I  DEBUG: Current template before processing: BookingTemplate
+    I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, όνομα, θέση
+    I  DEBUG: Template populated from JSON - Type: BookingTemplate, Missing fields count: 4
+    I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, όνομα, θέση
+    I  TEMPLATE APPLIED: Επιβεβαίωση κράτησης: Παράσταση "[unknown show_name]", στην αίθουσα Main Theater, την [unknown day] στις 19:30. Η κράτηση θα γίνει στο όνομα [unknown person_name], ηλικιακή κατηγορία > 18, θέση [unknown person_seat]. 
+    I   Θέλετε να επιβεβαιώσετε την κράτηση;
+    I  DEBUG: First process result: true
+    I  DEBUG: Handling node transition for node booking_confirmation
+    I  DEBUG: Current state: LLM_GET_INFO
+    I  DEBUG: State unchanged: LLM_GET_INFO
+    I  DEBUG: Current state after transition: LLM_GET_INFO
+    D  Conversation turn processed for node: booking_confirmation
+    D  Current state: LLM_GET_INFO
+    D  Using system message from node: booking_confirmation
+    D  Combined message: Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.
+       Επιβεβαίωση κράτησης: Παράσταση "[unknown show_name]", στην αίθουσα Main Theater, την [unknown day] στις 19:30. Η κράτηση θα γίνει στο όνομα [unknown person_name], ηλικιακή κατηγορία > 18, θέση [unknown person_seat]. 
+        Θέλετε να επιβεβαιώσετε την κράτηση;
+    I  Current Node: ChatbotNode{
+    I    id='booking_confirmation',
+    I    category='ΚΡΑΤΗΣΗ',
+    I    type='EXTRACT',
+    I    message1='Ευχαριστώ για όλες τις πληροφορίες που μου παρείχατε.',
+    I    message2='Επιβεβαίωση κράτησης: Παράσταση "[unknown show_name]", στην αίθουσα Main Theater, την [unknown day] στις 19:30. Η κράτηση θα γίνει στο όνομα [unknown person_name], ηλικιακή κατηγορία > 18, θέση [unknown person_seat]. 
+    I   Θέλετε να επιβεβαιώσετε την κράτηση;',
+    I    systemMessage=SystemMessage{category='ΚΡΑΤΗΣΗ', details={"show_name":{"value":"","pvalues":[]},"room":{"value":"Main Theater","pvalues":[]},"day":{"value":"","pvalues":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"time":{"value":"19:30","pvalues":[]},"person":{"name":{"value":"","pvalues":[]},"age":{"value":"> 18","pvalues":["< 18","> 18","> 65"]},"seat":{"value":"","pvalues":[]}}}, error='null', type=2},
+    I    userMessage=null,
+    I    content='',
+    I    fallback='Ευχαριστώ για τις πληροφορίες. Μπορώ να προχωρήσω στην κράτηση για εσάς.',
+    I    childrenCount=2,
+    I    parent=kratisi,
+    I    pendingChildIds=[],
+    I    msgTemplate=BookingTemplate{showName='', room='Main Theater', day='', time='19:30', person=com.example.jupitertheaterapp.model.BookingTemplate$Person@fe388af}
+    I  }

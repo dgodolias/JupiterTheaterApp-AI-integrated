@@ -937,12 +937,7 @@ public class ChatbotManager {
     // Template handling methods have been removed as we now directly use message_1
     // and message_2 values
 
-    /**
-     * Process local response without server communication
-     * 
-     * @param userMessage      The user's message
-     * @param responseCallback Callback to receive the response
-     */
+
     public String processResultsTag(String message, String category, MsgTemplate template) {
         // Check if message contains <results> tag
         if (message == null || !message.contains("<results>")) {

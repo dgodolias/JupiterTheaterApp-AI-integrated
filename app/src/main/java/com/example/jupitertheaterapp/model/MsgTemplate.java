@@ -34,9 +34,7 @@ public abstract class MsgTemplate {
             return fieldNameMap.get(fieldName);
         }
         return fieldName;
-    }
-    
-    /**
+    }    /**
      * Get a comma-separated list of missing fields in Greek
      * @param missingFields List of missing field names in English
      * @return Comma-separated list of missing fields in Greek
@@ -51,6 +49,25 @@ public abstract class MsgTemplate {
         }
         return result.toString();
     }
+    
+    /**
+     * Merges data from another template of the same type
+     * This allows template data to be preserved when navigating between nodes
+     * 
+     * @param otherTemplate The template to merge data from
+     * @return true if merged successfully, false otherwise
+     */
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Only merge if templates are of the same type
+        if (otherTemplate == null || !this.getClass().equals(otherTemplate.getClass())) {
+            System.out.println("DEBUG: Cannot merge templates of different types");
+            return false;
+        }
+        
+        System.out.println("DEBUG: Merging template data from " + otherTemplate.getClass().getSimpleName());
+        return true; // Base implementation, subclasses will override with actual merging logic
+    }
+       
 
     /**
      * Get a list of field names that are missing or incomplete
@@ -371,45 +388,76 @@ class ShowInfoTemplate extends MsgTemplate {
         fieldNameMap.put("room", "αίθουσα");
         fieldNameMap.put("duration", "διάρκεια");
         fieldNameMap.put("stars", "βαθμολογία");
-    }
-
-    @Override
+    }    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
+            // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("name")) {
-                name = extractStringListValue(jsonObject.getJSONObject("name"));
+                List<String> newName = extractStringListValue(jsonObject.getJSONObject("name"));
+                if (newName != null && !newName.isEmpty()) {
+                    name = newName;
+                }
             }
 
             if (jsonObject.has("day")) {
                 JSONObject dayObject = jsonObject.getJSONObject("day");
-                day = extractStringListValue(dayObject);
-                possibleDays = extractPossibleStringValues(dayObject);
+                List<String> newDay = extractStringListValue(dayObject);
+                if (newDay != null && !newDay.isEmpty()) {
+                    day = newDay;
+                }
+                // Always update possible values if provided
+                List<String> newPossibleDays = extractPossibleStringValues(dayObject);
+                if (!newPossibleDays.isEmpty()) {
+                    possibleDays = newPossibleDays;
+                }
             }
 
             if (jsonObject.has("topic")) {
-                topic = extractStringListValue(jsonObject.getJSONObject("topic"));
+                List<String> newTopic = extractStringListValue(jsonObject.getJSONObject("topic"));
+                if (newTopic != null && !newTopic.isEmpty()) {
+                    topic = newTopic;
+                }
             }
 
             if (jsonObject.has("time")) {
-                time = extractStringListValue(jsonObject.getJSONObject("time"));
+                List<String> newTime = extractStringListValue(jsonObject.getJSONObject("time"));
+                if (newTime != null && !newTime.isEmpty()) {
+                    time = newTime;
+                }
             }
 
             if (jsonObject.has("cast")) {
-                cast = extractStringListValue(jsonObject.getJSONObject("cast"));
+                List<String> newCast = extractStringListValue(jsonObject.getJSONObject("cast"));
+                if (newCast != null && !newCast.isEmpty()) {
+                    cast = newCast;
+                }
             }
 
             if (jsonObject.has("room")) {
-                room = extractStringListValue(jsonObject.getJSONObject("room"));
+                List<String> newRoom = extractStringListValue(jsonObject.getJSONObject("room"));
+                if (newRoom != null && !newRoom.isEmpty()) {
+                    room = newRoom;
+                }
             }
 
             if (jsonObject.has("duration")) {
-                duration = extractStringListValue(jsonObject.getJSONObject("duration"));
+                List<String> newDuration = extractStringListValue(jsonObject.getJSONObject("duration"));
+                if (newDuration != null && !newDuration.isEmpty()) {
+                    duration = newDuration;
+                }
             }
 
             if (jsonObject.has("stars")) {
                 JSONObject starsObject = jsonObject.getJSONObject("stars");
-                stars = extractStringListValue(starsObject);
-                possibleStarRatings = extractPossibleIntValues(starsObject);
+                List<String> newStars = extractStringListValue(starsObject);
+                if (newStars != null && !newStars.isEmpty()) {
+                    stars = newStars;
+                }
+                // Always update possible values if provided
+                List<Integer> newPossibleStarRatings = extractPossibleIntValues(starsObject);
+                if (!newPossibleStarRatings.isEmpty()) {
+                    possibleStarRatings = newPossibleStarRatings;
+                }
             }
 
             return true;
@@ -507,8 +555,61 @@ class ShowInfoTemplate extends MsgTemplate {
             templateString = replaceTemplateVariable(templateString, "stars", s);
         }
         return templateString;
+    }    @Override
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Call parent method to ensure same type check
+        if (!super.mergeFrom(otherTemplate)) {
+            return false;
+        }
+        
+        // Cast to ShowInfoTemplate since we know it's the same type
+        ShowInfoTemplate other = (ShowInfoTemplate) otherTemplate;
+        
+        // Merge lists, only if this template's lists are empty
+        if (this.name == null || this.name.isEmpty()) {
+            this.name = new ArrayList<>(other.name);
+        }
+        
+        if (this.day == null || this.day.isEmpty()) {
+            this.day = new ArrayList<>(other.day);
+        }
+        
+        if (this.topic == null || this.topic.isEmpty()) {
+            this.topic = new ArrayList<>(other.topic);
+        }
+        
+        if (this.time == null || this.time.isEmpty()) {
+            this.time = new ArrayList<>(other.time);
+        }
+        
+        if (this.cast == null || this.cast.isEmpty()) {
+            this.cast = new ArrayList<>(other.cast);
+        }
+        
+        if (this.room == null || this.room.isEmpty()) {
+            this.room = new ArrayList<>(other.room);
+        }
+        
+        if (this.duration == null || this.duration.isEmpty()) {
+            this.duration = new ArrayList<>(other.duration);
+        }
+        
+        if (this.stars == null || this.stars.isEmpty()) {
+            this.stars = new ArrayList<>(other.stars);
+        }
+        
+        // Merge possible values
+        if (this.possibleDays == null || this.possibleDays.isEmpty()) {
+            this.possibleDays = new ArrayList<>(other.possibleDays);
+        }
+        
+        if (this.possibleStarRatings == null || this.possibleStarRatings.isEmpty()) {
+            this.possibleStarRatings = new ArrayList<>(other.possibleStarRatings);
+        }
+        
+        return true;
     }
-
+    
     @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
@@ -614,45 +715,76 @@ class BookingTemplate extends MsgTemplate {
         fieldNameMap.put("person_name", "όνομα");
         fieldNameMap.put("person_age", "ηλικιακή κατηγορία");
         fieldNameMap.put("person_seat", "θέση");
-    }
-
-    @Override
+    }    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
+            // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("show_name")) {
-                showName = extractStringValue(jsonObject.getJSONObject("show_name"));
+                String newShowName = extractStringValue(jsonObject.getJSONObject("show_name"));
+                if (newShowName != null && !newShowName.isEmpty()) {
+                    showName = newShowName;
+                }
             }
 
             if (jsonObject.has("room")) {
-                room = extractStringValue(jsonObject.getJSONObject("room"));
+                String newRoom = extractStringValue(jsonObject.getJSONObject("room"));
+                if (newRoom != null && !newRoom.isEmpty()) {
+                    room = newRoom;
+                }
             }
 
             if (jsonObject.has("day")) {
                 JSONObject dayObject = jsonObject.getJSONObject("day");
-                day = extractStringValue(dayObject);
-                possibleDays = extractPossibleStringValues(dayObject);
+                String newDay = extractStringValue(dayObject);
+                if (newDay != null && !newDay.isEmpty()) {
+                    day = newDay;
+                }
+                // Always update possible values if provided
+                List<String> newPossibleDays = extractPossibleStringValues(dayObject);
+                if (!newPossibleDays.isEmpty()) {
+                    possibleDays = newPossibleDays;
+                }
             }
 
             if (jsonObject.has("time")) {
-                time = extractStringValue(jsonObject.getJSONObject("time"));
+                String newTime = extractStringValue(jsonObject.getJSONObject("time"));
+                if (newTime != null && !newTime.isEmpty()) {
+                    time = newTime;
+                }
             }
 
             if (jsonObject.has("person")) {
                 JSONObject personObject = jsonObject.getJSONObject("person");
-                person = new Person();
+                // Initialize person if it doesn't exist
+                if (person == null) {
+                    person = new Person();
+                }
 
                 if (personObject.has("name")) {
-                    person.setName(extractStringValue(personObject.getJSONObject("name")));
+                    String newPersonName = extractStringValue(personObject.getJSONObject("name"));
+                    if (newPersonName != null && !newPersonName.isEmpty()) {
+                        person.setName(newPersonName);
+                    }
                 }
 
                 if (personObject.has("age")) {
                     JSONObject ageObject = personObject.getJSONObject("age");
-                    person.setAge(extractStringValue(ageObject));
-                    person.setPossibleAgeCategories(extractPossibleStringValues(ageObject));
+                    String newAge = extractStringValue(ageObject);
+                    if (newAge != null && !newAge.isEmpty()) {
+                        person.setAge(newAge);
+                    }
+                    // Always update possible values if provided
+                    List<String> newPossibleAgeCategories = extractPossibleStringValues(ageObject);
+                    if (!newPossibleAgeCategories.isEmpty()) {
+                        person.setPossibleAgeCategories(newPossibleAgeCategories);
+                    }
                 }
 
                 if (personObject.has("seat")) {
-                    person.setSeat(extractStringValue(personObject.getJSONObject("seat")));
+                    String newSeat = extractStringValue(personObject.getJSONObject("seat"));
+                    if (newSeat != null && !newSeat.isEmpty()) {
+                        person.setSeat(newSeat);
+                    }
                 }
             }
 
@@ -715,8 +847,59 @@ class BookingTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "person_age", person.getAge());
         templateString = replaceTemplateVariable(templateString, "person_seat", person.getSeat());
         return templateString;
+    }    @Override
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Call parent method to ensure same type check
+        if (!super.mergeFrom(otherTemplate)) {
+            return false;
+        }
+        
+        // Cast to BookingTemplate since we know it's the same type
+        BookingTemplate other = (BookingTemplate) otherTemplate;
+        
+        // Only merge fields that are empty in this template but have values in the other
+        if (this.showName == null || this.showName.isEmpty()) {
+            this.showName = other.showName;
+        }
+        
+        if (this.room == null || this.room.isEmpty()) {
+            this.room = other.room;
+        }
+        
+        if (this.day == null || this.day.isEmpty()) {
+            this.day = other.day;
+        }
+        
+        if (this.time == null || this.time.isEmpty()) {
+            this.time = other.time;
+        }
+        
+        // Handle person object specially
+        if (this.person == null) {
+            this.person = other.person;
+        } else if (other.person != null) {
+            // Merge person fields individually
+            if (this.person.getName() == null || this.person.getName().isEmpty()) {
+                this.person.setName(other.person.getName());
+            }
+            
+            if (this.person.getAge() == null || this.person.getAge().isEmpty()) {
+                this.person.setAge(other.person.getAge());
+            }
+            
+            if (this.person.getSeat() == null || this.person.getSeat().isEmpty()) {
+                this.person.setSeat(other.person.getSeat());
+            }
+        }
+        
+        // Merge possible days list
+        if (this.possibleDays == null || this.possibleDays.isEmpty()) {
+            this.possibleDays = new ArrayList<>(other.possibleDays);
+        }
+        
+        return true;
     }
-
+    
     @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
@@ -873,17 +1056,22 @@ class CancellationTemplate extends MsgTemplate {
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("reservation_number", "αριθμός κράτησης");
         fieldNameMap.put("passcode", "κωδικός επιβεβαίωσης");
-    }
-
-    @Override
+    }    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
+            // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("reservation_number")) {
-                reservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
+                String newReservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
+                if (newReservationNumber != null && !newReservationNumber.isEmpty()) {
+                    reservationNumber = newReservationNumber;
+                }
             }
 
             if (jsonObject.has("passcode")) {
-                passcode = extractStringValue(jsonObject.getJSONObject("passcode"));
+                String newPasscode = extractStringValue(jsonObject.getJSONObject("passcode"));
+                if (newPasscode != null && !newPasscode.isEmpty()) {
+                    passcode = newPasscode;
+                }
             }
 
             return true;
@@ -891,6 +1079,26 @@ class CancellationTemplate extends MsgTemplate {
             e.printStackTrace();
             return false;
         }
+    }    @Override
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Call parent method to ensure same type check
+        if (!super.mergeFrom(otherTemplate)) {
+            return false;
+        }
+        
+        // Cast to CancellationTemplate since we know it's the same type
+        CancellationTemplate other = (CancellationTemplate) otherTemplate;
+        
+        // Only merge fields that are empty in this template but have values in the other
+        if (this.reservationNumber == null || this.reservationNumber.isEmpty()) {
+            this.reservationNumber = other.getReservationNumber();
+        }
+        
+        if (this.passcode == null || this.passcode.isEmpty()) {
+            this.passcode = other.getPasscode();
+        }
+        
+        return true;
     }
 
     @Override
@@ -994,27 +1202,76 @@ class DiscountTemplate extends MsgTemplate {
         fieldNameMap.put("no_of_people", "αριθμός ατόμων");
         fieldNameMap.put("age", "ηλικιακή κατηγορία");
         fieldNameMap.put("date", "ημερομηνία");
+    }    @Override
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Call parent method to ensure same type check
+        if (!super.mergeFrom(otherTemplate)) {
+            return false;
+        }
+        
+        // Cast to DiscountTemplate since we know it's the same type
+        DiscountTemplate other = (DiscountTemplate) otherTemplate;
+        
+        // Only merge fields that are empty in this template but have values in the other
+        if (this.showName == null || this.showName.isEmpty()) {
+            this.showName = new ArrayList<>(other.getShowName());
+        }
+        
+        if (this.numberOfPeople == 0) {
+            this.numberOfPeople = other.getNumberOfPeople();
+        }
+        
+        if (this.age == null || this.age.isEmpty()) {
+            this.age = new ArrayList<>(other.getAge());
+        }
+        
+        if (this.date == null || this.date.isEmpty()) {
+            this.date = new ArrayList<>(other.getDate());
+        }
+        
+        if (this.possibleAgeCategories == null || this.possibleAgeCategories.isEmpty()) {
+            this.possibleAgeCategories = new ArrayList<>(other.getPossibleAgeCategories());
+        }
+        
+        return true;
     }
-
+    
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
+            // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("show_name")) {
-                showName = extractStringListValue(jsonObject.getJSONObject("show_name"));
+                List<String> newShowName = extractStringListValue(jsonObject.getJSONObject("show_name"));
+                if (newShowName != null && !newShowName.isEmpty()) {
+                    showName = newShowName;
+                }
             }
 
             if (jsonObject.has("no_of_people")) {
-                numberOfPeople = extractIntValue(jsonObject.getJSONObject("no_of_people"));
+                int newNumberOfPeople = extractIntValue(jsonObject.getJSONObject("no_of_people"));
+                if (newNumberOfPeople > 0) {
+                    numberOfPeople = newNumberOfPeople;
+                }
             }
 
             if (jsonObject.has("age")) {
                 JSONObject ageObject = jsonObject.getJSONObject("age");
-                age = extractStringListValue(ageObject);
-                possibleAgeCategories = extractPossibleStringValues(ageObject);
+                List<String> newAge = extractStringListValue(ageObject);
+                if (newAge != null && !newAge.isEmpty()) {
+                    age = newAge;
+                }
+                // Always update possible values if provided
+                List<String> newPossibleAgeCategories = extractPossibleStringValues(ageObject);
+                if (!newPossibleAgeCategories.isEmpty()) {
+                    possibleAgeCategories = newPossibleAgeCategories;
+                }
             }
 
             if (jsonObject.has("date")) {
-                date = extractStringListValue(jsonObject.getJSONObject("date"));
+                List<String> newDate = extractStringListValue(jsonObject.getJSONObject("date"));
+                if (newDate != null && !newDate.isEmpty()) {
+                    date = newDate;
+                }
             }
 
             return true;
@@ -1076,33 +1333,7 @@ class DiscountTemplate extends MsgTemplate {
             templateString = replaceTemplateVariable(templateString, "date", d);
         }
         return templateString;
-    }
-
-    @Override
-    public Map<String, List<String>> getFieldValuesMap() {
-        Map<String, List<String>> fieldsMap = new HashMap<>();
-        fieldsMap.put("show_name", showName);
-        fieldsMap.put("age", age);
-        fieldsMap.put("date", date);
-        
-        // Handle numeric value
-        if (numberOfPeople > 0) {
-            List<String> peopleList = new ArrayList<>();
-            peopleList.add(String.valueOf(numberOfPeople));
-            fieldsMap.put("no_of_people", peopleList);
-        } else {
-            fieldsMap.put("no_of_people", new ArrayList<>());
-        }
-        
-        return fieldsMap;
-    }
-
-    // Get the total number of fields in this template
-    public int getTotalFieldCount() {
-        return 4; // show_name, no_of_people, age, date
-    }
-    
-    // Getters
+    }    // Getter methods needed for mergeFrom
     public List<String> getShowName() {
         return showName;
     }
@@ -1122,6 +1353,29 @@ class DiscountTemplate extends MsgTemplate {
     public List<String> getPossibleAgeCategories() {
         return possibleAgeCategories;
     }
+    
+    public int getTotalFieldCount() {
+        return 4; // showName, numberOfPeople, age, date
+    }
+    
+    @Override
+    public Map<String, List<String>> getFieldValuesMap() {
+        Map<String, List<String>> fieldsMap = new HashMap<>();
+        fieldsMap.put("show_name", showName);
+        fieldsMap.put("age", age);
+        fieldsMap.put("date", date);
+        
+        // Handle numeric value
+        if (numberOfPeople > 0) {
+            List<String> peopleList = new ArrayList<>();
+            peopleList.add(String.valueOf(numberOfPeople));
+            fieldsMap.put("no_of_people", peopleList);
+        } else {
+            fieldsMap.put("no_of_people", new ArrayList<>());
+        }
+        
+        return fieldsMap;
+    }    // NOTE: Removed duplicated getTotalFieldCount and getter methods
 
     // tostring
     @Override
@@ -1160,26 +1414,77 @@ class ReviewTemplate extends MsgTemplate {
         fieldNameMap.put("stars", "βαθμολογία αστεριών");
         fieldNameMap.put("review", "σχόλιο αξιολόγησης");
     }
-
+    
+    @Override
+    public boolean mergeFrom(MsgTemplate otherTemplate) {
+        // Call parent method to ensure same type check
+        if (!super.mergeFrom(otherTemplate)) {
+            return false;
+        }
+        
+        // Cast to ReviewTemplate since we know it's the same type
+        ReviewTemplate other = (ReviewTemplate) otherTemplate;
+        
+        // Only merge fields that are empty in this template but have values in the other
+        if (this.reservationNumber == null || this.reservationNumber.isEmpty()) {
+            this.reservationNumber = other.getReservationNumber();
+        }
+        
+        if (this.passcode == null || this.passcode.isEmpty()) {
+            this.passcode = other.getPasscode();
+        }
+        
+        if (this.stars == 0) {
+            this.stars = other.getStars();
+        }
+        
+        if (this.review == null || this.review.isEmpty()) {
+            this.review = other.getReview();
+        }
+        
+        if (this.possibleStarRatings == null || this.possibleStarRatings.isEmpty()) {
+            this.possibleStarRatings = new ArrayList<>(other.getPossibleStarRatings());
+        }
+        
+        return true;
+    }
+    
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
+            // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("reservation_number")) {
-                reservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
+                String newReservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_number"));
+                if (newReservationNumber != null && !newReservationNumber.isEmpty()) {
+                    reservationNumber = newReservationNumber;
+                }
             }
 
             if (jsonObject.has("passcode")) {
-                passcode = extractStringValue(jsonObject.getJSONObject("passcode"));
+                String newPasscode = extractStringValue(jsonObject.getJSONObject("passcode"));
+                if (newPasscode != null && !newPasscode.isEmpty()) {
+                    passcode = newPasscode;
+                }
             }
 
             if (jsonObject.has("stars")) {
                 JSONObject starsObject = jsonObject.getJSONObject("stars");
-                stars = extractIntValue(starsObject);
-                possibleStarRatings = extractPossibleIntValues(starsObject);
+                int newStars = extractIntValue(starsObject);
+                if (newStars > 0) {
+                    stars = newStars;
+                }
+                // Always update possible values if provided
+                List<Integer> newPossibleStarRatings = extractPossibleIntValues(starsObject);
+                if (!newPossibleStarRatings.isEmpty()) {
+                    possibleStarRatings = newPossibleStarRatings;
+                }
             }
 
             if (jsonObject.has("review")) {
-                review = extractStringValue(jsonObject.getJSONObject("review"));
+                String newReview = extractStringValue(jsonObject.getJSONObject("review"));
+                if (newReview != null && !newReview.isEmpty()) {
+                    review = newReview;
+                }
             }
 
             return true;
