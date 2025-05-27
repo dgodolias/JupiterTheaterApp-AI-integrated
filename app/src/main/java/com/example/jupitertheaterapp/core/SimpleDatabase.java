@@ -156,9 +156,7 @@ public class SimpleDatabase {
         JSONArray resultArray = new JSONArray();
         for (JSONObject result : results) {
             resultArray.put(result);
-        }
-        
-        return resultArray;
+        }        return resultArray;
     }
     
     /**
@@ -168,6 +166,11 @@ public class SimpleDatabase {
      * @return True if the record matches all criteria
      */
     private boolean matchesTemplate(JSONObject record, MsgTemplate template) {
+        // If template is null, match all records (used for debug sampling)
+        if (template == null) {
+            return true;
+        }
+        
         Map<String, List<String>> criteria = template.getFieldValuesMap();
         
         for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {

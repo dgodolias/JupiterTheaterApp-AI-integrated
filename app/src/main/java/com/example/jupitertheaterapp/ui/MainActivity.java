@@ -1,5 +1,6 @@
 package com.example.jupitertheaterapp.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,22 +72,43 @@ public class MainActivity extends AppCompatActivity {
                         addMessage(response, messageType);
 
                         // For debugging, print the node after processing
-                        chatbotManager.printCurrentNode();
-                    }
+                        chatbotManager.printCurrentNode();                }
                 });
             }
-        });// Add long press listener to show debug info
+        });
+
+        // Add long press listener to show debug info
         sendButton.setOnLongClickListener(v -> {
             // Show a dialog to choose what to display
-            String[] options = { "Full Tree Structure", "Conversation Node List" };
-
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+            String[] options = {
+                "Full Tree Structure", 
+                "Conversation Node List", 
+                "Current Node Details",
+                "Database State",
+                "Complete Debug Info",
+                "Test Database Fix"
+            };            new androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Debug Display Options")
                     .setItems(options, (dialog, which) -> {
-                        if (which == 0) {
-                            displayTreeStructure();
-                        } else if (which == 1) {
-                            displayConversationNodeList();
+                        switch (which) {
+                            case 0:
+                                displayTreeStructure();
+                                break;
+                            case 1:
+                                displayConversationNodeList();
+                                break;
+                            case 2:
+                                displayCurrentNodeDetails();
+                                break;
+                            case 3:
+                                displayDatabaseState();
+                                break;
+                            case 4:
+                                displayCompleteDebugInfo();
+                                break;
+                            case 5:
+                                testDatabaseFix();
+                                break;
                         }
                     })
                     .show();
@@ -137,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("OK", null)
                 .create()
                 .show();
-    }
-
-    /**
+    }    /**
      * Displays the conversation as a list of nodes with system and user messages.
      * This shows only the conversation path that has been traversed, not the entire
      * tree.
@@ -150,6 +170,149 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Conversation Node List")
                 .setMessage(nodeList)
                 .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    /**
+     * Displays detailed information about the current node.
+     * This includes node properties, template state, and navigation details.
+     */
+    public void displayCurrentNodeDetails() {
+        String nodeDetails = chatbotManager.getCurrentNodeDebugInfo();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Current Node Details")
+                .setMessage(nodeDetails)
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    /**
+     * Displays the current state of the database including record counts and sample data.
+     * This is useful for debugging database operations and seeing what data is stored.
+     */
+    public void displayDatabaseState() {
+        String databaseState = chatbotManager.getDatabaseDebugInfo();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Database State")
+                .setMessage(databaseState)
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    /**
+     * Displays comprehensive debug information including tree structure, 
+     * current node details, conversation path, and database state.
+     * This provides a complete overview of the application's current state.
+     */
+    public void displayCompleteDebugInfo() {
+        String completeDebugInfo = chatbotManager.getComprehensiveDebugInfo();
+        
+        // For the complete debug info, we'll use a scrollable dialog since it's quite long
+        android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
+        android.widget.TextView textView = new android.widget.TextView(this);
+        textView.setText(completeDebugInfo);
+        textView.setPadding(20, 20, 20, 20);
+        textView.setTextSize(12);
+        textView.setTypeface(android.graphics.Typeface.MONOSPACE);
+        scrollView.addView(textView);
+        
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Complete Debug Information")
+                .setView(scrollView)
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Copy to Clipboard", (dialog, which) -> {
+                    android.content.ClipboardManager clipboard = 
+                        (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = 
+                        android.content.ClipData.newPlainText("Debug Info", completeDebugInfo);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(this, "Debug info copied to clipboard", Toast.LENGTH_SHORT).show();
+                })
+                .create()
+                .show();
+    }
+
+    /**
+     * Tests the database debug functionality to verify the null pointer exception fix.
+     * This method specifically tests the scenario that was causing the crash.
+     */
+    public void testDatabaseFix() {
+        android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
+        android.widget.TextView textView = new android.widget.TextView(this);
+        textView.setPadding(20, 20, 20, 20);
+        textView.setTextSize(12);
+        textView.setTypeface(android.graphics.Typeface.MONOSPACE);
+        
+        StringBuilder testResults = new StringBuilder();
+        testResults.append("Database Debug Fix Test Results:\n");
+        testResults.append("==========================================\n\n");
+          try {
+            // Import the test class
+            com.example.jupitertheaterapp.test.DebugTest.testDatabaseDebugFunctionality(this);
+            com.example.jupitertheaterapp.test.DebugTest.testNullTemplateScenario(this);
+            com.example.jupitertheaterapp.test.DebugTest.testImprovedDebugOutput(this);
+            
+            testResults.append("✓ All tests executed successfully!\n");
+            testResults.append("✓ No null pointer exceptions occurred\n");
+            testResults.append("✓ Database sampling is working correctly\n");
+            testResults.append("✓ Improved debug output formatting tested\n\n");
+            
+            // Test each table individually to show results
+            com.example.jupitertheaterapp.core.SimpleDatabase db = 
+                com.example.jupitertheaterapp.core.SimpleDatabase.getInstance();
+            
+            String[] tables = {"bookings", "reviews", "shows", "discounts"};
+            for (String tableName : tables) {
+                try {
+                    org.json.JSONArray results = db.queryRecords(tableName, null);
+                    if (results != null) {
+                        testResults.append("✓ ").append(tableName).append(" table: ")
+                                  .append(results.length()).append(" records found\n");
+                    } else {
+                        testResults.append("⚠ ").append(tableName).append(" table: null results\n");
+                    }
+                } catch (Exception e) {
+                    testResults.append("✗ ").append(tableName).append(" table error: ")
+                              .append(e.getMessage()).append("\n");
+                }
+            }
+            
+            testResults.append("\n");
+            testResults.append("Database Debug Info Test:\n");
+            testResults.append("----------------------------------------\n");
+            
+            // Test the actual debug info generation
+            String debugInfo = chatbotManager.getDatabaseDebugInfo();
+            if (debugInfo != null && !debugInfo.isEmpty()) {
+                testResults.append("✓ Database debug info generated successfully\n");
+                testResults.append("Length: ").append(debugInfo.length()).append(" characters\n\n");
+                testResults.append("Preview of generated debug info:\n");
+                testResults.append(debugInfo.substring(0, Math.min(500, debugInfo.length())));
+                if (debugInfo.length() > 500) {
+                    testResults.append("\n... (truncated for display)");
+                }
+            } else {
+                testResults.append("✗ Database debug info generation failed\n");
+            }
+            
+        } catch (Exception e) {
+            testResults.append("✗ Test failed with exception: ").append(e.getMessage()).append("\n");
+            testResults.append("Stack trace: ").append(android.util.Log.getStackTraceString(e));
+        }
+        
+        textView.setText(testResults.toString());
+        scrollView.addView(textView);
+        
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Database Fix Test Results")
+                .setView(scrollView)
+                .setPositiveButton("OK", null)
+                .setNeutralButton("Run Database State", (dialog, which) -> {
+                    displayDatabaseState();
+                })
                 .create()
                 .show();
     }

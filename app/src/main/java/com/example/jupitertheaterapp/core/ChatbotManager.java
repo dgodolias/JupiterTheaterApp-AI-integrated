@@ -1046,8 +1046,216 @@ public class ChatbotManager {
             System.out.println("Current Node: " + currentNode);
         } else {
             System.out.println("Current Node is null");
-        }
+        }    }
+
+    /**
+     * Gets a comprehensive debug information including tree structure, current node, and database state
+     * @return A formatted string containing all debug information
+     */
+    public String getComprehensiveDebugInfo() {
+        StringBuilder debugInfo = new StringBuilder();
+        
+        // Add tree structure
+        debugInfo.append("=== CONVERSATION TREE STRUCTURE ===\n");
+        debugInfo.append(getTreeAsString());
+        debugInfo.append("\n");
+        
+        // Add current node information
+        debugInfo.append("=== CURRENT NODE DETAILS ===\n");
+        debugInfo.append(getCurrentNodeDebugInfo());
+        debugInfo.append("\n");
+        
+        // Add conversation path
+        debugInfo.append("=== CONVERSATION PATH ===\n");
+        debugInfo.append(getConversationNodeList());
+        debugInfo.append("\n");
+        
+        // Add database state
+        debugInfo.append("=== DATABASE STATE ===\n");
+        debugInfo.append(getDatabaseDebugInfo());
+        
+        return debugInfo.toString();
     }
+
+    /**
+     * Gets detailed information about the current node
+     * @return A formatted string with current node details
+     */
+    public String getCurrentNodeDebugInfo() {
+        if (currentNode == null) {
+            return "Current Node: null\n";
+        }
+        
+        StringBuilder info = new StringBuilder();
+        info.append("Current Node Details:\n");
+        info.append("- ID: ").append(currentNode.getId()).append("\n");
+        info.append("- Category: ").append(currentNode.getCategory()).append("\n");
+        info.append("- Type: ").append(currentNode.getType()).append("\n");
+        info.append("- Current State: ").append(currentNode.getCurrentState()).append("\n");
+        
+        // System message info
+        if (currentNode.getSystemMessage() != null) {
+            info.append("- System Message Type: ");
+            info.append(currentNode.getSystemMessage().getType() == ChatMessage.TYPE_BOT ? "BOT" : "SERVER");
+            info.append("\n");
+            info.append("- System Message: ").append(currentNode.getSystemMessage().getMessage()).append("\n");
+        }
+        
+        // User message info
+        if (currentNode.getUserMessage() != null) {
+            info.append("- User Message: ").append(currentNode.getUserMessage().getMessage()).append("\n");
+        }
+        
+        // Template info
+        if (currentNode.getMessageTemplate() != null) {
+            MsgTemplate template = currentNode.getMessageTemplate();
+            info.append("- Template Type: ").append(template.getClass().getSimpleName()).append("\n");
+            info.append("- Template Fields: ").append(template.getFieldValuesMap()).append("\n");
+            
+            List<String> missingFields = template.getMissingFields();
+            if (!missingFields.isEmpty()) {
+                info.append("- Missing Fields: ").append(missingFields).append("\n");
+            }
+        }
+        
+        // Children info
+        info.append("- Children Count: ").append(currentNode.getChildren().size()).append("\n");
+        if (!currentNode.getChildren().isEmpty()) {
+            info.append("- Children IDs: ");
+            for (ChatbotNode child : currentNode.getChildren()) {
+                info.append(child.getId()).append(", ");
+            }
+            info.setLength(info.length() - 2); // Remove last comma and space
+            info.append("\n");
+        }
+        
+        return info.toString();
+    }
+
+    /**
+     * Gets comprehensive database state information for debugging
+     * @return A formatted string with database state details
+     */
+    public String getDatabaseDebugInfo() {
+        SimpleDatabase db = SimpleDatabase.getInstance();
+        StringBuilder dbInfo = new StringBuilder();
+        
+        dbInfo.append("Database State Information:\n");
+        dbInfo.append("==========================================\n");
+        
+        // Table record counts
+        dbInfo.append("TABLE RECORD COUNTS:\n");
+        dbInfo.append("- Bookings: ").append(db.getTableRecordCount("bookings")).append(" records\n");
+        dbInfo.append("- Reviews: ").append(db.getTableRecordCount("reviews")).append(" records\n");
+        dbInfo.append("- Shows: ").append(db.getTableRecordCount("shows")).append(" records\n");
+        dbInfo.append("- Discounts: ").append(db.getTableRecordCount("discounts")).append(" records\n");
+        dbInfo.append("\n");
+        
+        // Recent database operations (from logs)
+        dbInfo.append("RECENT DATABASE ACTIVITY:\n");
+        dbInfo.append("(Check system logs for detailed operation history)\n");
+        dbInfo.append("\n");
+          // Sample data from each table
+        dbInfo.append("ALL DATABASE ENTRIES:\n");
+        
+        // Bookings - all entries
+        dbInfo.append("--- All Bookings ---\n");
+        String bookingsSample = getDatabaseTableSample("bookings", Integer.MAX_VALUE);
+        dbInfo.append(bookingsSample);
+        
+        // Reviews - all entries
+        dbInfo.append("--- All Reviews ---\n");
+        String reviewsSample = getDatabaseTableSample("reviews", Integer.MAX_VALUE);
+        dbInfo.append(reviewsSample);
+        
+        // Shows - all entries
+        dbInfo.append("--- All Shows ---\n");
+        String showsSample = getDatabaseTableSample("shows", Integer.MAX_VALUE);
+        dbInfo.append(showsSample);
+        
+        // Discounts - all entries
+        dbInfo.append("--- All Discounts ---\n");
+        String discountsSample = getDatabaseTableSample("discounts", Integer.MAX_VALUE);
+        dbInfo.append(discountsSample);
+        
+        dbInfo.append("==========================================\n");
+        return dbInfo.toString();
+    }
+
+    /**
+     * Gets a sample of data from a specific database table
+     * @param tableName The name of the table
+     * @param limit Maximum number of records to return
+     * @return Formatted string with sample data
+     */
+    private String getDatabaseTableSample(String tableName, int limit) {
+        SimpleDatabase db = SimpleDatabase.getInstance();
+        StringBuilder sample = new StringBuilder();
+        
+        try {
+            // Query all records from the table (SimpleDatabase handles the limit internally)
+            JSONArray results = db.queryRecords(tableName, null);
+            
+            if (results == null || results.length() == 0) {
+                sample.append("No records found.\n");
+            } else {
+                int recordsToShow = Math.min(results.length(), limit);
+                for (int i = 0; i < recordsToShow; i++) {
+                    JSONObject record = results.getJSONObject(i);
+                    sample.append("Record ").append(i + 1).append(": ");
+                      // Format key fields based on table type
+                    switch (tableName) {
+                        case "bookings":
+                            sample.append("Show: ").append(getFieldValue(record, "show_name"));
+                            sample.append(", Day: ").append(getFieldValue(record, "day"));
+                            sample.append(", Time: ").append(getFieldValue(record, "time"));
+                            sample.append(", Room: ").append(getFieldValue(record, "room"));
+                            sample.append(", Person: ").append(getNestedFieldValue(record, "person", "name"));
+                            sample.append(", Seat: ").append(getNestedFieldValue(record, "person", "seat"));
+                            break;
+                        case "reviews":
+                            sample.append("Show: ").append(getFieldValue(record, "show_name"));
+                            sample.append(", Reservation: ").append(getFieldValue(record, "reservation_number"));
+                            sample.append(", Rating: ").append(getFieldValue(record, "stars"));
+                            String reviewText = getFieldValue(record, "review");
+                            if (reviewText.length() > 50) reviewText = reviewText.substring(0, 47) + "...";
+                            sample.append(", Review: ").append(reviewText);
+                            break;
+                        case "shows":
+                            sample.append("Title: ").append(getFieldValue(record, "name"));
+                            sample.append(", Day: ").append(getFieldValue(record, "day"));
+                            sample.append(", Time: ").append(getFieldValue(record, "time"));
+                            sample.append(", Room: ").append(getFieldValue(record, "room"));
+                            sample.append(", Topic: ").append(getFieldValue(record, "topic"));
+                            sample.append(", Duration: ").append(getFieldValue(record, "duration")).append("min");
+                            break;
+                        case "discounts":
+                            sample.append("Show: ").append(getFieldValue(record, "show_name"));
+                            sample.append(", Age: ").append(getFieldValue(record, "age"));
+                            sample.append(", Discount: ").append(getFieldValue(record, "discount_percentage")).append("%");
+                            sample.append(", Code: ").append(getFieldValue(record, "code"));
+                            sample.append(", Date: ").append(getFieldValue(record, "date"));
+                            break;
+                        default:
+                            sample.append(record.toString());
+                            break;
+                    }
+                    sample.append("\n");                }
+                
+                // Only show "more records" message if we're actually limiting the results
+                if (results.length() > limit && limit != Integer.MAX_VALUE) {
+                    sample.append("... and ").append(results.length() - limit).append(" more records\n");
+                }
+            }
+        } catch (Exception e) {
+            sample.append("Error retrieving data: ").append(e.getMessage()).append("\n");
+            Log.e(TAG, "Error getting database sample for table: " + tableName, e);
+        }
+        
+        sample.append("\n");
+        return sample.toString();
+    }
+
     // Template handling methods have been removed as we now directly use message_1
     // and message_2 values
 
@@ -1087,5 +1295,46 @@ public class ChatbotManager {
         
         // Replace the <results> tag with formatted results
         return message.replace("<results>", formattedResults);
+    }
+    
+    /**
+     * Helper method to extract field values from the nested JSON structure
+     * Each field in the database has format: {"value": "actual_value", "pvalues": [...]}
+     * @param record The JSON record
+     * @param fieldName The name of the field to extract
+     * @return The actual value or "N/A" if not found
+     */
+    private String getFieldValue(JSONObject record, String fieldName) {
+        try {
+            if (record.has(fieldName)) {
+                JSONObject field = record.getJSONObject(fieldName);
+                return field.optString("value", "N/A");
+            }
+            return "N/A";
+        } catch (Exception e) {
+            return "N/A";
+        }
+    }
+    
+    /**
+     * Helper method to extract nested field values (like person.name)
+     * @param record The JSON record
+     * @param parentField The parent field name (e.g., "person")
+     * @param childField The child field name (e.g., "name")
+     * @return The actual value or "N/A" if not found
+     */
+    private String getNestedFieldValue(JSONObject record, String parentField, String childField) {
+        try {
+            if (record.has(parentField)) {
+                JSONObject parent = record.getJSONObject(parentField);
+                if (parent.has(childField)) {
+                    JSONObject field = parent.getJSONObject(childField);
+                    return field.optString("value", "N/A");
+                }
+            }
+            return "N/A";
+        } catch (Exception e) {
+            return "N/A";
+        }
     }
 }
