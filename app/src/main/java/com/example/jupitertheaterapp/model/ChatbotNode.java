@@ -1344,30 +1344,28 @@ public class ChatbotNode {
     private ChatbotNode handleNodeSelectionWithState(ChatbotNode nextNode) {
         if (nextNode != null) {
             System.out.println("DEBUG: Selected next node: " + nextNode.getId() + ", handling state transition");
-            // Transfer template data from current node to next node
-            if (this.msgTemplate != null && nextNode.getMessageTemplate() == null) {
-                System.out.println("DEBUG: Transferring template from " + this.id + " to " + nextNode.getId());
-                nextNode.setMessageTemplate(this.msgTemplate);
-                System.out.println("DEBUG: Template transferred: " + this.msgTemplate.getClass().getSimpleName() + " with fields: " + 
-                    (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" : 
-                    "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
-            } else if (this.msgTemplate != null && nextNode.getMessageTemplate() != null) {
-                // Both nodes have templates - merge data from current to next
-                System.out.println("DEBUG: Both nodes have templates. Merging template data from " + 
-                    this.id + " to " + nextNode.getId());
-                System.out.println("DEBUG: Before merge - Source template (" + this.id + "): " + 
-                    (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" : 
-                    "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
-                System.out.println("DEBUG: Before merge - Target template (" + nextNode.getId() + "): " + 
-                    (nextNode.getMessageTemplate().getMissingFields().isEmpty() ? "all fields populated" : 
-                    "missing: " + nextNode.getMessageTemplate().getMissingFieldsAsGreekString()));
-                
-                // Perform the merge
-                nextNode.getMessageTemplate().mergeFrom(this.msgTemplate);
-                
-                System.out.println("DEBUG: After merge - Target template (" + nextNode.getId() + "): " + 
-                    (nextNode.getMessageTemplate().getMissingFields().isEmpty() ? "all fields populated" : 
-                    "missing: " + nextNode.getMessageTemplate().getMissingFieldsAsGreekString()));
+
+            // If the next node is the root node, ensure its template is cleared and not inherited.
+            if ("root".equals(nextNode.getId())) {
+                System.out.println("DEBUG: Next node is root. Clearing its message template.");
+                nextNode.setMessageTemplate(null);
+            } else {
+                // Original template transfer/merge logic for non-root nodes
+                if (this.msgTemplate != null && nextNode.getMessageTemplate() == null) {
+                    System.out.println("DEBUG: Transferring template from " + this.id + " to " + nextNode.getId());
+                    nextNode.setMessageTemplate(this.msgTemplate);
+                    System.out.println("DEBUG: Template transferred: " + this.msgTemplate.getClass().getSimpleName() + " with fields: " +
+                        (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" :
+                        "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
+                } else if (this.msgTemplate != null && nextNode.getMessageTemplate() != null) {
+                    System.out.println("DEBUG: Both nodes have templates, attempting merge from " + this.id + " to " + nextNode.getId());
+                    boolean merged = nextNode.getMessageTemplate().mergeFrom(this.msgTemplate);
+                    System.out.println("DEBUG: Merge successful: " + merged);
+                    if (!merged) {
+                        System.out.println("DEBUG: Merge failed (e.g. different types or no new info), replacing template in " + nextNode.getId() + " with template from " + this.id);
+                        nextNode.setMessageTemplate(this.msgTemplate);
+                    }
+                }
             }
             
             // This will update the state based on the node's type

@@ -389,10 +389,27 @@ public class ChatbotManager {
             return combinedMessage;
         }
         return "Δεν βρέθηκε απάντηση.";
-    }
-
-    public void reset() {
+    }    public void reset() {
+        // Reset to root node
         currentNode = rootNode;
+        
+        // Reset root node's template and category
+        if (rootNode != null) {
+            rootNode.setMessageTemplate(null);
+            rootNode.setCategory("-"); // Use the consistent category identifier for root
+            
+            // Debug verification to confirm reset
+            System.out.println("DEBUG: Reset chatbot - Template and category reset for root node");
+            System.out.println("DEBUG: Root node state after reset: Template=" + 
+                             (rootNode.getMessageTemplate() == null ? "null" : rootNode.getMessageTemplate().getClass().getSimpleName()) +
+                             ", Category='" + rootNode.getCategory() + "'");
+            
+            // Double check if template somehow wasn't reset
+            if (rootNode.getMessageTemplate() != null) {
+                System.out.println("CRITICAL ERROR: Root template still not null after reset! Forcing null again.");
+                rootNode.setMessageTemplate(null);
+            }
+        }
     }
 
     public ChatbotNode getCurrentNode() {
@@ -802,6 +819,43 @@ public class ChatbotManager {
             // Store the original user message for confirmation node navigation
             final String originalUserMessage = userMessage;
             
+            // Check if we're at a confirmation node and user said "yes"
+            // In this case, we want to skip server communication and go directly to root
+            boolean isConfirmation = userMessage.toLowerCase().contains("yes") ||
+                    userMessage.toLowerCase().contains("confirm") ||
+                    userMessage.toLowerCase().contains("ναι") ||
+                    userMessage.toLowerCase().contains("επιβεβαιώνω") ||
+                    userMessage.toLowerCase().contains("ναί") ||
+                    userMessage.toLowerCase().contains("οκ") ||
+                    userMessage.toLowerCase().contains("ok");
+            
+            boolean isAtConfirmationNode = currentNode.getId().contains("confirmation");
+            
+            if (isAtConfirmationNode && isConfirmation) {
+                Log.d(TAG, "User confirmed at confirmation node - navigating to root without server request");
+                
+                // Directly navigate to the next node (which should be root)
+                ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);
+                if (nextNode != null && "root".equals(nextNode.getId())) {
+                    Log.d(TAG, "Successfully navigating to root node - skipping server communication");
+                    currentNode = nextNode;
+                    
+                    // Return the root node's message without any server communication
+                    String rootMessage = currentNode.getMessage2();
+                    if (rootMessage == null || rootMessage.isEmpty()) {
+                        rootMessage = currentNode.getMessage();
+                    }
+                    if (rootMessage == null || rootMessage.isEmpty()) {
+                        rootMessage = "Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;";
+                    }
+                    
+                    Log.d(TAG, "Returning root message without server request: " + rootMessage);
+                    responseCallback.onResponseReceived(rootMessage, ChatMessage.TYPE_BOT);
+                    return; // Skip the rest of the method
+                }
+            }
+            
+            // For all other cases, proceed with normal server communication
             // Create JSON request using the current node
             JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
 
@@ -810,8 +864,8 @@ public class ChatbotManager {
 
             System.out.println("Current node: " + currentNode);
 
-            // Always make the server request
-            makeServerRequest(jsonRequest, new ServerRequestCallback() {                @Override
+            // Make the server request
+            makeServerRequest(jsonRequest, new ServerRequestCallback() {@Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
                         // IMPORTANT - First populate the template with the server response
