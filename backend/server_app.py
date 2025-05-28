@@ -31,7 +31,7 @@ def get_dummy_category():
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     choice = random.choice(valid_categories)
-    choice = "ΚΡΑΤΗΣΗ" 
+    choice = "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     return choice
 
 def process_client_request(client_data):
