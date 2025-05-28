@@ -3,7 +3,7 @@
     "id": "root",
     "category": "-",
     "type": "CATEGORISE",
-    "message_1": "",
+    "message_1": "<leftover>",
     "message_2": "Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;",
     "children": [
       {

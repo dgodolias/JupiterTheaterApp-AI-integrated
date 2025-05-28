@@ -299,31 +299,38 @@ public class SimpleDatabase {
         
         return sb.toString();
     }
-    
-    /**
+      /**
      * Add a new booking to the database
      * @param template The message template containing booking data
      * @return True if booking was added successfully
      */
     public boolean addBooking(MsgTemplate template) {
         try {
+            Log.d(TAG, "addBooking: Starting booking addition with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "addBooking: Template field values: " + template.getFieldValuesMap());
+            }
+            
             JSONObject newBooking = createBookingFromTemplate(template);
+            Log.d(TAG, "addBooking: Created booking JSON: " + newBooking.toString(2));
             
             // Add to in-memory table
             JSONArray bookingsTable = tables.get("bookings");
             if (bookingsTable != null) {
                 bookingsTable.put(newBooking);
-                Log.d(TAG, "Added new booking to in-memory database");
+                Log.d(TAG, "addBooking: Added new booking to in-memory database. Total bookings: " + bookingsTable.length());
                 
                 // Write to internal storage for verification
                 writeTableToInternalStorage("bookings", "test_bookings.json");
                 return true;
+            } else {
+                Log.e(TAG, "addBooking: Bookings table is null!");
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Error adding booking: " + e.getMessage());
+            Log.e(TAG, "addBooking: Error adding booking: " + e.getMessage());
         }
         return false;
-    }    /**
+    }/**
      * Remove a booking from the database
      * @param template The message template containing booking criteria to remove
      * @return True if booking was removed successfully
@@ -362,75 +369,86 @@ public class SimpleDatabase {
             Log.e(TAG, "Error removing booking: " + e.getMessage());
         }
         return false;
-    }
-
-    /**
+    }    /**
      * Add a new review to the database
      * @param template The message template containing review data
      * @return True if review was added successfully
      */
     public boolean addReview(MsgTemplate template) {
         try {
+            Log.d(TAG, "addReview: Starting review addition with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "addReview: Template field values: " + template.getFieldValuesMap());
+            }
+            
             JSONObject newReview = createReviewFromTemplate(template);
+            Log.d(TAG, "addReview: Created review JSON: " + newReview.toString(2));
             
             // Add to in-memory table
             JSONArray reviewsTable = tables.get("reviews");
             if (reviewsTable != null) {
                 reviewsTable.put(newReview);
-                Log.d(TAG, "Added new review to in-memory database");
+                Log.d(TAG, "addReview: Added new review to in-memory database. Total reviews: " + reviewsTable.length());
                 
                 // Write to internal storage for verification
                 writeTableToInternalStorage("reviews", "test_reviews.json");
                 return true;
+            } else {
+                Log.e(TAG, "addReview: Reviews table is null!");
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Error adding review: " + e.getMessage());
+            Log.e(TAG, "addReview: Error adding review: " + e.getMessage());
         }
         return false;
-    }
-
-    /**
+    }    /**
      * Create a booking JSON object from template data
      * @param template The message template containing booking data
      * @return JSONObject representing the booking
      */
     private JSONObject createBookingFromTemplate(MsgTemplate template) throws JSONException {
+        Log.d(TAG, "createBookingFromTemplate: Starting booking creation");
         JSONObject booking = new JSONObject();
         Map<String, List<String>> fields = template.getFieldValuesMap();
+        
+        Log.d(TAG, "createBookingFromTemplate: Template fields: " + fields);
         
         // Generate unique reservation ID and password
         String reservationId = "RES" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         String reservationPassword = "pass" + (int)(Math.random() * 1000);
         
-        Log.d(TAG, "Created booking with ID: " + reservationId + " and password: " + reservationPassword);
+        Log.d(TAG, "createBookingFromTemplate: Generated booking with ID: " + reservationId + " and password: " + reservationPassword);
         
         // Add all fields from template
         for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
             String fieldName = entry.getKey();
             List<String> values = entry.getValue();
             
+            Log.d(TAG, "createBookingFromTemplate: Processing field '" + fieldName + "' with values: " + values);
+            
             if (values != null && !values.isEmpty()) {
                 String value = values.get(0); // Take first value
+                Log.d(TAG, "createBookingFromTemplate: Setting field '" + fieldName + "' to value '" + value + "'");
                 
                 // Handle nested person object
                 if (fieldName.equals("name") || fieldName.equals("age") || fieldName.equals("seat")) {
                     if (!booking.has("person")) {
                         booking.put("person", new JSONObject());
+                        Log.d(TAG, "createBookingFromTemplate: Created person object");
                     }
                     JSONObject person = booking.getJSONObject("person");
                     JSONObject fieldObj = new JSONObject();
                     fieldObj.put("value", value);
                     fieldObj.put("pvalues", new JSONArray());
                     person.put(fieldName, fieldObj);
+                    Log.d(TAG, "createBookingFromTemplate: Added person field '" + fieldName + "' = '" + value + "'");
                 } else {
                     // Regular field
                     JSONObject fieldObj = new JSONObject();
                     fieldObj.put("value", value);
                     fieldObj.put("pvalues", new JSONArray());
                     booking.put(fieldName, fieldObj);
-                }
-            }
-        }
+                    Log.d(TAG, "createBookingFromTemplate: Added regular field '" + fieldName + "' = '" + value + "'");
+                }        }
         
         // Add reservation ID and password
         JSONObject resIdObj = new JSONObject();
@@ -443,7 +461,19 @@ public class SimpleDatabase {
         resPassObj.put("pvalues", new JSONArray());
         booking.put("reservation_password", resPassObj);
         
+        Log.d(TAG, "createBookingFromTemplate: Created booking structure: " + booking.toString(2));
         return booking;
+    }
+        JSONObject resIdObj = new JSONObject();
+        resIdObj.put("value", reservationId);
+        resIdObj.put("pvalues", new JSONArray());
+        booking.put("reservation_id", resIdObj);
+        
+        JSONObject resPassObj = new JSONObject();
+        resPassObj.put("value", reservationPassword);
+        resPassObj.put("pvalues", new JSONArray());
+        booking.put("reservation_password", resPassObj);
+          return booking;
     }
 
     /**
@@ -452,24 +482,33 @@ public class SimpleDatabase {
      * @return JSONObject representing the review
      */
     private JSONObject createReviewFromTemplate(MsgTemplate template) throws JSONException {
+        Log.d(TAG, "createReviewFromTemplate: Starting review creation");
         JSONObject review = new JSONObject();
         Map<String, List<String>> fields = template.getFieldValuesMap();
+        
+        Log.d(TAG, "createReviewFromTemplate: Template fields: " + fields);
         
         // Add all fields from template
         for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
             String fieldName = entry.getKey();
             List<String> values = entry.getValue();
             
+            Log.d(TAG, "createReviewFromTemplate: Processing field '" + fieldName + "' with values: " + values);
+            
             if (values != null && !values.isEmpty()) {
                 String value = values.get(0); // Take first value
+                Log.d(TAG, "createReviewFromTemplate: Setting field '" + fieldName + "' to value '" + value + "'");
                 
                 JSONObject fieldObj = new JSONObject();
                 fieldObj.put("value", value);
                 fieldObj.put("pvalues", new JSONArray());
                 review.put(fieldName, fieldObj);
+            } else {
+                Log.w(TAG, "createReviewFromTemplate: Skipping empty field '" + fieldName + "'");
             }
         }
         
+        Log.d(TAG, "createReviewFromTemplate: Created review structure: " + review.toString(2));
         return review;
     }
 

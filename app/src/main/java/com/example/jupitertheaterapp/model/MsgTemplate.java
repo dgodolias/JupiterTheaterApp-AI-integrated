@@ -1538,18 +1538,16 @@ class ReviewTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
         templateString = replaceTemplateVariable(templateString, "review", review);
         return templateString;
-    }
-
-    @Override
+    }    @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
         
         if (reservationNumber != null && !reservationNumber.isEmpty()) {
             List<String> reservationList = new ArrayList<>();
             reservationList.add(reservationNumber);
-            fieldsMap.put("reservation_id", reservationList);
+            fieldsMap.put("reservation_number", reservationList);  // Fixed: was "reservation_id"
         } else {
-            fieldsMap.put("reservation_id", new ArrayList<>());
+            fieldsMap.put("reservation_number", new ArrayList<>());
         }
         
         if (passcode != null && !passcode.isEmpty()) {
@@ -1571,9 +1569,9 @@ class ReviewTemplate extends MsgTemplate {
         if (review != null && !review.isEmpty()) {
             List<String> reviewList = new ArrayList<>();
             reviewList.add(review);
-            fieldsMap.put("comment", reviewList);  // Assuming "comment" is the field name in JSON
+            fieldsMap.put("review", reviewList);  // Fixed: was "comment"
         } else {
-            fieldsMap.put("comment", new ArrayList<>());
+            fieldsMap.put("review", new ArrayList<>());
         }
         
         return fieldsMap;
