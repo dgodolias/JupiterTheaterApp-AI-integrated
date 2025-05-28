@@ -1,4 +1,4 @@
 {
-    "reservation_number": {"value": "", "pvalues": []},
-    "passcode": {"value": "pass1223", "pvalues": []}
+    "reservation_number": {"value": "RES12345", "pvalues": []},
+    "passcode": {"value": "", "pvalues": []}
 }
