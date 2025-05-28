@@ -894,11 +894,13 @@ public class ChatbotManager {
                     
                     SimpleDatabase database = SimpleDatabase.getInstance();
                     boolean operationSuccess = false;
-                    
+                    String sepChar = "<sep>";
                     switch (currentNodeId) {                        case "booking_confirmation":
                             Log.d(TAG, "Validating booking details against shows database");
                             // First validate that the show exists with the provided details
                             boolean showExists = database.validateShowExists(currentNode.getMessageTemplate());
+                            //sep char
+
                             if (showExists) {
                                 Log.d(TAG, "Show validation passed, adding booking to database");
                                 operationSuccess = database.addBooking(currentNode.getMessageTemplate());
@@ -910,9 +912,9 @@ public class ChatbotManager {
                                     String showName = getTemplateField(template, "show_name");
                                     String leftoverMsg;
                                     if (!"N/A".equals(showName)) {
-                                        leftoverMsg = "Η κράτησή σας για την παράσταση " + showName + " επιβεβαιώθηκε επιτυχώς!";
+                                        leftoverMsg = "Η κράτησή σας για την παράσταση " + showName + " επιβεβαιώθηκε επιτυχώς!"+sepChar;
                                     } else {
-                                        leftoverMsg = "Η κράτησή σας επιβεβαιώθηκε επιτυχώς!";
+                                        leftoverMsg = "Η κράτησή σας επιβεβαιώθηκε επιτυχώς!"+sepChar;
                                     }
                                     Log.d(TAG, "Setting leftover message for booking: " + leftoverMsg);
                                     setLeftoverMessage(leftoverMsg);
@@ -926,7 +928,7 @@ public class ChatbotManager {
                             } else {
                                 Log.e(TAG, "Show validation failed - no matching show found");
                                 operationSuccess = false; // Mark operation as failed
-                                String leftoverMsg = "συγγνωμη δεν υπάρχει παράσταση που να ικανοποιει τα κριτήριαπου θέσατε. Παρακαλώ μέσα απο το menu πληροφοριων, δειτε τις σωστές πληροφορίες και δοκιμάστε ξανα!";
+                                String leftoverMsg = "συγγνωμη δεν υπάρχει παράσταση που να ικανοποιει τα κριτήριαπου θέσατε. Παρακαλώ μέσα απο το menu πληροφοριων, δειτε τις σωστές πληροφορίες και δοκιμάστε ξανα!"+sepChar;
                                 Log.d(TAG, "Setting leftover message for show validation failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
@@ -942,15 +944,15 @@ public class ChatbotManager {
                                 String reservationNumber = getTemplateField(template, "reservation_number");
                                 String leftoverMsg;
                                 if (!"N/A".equals(reservationNumber)) {
-                                    leftoverMsg = "Η κράτησή σας με αριθμό " + reservationNumber + " ακυρώθηκε επιτυχώς.";
+                                    leftoverMsg = "Η κράτησή σας με αριθμό " + reservationNumber + " ακυρώθηκε επιτυχώς."+ sepChar;
                                 } else {
-                                    leftoverMsg = "Η κράτησή σας ακυρώθηκε επιτυχώς.";
+                                    leftoverMsg = "Η κράτησή σας ακυρώθηκε επιτυχώς."+ sepChar;
                                 }
                                 Log.d(TAG, "Setting leftover message for cancellation: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                            } else {
                                 Log.e(TAG, "Failed to remove booking from database");
-                                String leftoverMsg = "Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων.";
+                                String leftoverMsg = "Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων.<sep>";
                                 Log.d(TAG, "Setting leftover message for cancellation failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
@@ -966,15 +968,15 @@ public class ChatbotManager {
                                 String reservationNumber = getTemplateField(template, "reservation_number");
                                 String leftoverMsg;
                                 if (!"N/A".equals(reservationNumber)) {
-                                    leftoverMsg = "Η αξιολόγησή σας για την κράτηση " + reservationNumber + " καταχωρήθηκε επιτυχώς!";
+                                    leftoverMsg = "Η αξιολόγησή σας για την κράτηση " + reservationNumber + " καταχωρήθηκε επιτυχώς!"+ sepChar;
                                 } else {
-                                    leftoverMsg = "Η αξιολόγησή σας καταχωρήθηκε επιτυχώς!";
+                                    leftoverMsg = "Η αξιολόγησή σας καταχωρήθηκε επιτυχώς!"+ sepChar;
                                 }
                                 Log.d(TAG, "Setting leftover message for review: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                            } else {
                                 Log.e(TAG, "Failed to add review to database");
-                                String leftoverMsg = "Υπήρξε πρόβλημα με την καταχώρηση της αξιολόγησής σας. Παρακαλώ δοκιμάστε ξανά.";
+                                String leftoverMsg = "Υπήρξε πρόβλημα με την καταχώρηση της αξιολόγησής σας. Παρακαλώ δοκιμάστε ξανά."+ sepChar;
                                 Log.d(TAG, "Setting leftover message for review failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());

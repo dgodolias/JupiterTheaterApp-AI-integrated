@@ -18,7 +18,7 @@ from information_extractor import (
 DUMMY_RESPONSES = True
 
 # Set to True to use full dummy data, False for partial dummy data
-DUMMY_FULL = True
+DUMMY_FULL = False
 
 # Set to True to enable alternating DUMMY_FULL state for EXTRACT requests
 DUAL = False # Or False to disable
@@ -31,7 +31,7 @@ def get_dummy_category():
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     choice = random.choice(valid_categories)
-    choice = "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
+    choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
     return choice
 
 def process_client_request(client_data):
