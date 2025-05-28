@@ -352,55 +352,55 @@ public class SimpleDatabase {
             return false;
         }
     }
-    
-    /**
+      /**
      * Format results as a human-readable string
      * @param results JSONArray of query results
      * @return Formatted string for display
      */
     public String formatResults(JSONArray results) {
+        return formatResults(results, null);
+    }
+    
+    /**
+     * Format results as a human-readable string using template for Greek field names
+     * @param results JSONArray of query results
+     * @param template Optional template to get Greek field names from
+     * @return Formatted string for display
+     */
+    public String formatResults(JSONArray results, MsgTemplate template) {
         if (results == null || results.length() == 0) {
             return "Δεν βρέθηκαν αποτελέσματα.";
         }
         
         StringBuilder sb = new StringBuilder();
-        sb.append("Βρέθηκαν ").append(results.length()).append(" αποτελέσματα:\n\n");
+        sb.append("Βρέθηκαν ").append(results.length()).append(" αποτελέσματα:<sep>");
         
         try {
             for (int i = 0; i < results.length(); i++) {
                 JSONObject record = results.getJSONObject(i);
-                sb.append("• Αποτέλεσμα ").append(i + 1).append(":\n");
+                sb.append("<sep>• Αποτέλεσμα ").append(i + 1).append(":\n");
                 
                 // Add all fields from the record
                 JSONArray names = record.names();
                 if (names != null) {
                     for (int j = 0; j < names.length(); j++) {
                         String name = names.getString(j);
-                        try {
-                            JSONObject fieldObj = record.getJSONObject(name);
-                            String value = fieldObj.getString("value");
-                            
-                            // Format field name nicely
-                            String displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
-                            sb.append("  - ").append(displayName).append(": ").append(value).append("\n");
-                        } catch (JSONException e) {
-                            // Handle special case for nested objects like "person"
-                            try {
-                                JSONObject nestedObj = record.getJSONObject(name);
-                                sb.append("  - ").append(name).append(":\n");
-                                
-                                JSONArray nestedNames = nestedObj.names();
-                                if (nestedNames != null) {
-                                    for (int k = 0; k < nestedNames.length(); k++) {
-                                        String nestedName = nestedNames.getString(k);
-                                        JSONObject nestedFieldObj = nestedObj.getJSONObject(nestedName);
-                                        String nestedValue = nestedFieldObj.getString("value");
-                                        sb.append("    * ").append(nestedName).append(": ").append(nestedValue).append("\n");
-                                    }
-                                }
-                            } catch (JSONException e2) {
-                                // Skip this field
+                        // Get field values (handles both string and array formats)
+                        List<String> fieldValues = getFieldValues(record, name);
+
+                        if (!fieldValues.isEmpty()) {
+                            // Get Greek field name from template if available
+                            String displayName;
+                            if (template != null) {
+                                displayName = template.getGreekFieldName(name);
+                            } else {
+                                // Fallback to formatted English name
+                                displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
                             }
+
+                            // Join multiple values with comma and space
+                            String formattedValue = String.join(", ", fieldValues);
+                            sb.append("  - ").append(displayName).append(": ").append(formattedValue).append("\n");
                         }
                     }
                 }
