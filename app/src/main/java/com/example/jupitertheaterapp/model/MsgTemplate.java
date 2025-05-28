@@ -1046,17 +1046,15 @@ class BookingTemplate extends MsgTemplate {
  */
 class CancellationTemplate extends MsgTemplate {
     private String reservationNumber;
-    private String passcode;
-
-    public CancellationTemplate() {
+    private String passcode;    public CancellationTemplate() {
         reservationNumber = "";
         passcode = "";
         
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("reservation_number", "αριθμός κράτησης");
-        fieldNameMap.put("passcode", "κωδικός επιβεβαίωσης");
-    }    @Override
+        fieldNameMap.put("reservation_password", "κωδικός επιβεβαίωσης");
+    }@Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
@@ -1073,13 +1071,21 @@ class CancellationTemplate extends MsgTemplate {
                     passcode = newPasscode;
                 }
             }
+            
+            // Also handle reservation_password field from database records
+            if (jsonObject.has("reservation_password")) {
+                String newPasscode = extractStringValue(jsonObject.getJSONObject("reservation_password"));
+                if (newPasscode != null && !newPasscode.isEmpty()) {
+                    passcode = newPasscode;
+                }
+            }
 
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
-    }    @Override
+    }@Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
@@ -1133,9 +1139,7 @@ class CancellationTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         return templateString;
-    }
-
-    @Override
+    }    @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
         
@@ -1151,9 +1155,9 @@ class CancellationTemplate extends MsgTemplate {
         if (passcode != null && !passcode.isEmpty()) {
             List<String> passcodeList = new ArrayList<>();
             passcodeList.add(passcode);
-            fieldsMap.put("passcode", passcodeList);
+            fieldsMap.put("reservation_password", passcodeList);  // Use "reservation_password" to match the field in JSON
         } else {
-            fieldsMap.put("passcode", new ArrayList<>());
+            fieldsMap.put("reservation_password", new ArrayList<>());
         }
         
         return fieldsMap;

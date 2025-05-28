@@ -164,20 +164,22 @@ public class SimpleDatabase {
      * @param record The record to check
      * @param template The template containing the criteria
      * @return True if the record matches all criteria
-     */
-    private boolean matchesTemplate(JSONObject record, MsgTemplate template) {
+     */    private boolean matchesTemplate(JSONObject record, MsgTemplate template) {
         // If template is null, match all records (used for debug sampling)
         if (template == null) {
             return true;
         }
         
         Map<String, List<String>> criteria = template.getFieldValuesMap();
-        
-        for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {
+        Log.d(TAG, "matchesTemplate: Starting comparison with criteria: " + criteria);
+          for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {
             String field = entry.getKey();
             List<String> values = entry.getValue();
             
+            Log.d(TAG, "matchesTemplate: Checking field '" + field + "' with values: " + values);
+            
             if (values == null || values.isEmpty()) {
+                Log.d(TAG, "matchesTemplate: Skipping empty field '" + field + "'");
                 continue; // Skip empty criteria
             }
 
@@ -187,7 +189,9 @@ public class SimpleDatabase {
                     // Handle special cases like 'name' vs 'show_name' in different tables
                     if (record.has("show_" + field)) {
                         field = "show_" + field;
+                        Log.d(TAG, "matchesTemplate: Found field with 'show_' prefix: " + field);
                     } else {
+                        Log.d(TAG, "matchesTemplate: Field '" + field + "' not found in record");
                         return false; // Field doesn't exist
                     }
                 }
@@ -195,18 +199,24 @@ public class SimpleDatabase {
                 // Get field value from record
                 JSONObject fieldObj = record.getJSONObject(field);
                 String recordValue = fieldObj.getString("value");
+                Log.d(TAG, "matchesTemplate: Record value for field '" + field + "': '" + recordValue + "'");
                 
                 // Check if any of the template values match the record value
                 boolean foundMatch = false;
                 for (String value : values) {
+                    Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
                     if (caseInsensitiveMatch(recordValue, value)) {
+                        Log.d(TAG, "matchesTemplate: MATCH FOUND for field '" + field + "'");
                         foundMatch = true;
                         break;
                     }
                 }
                 
                 // If no match found for this field, record doesn't match criteria
-                if (!foundMatch) return false;
+                if (!foundMatch) {
+                    Log.d(TAG, "matchesTemplate: NO MATCH found for field '" + field + "' - record rejected");
+                    return false;
+                }
             } catch (JSONException e) {
                 Log.e(TAG, "Error accessing field '" + field + "': " + e.getMessage());
                 return false;
@@ -214,6 +224,7 @@ public class SimpleDatabase {
         }
         
         // All criteria matched
+        Log.d(TAG, "matchesTemplate: ALL criteria matched - record accepted");
         return true;
     }
     
@@ -312,9 +323,7 @@ public class SimpleDatabase {
             Log.e(TAG, "Error adding booking: " + e.getMessage());
         }
         return false;
-    }
-
-    /**
+    }    /**
      * Remove a booking from the database
      * @param template The message template containing booking criteria to remove
      * @return True if booking was removed successfully
@@ -324,9 +333,19 @@ public class SimpleDatabase {
             JSONArray bookingsTable = tables.get("bookings");
             if (bookingsTable == null) return false;
             
+            Log.d(TAG, "removeBooking: Starting removal process with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "removeBooking: Template field values: " + template.getFieldValuesMap());
+            }
+            
             // Find and remove matching booking
             for (int i = 0; i < bookingsTable.length(); i++) {
                 JSONObject booking = bookingsTable.getJSONObject(i);
+                Log.d(TAG, "removeBooking: Checking booking " + i + ": reservation_id=" + 
+                      booking.optJSONObject("reservation_id").optString("value") + 
+                      ", reservation_password=" + 
+                      booking.optJSONObject("reservation_password").optString("value"));
+                
                 if (matchesTemplate(booking, template)) {
                     bookingsTable.remove(i);
                     Log.d(TAG, "Removed booking from in-memory database");
@@ -334,8 +353,11 @@ public class SimpleDatabase {
                     // Write to internal storage for verification
                     writeTableToInternalStorage("bookings", "test_bookings.json");
                     return true;
+                } else {
+                    Log.d(TAG, "removeBooking: Booking " + i + " does not match criteria");
                 }
             }
+            Log.d(TAG, "removeBooking: No matching booking found");
         } catch (JSONException e) {
             Log.e(TAG, "Error removing booking: " + e.getMessage());
         }
