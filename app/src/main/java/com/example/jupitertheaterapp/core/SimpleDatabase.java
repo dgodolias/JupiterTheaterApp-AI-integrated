@@ -682,4 +682,78 @@ public class SimpleDatabase {
         }
         Log.d(TAG, "=====================");
     }
+    
+    /**
+     * Validate that the booking details match an existing show
+     * @param template The message template containing booking data
+     * @return True if a matching show exists, false otherwise
+     */
+    public boolean validateShowExists(MsgTemplate template) {
+        try {
+            JSONArray showsTable = tables.get("shows");
+            if (showsTable == null) {
+                Log.e(TAG, "validateShowExists: Shows table is null!");
+                return false;
+            }
+            
+            Log.d(TAG, "validateShowExists: Starting validation with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "validateShowExists: Template field values: " + template.getFieldValuesMap());
+            }
+            
+            // Extract the booking details we need to validate
+            Map<String, List<String>> criteria = template.getFieldValuesMap();
+            String showName = getFirstValue(criteria, "show_name");
+            String room = getFirstValue(criteria, "room");
+            String day = getFirstValue(criteria, "day");
+            String time = getFirstValue(criteria, "time");
+            
+            Log.d(TAG, "validateShowExists: Looking for show - name: '" + showName + 
+                  "', room: '" + room + "', day: '" + day + "', time: '" + time + "'");
+            
+            // Check each show in the shows table
+            for (int i = 0; i < showsTable.length(); i++) {
+                JSONObject show = showsTable.getJSONObject(i);
+                
+                String showRecordName = show.optJSONObject("name").optString("value");
+                String showRecordRoom = show.optJSONObject("room").optString("value");
+                String showRecordDay = show.optJSONObject("day").optString("value");
+                String showRecordTime = show.optJSONObject("time").optString("value");
+                
+                Log.d(TAG, "validateShowExists: Checking show " + i + " - name: '" + showRecordName + 
+                      "', room: '" + showRecordRoom + "', day: '" + showRecordDay + "', time: '" + showRecordTime + "'");
+                
+                // Check if all required fields match
+                if (caseInsensitiveMatch(showName, showRecordName) &&
+                    caseInsensitiveMatch(room, showRecordRoom) &&
+                    caseInsensitiveMatch(day, showRecordDay) &&
+                    caseInsensitiveMatch(time, showRecordTime)) {
+                    
+                    Log.d(TAG, "validateShowExists: MATCH FOUND! Show exists with all required details");
+                    return true;
+                }
+            }
+            
+            Log.d(TAG, "validateShowExists: NO MATCHING SHOW FOUND");
+            return false;
+            
+        } catch (JSONException e) {
+            Log.e(TAG, "validateShowExists: Error validating show: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Helper method to get the first value from a criteria list
+     * @param criteria The criteria map
+     * @param field The field name
+     * @return The first value or empty string if not found
+     */
+    private String getFirstValue(Map<String, List<String>> criteria, String field) {
+        List<String> values = criteria.get(field);
+        if (values != null && !values.isEmpty()) {
+            return values.get(0);
+        }
+        return "";
+    }
 }
