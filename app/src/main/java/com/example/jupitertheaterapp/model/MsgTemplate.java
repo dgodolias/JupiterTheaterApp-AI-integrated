@@ -337,14 +337,22 @@ public abstract class MsgTemplate {
             return fieldObject.getInt("value");
         }
         return 0;
-    }
-
-    protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
+    }    protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
         List<String> values = new ArrayList<>();
         if (fieldObject.has("value")) {
-            JSONArray valueArray = fieldObject.getJSONArray("value");
-            for (int i = 0; i < valueArray.length(); i++) {
-                values.add(valueArray.getString(i));
+            Object valueObj = fieldObject.get("value");
+            if (valueObj instanceof JSONArray) {
+                // Handle array format (like in shows database)
+                JSONArray valueArray = (JSONArray) valueObj;
+                for (int i = 0; i < valueArray.length(); i++) {
+                    values.add(valueArray.getString(i));
+                }
+            } else if (valueObj instanceof String) {
+                // Handle string format (like in server responses and bookings)
+                values.add((String) valueObj);
+            } else {
+                // Handle other types (convert to string)
+                values.add(valueObj.toString());
             }
         }
         return values;

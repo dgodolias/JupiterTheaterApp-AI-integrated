@@ -195,26 +195,29 @@ public class SimpleDatabase {
                         return false; // Field doesn't exist
                     }
                 }
-                
-                // Get field value from record
+                  // Get field value from record - handle both string and array formats
                 JSONObject fieldObj = record.getJSONObject(field);
-                String recordValue = fieldObj.getString("value");
-                Log.d(TAG, "matchesTemplate: Record value for field '" + field + "': '" + recordValue + "'");
-                  // Check if any of the template values match the record value
+                List<String> recordValues = getFieldValues(record, field);
+                
+                Log.d(TAG, "matchesTemplate: Record values for field '" + field + "': " + recordValues);
+                  // Check if any of the template values match any of the record values
                 boolean foundMatch = false;
                 for (String value : values) {
-                    Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
-                    
-                    // Use smart comparison for special fields
-                    if (smartFieldComparison(field, recordValue, value)) {
-                        Log.d(TAG, "matchesTemplate: SMART MATCH FOUND for field '" + field + "'");
-                        foundMatch = true;
-                        break;
-                    } else if (caseInsensitiveMatch(recordValue, value)) {
-                        Log.d(TAG, "matchesTemplate: EXACT MATCH FOUND for field '" + field + "'");
-                        foundMatch = true;
-                        break;
+                    for (String recordValue : recordValues) {
+                        Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
+                        
+                        // Use smart comparison for special fields
+                        if (smartFieldComparison(field, recordValue, value)) {
+                            Log.d(TAG, "matchesTemplate: SMART MATCH FOUND for field '" + field + "'");
+                            foundMatch = true;
+                            break;
+                        } else if (caseInsensitiveMatch(recordValue, value)) {
+                            Log.d(TAG, "matchesTemplate: EXACT MATCH FOUND for field '" + field + "'");
+                            foundMatch = true;
+                            break;
+                        }
                     }
+                    if (foundMatch) break;
                 }
                 
                 // If no match found for this field, record doesn't match criteria
@@ -682,8 +685,7 @@ public class SimpleDatabase {
         }
         Log.d(TAG, "=====================");
     }
-    
-    /**
+      /**
      * Validate that the booking details match an existing show
      * @param template The message template containing booking data
      * @return True if a matching show exists, false otherwise
@@ -715,20 +717,22 @@ public class SimpleDatabase {
             for (int i = 0; i < showsTable.length(); i++) {
                 JSONObject show = showsTable.getJSONObject(i);
                 
-                String showRecordName = show.optJSONObject("name").optString("value");
-                String showRecordRoom = show.optJSONObject("room").optString("value");
-                String showRecordDay = show.optJSONObject("day").optString("value");
-                String showRecordTime = show.optJSONObject("time").optString("value");
+                // Get all possible values for each field (handling arrays)
+                List<String> showNames = getFieldValues(show, "name");
+                List<String> showRooms = getFieldValues(show, "room");
+                List<String> showDays = getFieldValues(show, "day");
+                List<String> showTimes = getFieldValues(show, "time");
                 
-                Log.d(TAG, "validateShowExists: Checking show " + i + " - name: '" + showRecordName + 
-                      "', room: '" + showRecordRoom + "', day: '" + showRecordDay + "', time: '" + showRecordTime + "'");
+                Log.d(TAG, "validateShowExists: Checking show " + i + " - names: " + showNames + 
+                      ", rooms: " + showRooms + ", days: " + showDays + ", times: " + showTimes);
                 
-                // Check if all required fields match
-                if (caseInsensitiveMatch(showName, showRecordName) &&
-                    caseInsensitiveMatch(room, showRecordRoom) &&
-                    caseInsensitiveMatch(day, showRecordDay) &&
-                    caseInsensitiveMatch(time, showRecordTime)) {
-                    
+                // Check if the booking details match any combination in this show
+                boolean nameMatch = containsIgnoreCase(showNames, showName);
+                boolean roomMatch = containsIgnoreCase(showRooms, room);
+                boolean dayMatch = containsIgnoreCase(showDays, day);
+                boolean timeMatch = containsIgnoreCase(showTimes, time);
+                
+                if (nameMatch && roomMatch && dayMatch && timeMatch) {
                     Log.d(TAG, "validateShowExists: MATCH FOUND! Show exists with all required details");
                     return true;
                 }
@@ -744,6 +748,24 @@ public class SimpleDatabase {
     }
     
     /**
+     * Helper method to check if a list contains a string (case-insensitive)
+     * @param list The list to search in
+     * @param target The target string to find
+     * @return True if found (case-insensitive), false otherwise
+     */
+    private boolean containsIgnoreCase(List<String> list, String target) {
+        if (target == null || target.isEmpty()) {
+            return false;
+        }
+        for (String item : list) {
+            if (caseInsensitiveMatch(item, target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Helper method to get the first value from a criteria list
      * @param criteria The criteria map
      * @param field The field name
@@ -755,5 +777,50 @@ public class SimpleDatabase {
             return values.get(0);
         }
         return "";
+    }
+    
+    /**
+     * Helper method to get field values from a JSON object, handling both string and array formats
+     * @param record The JSON record
+     * @param fieldName The field name to extract
+     * @return List of values from the field
+     */
+    private List<String> getFieldValues(JSONObject record, String fieldName) {
+        List<String> values = new ArrayList<>();
+        try {
+            if (record.has(fieldName)) {
+                JSONObject fieldObj = record.getJSONObject(fieldName);
+                
+                // Check if value is an array or a string
+                Object valueObj = fieldObj.get("value");
+                if (valueObj instanceof JSONArray) {
+                    // Handle array format (like in shows)
+                    JSONArray valueArray = (JSONArray) valueObj;
+                    for (int i = 0; i < valueArray.length(); i++) {
+                        values.add(valueArray.getString(i));
+                    }
+                } else if (valueObj instanceof String) {
+                    // Handle string format (like in bookings)
+                    values.add((String) valueObj);
+                } else {
+                    // Handle other types (convert to string)
+                    values.add(valueObj.toString());
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error getting field values for '" + fieldName + "': " + e.getMessage());
+        }
+        return values;
+    }
+
+    /**
+     * Helper method to get the first field value from a JSON object, handling both string and array formats
+     * @param record The JSON record
+     * @param fieldName The field name to extract
+     * @return The first value or empty string if not found
+     */
+    private String getFirstFieldValue(JSONObject record, String fieldName) {
+        List<String> values = getFieldValues(record, fieldName);
+        return values.isEmpty() ? "" : values.get(0);
     }
 }
