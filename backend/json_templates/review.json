@@ -1,6 +1,6 @@
 {
     "reservation_number": {"value": "", "pvalues": []},
     "passcode": {"value": "", "pvalues": []},
-    "stars": {"value": 0, "pvalues": [1, 2, 3, 4, 5]},
-    "review": {"value": "", "pvalues": []}
+    "stars": {"value": null, "pvalues": [1, 2, 3, 4, 5]},
+    "review": {"value": "This is a dummy review for testing.", "pvalues": []}
 }

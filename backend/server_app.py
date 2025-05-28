@@ -21,7 +21,7 @@ DUMMY_RESPONSES = True
 DUMMY_FULL = False  # Default to full dummy data
 
 # Set to True to enable alternating DUMMY_FULL state for EXTRACT requests
-DUAL = False # Or False to disable
+DUAL = True # Or False to disable
 DUAL_STATE_FULL = True  # Initial state for DUAL mode (True for full, False for nonfull)
 
 def get_dummy_category():
@@ -31,7 +31,7 @@ def get_dummy_category():
         "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     ]
     choice = random.choice(valid_categories)
-    choice = "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
+    #choice = "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
     return choice
 
 def process_client_request(client_data):
