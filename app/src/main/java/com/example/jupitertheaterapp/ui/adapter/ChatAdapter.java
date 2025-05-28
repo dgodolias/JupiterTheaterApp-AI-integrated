@@ -63,11 +63,67 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
     @Override
     public int getItemCount() {
         return messages.size();
+    }    public void addMessage(ChatMessage message) {
+        // Check if the message contains newlines and split if necessary
+        String messageText = message.getMessage();
+        if (messageText != null && messageText.contains("\n")) {
+            // Split the message by newlines
+            String[] parts = messageText.split("\n");
+            
+            // Add each part as a separate message bubble
+            for (String part : parts) {
+                // Skip empty parts (which can occur from multiple consecutive newlines)
+                if (part.trim().isEmpty()) {
+                    continue;
+                }
+                
+                // Create a new ChatMessage for each part with the same type as the original
+                ChatMessage splitMessage = ChatMessage.createMessage(part.trim(), message.getType());
+                splitMessage.setCategory(message.getCategory());
+                
+                messages.add(splitMessage);
+                notifyItemInserted(messages.size() - 1);
+            }
+        } else {
+            // Single message without newlines - add normally
+            messages.add(message);
+            notifyItemInserted(messages.size() - 1);
+        }
     }
 
-    public void addMessage(ChatMessage message) {
-        messages.add(message);
-        notifyItemInserted(messages.size() - 1);
+    /**
+     * Add a message with manual splitting by newlines
+     * @param messageText The combined message text
+     * @param messageType The type of message (USER, BOT, SERVER)
+     * @param category The message category
+     */
+    public void addSplitMessage(String messageText, int messageType, String category) {
+        if (messageText != null && messageText.contains("\n")) {
+            // Split the message by newlines
+            String[] parts = messageText.split("\n");
+            
+            // Add each part as a separate message bubble
+            for (String part : parts) {
+                // Skip empty parts (which can occur from multiple consecutive newlines)
+                if (part.trim().isEmpty()) {
+                    continue;
+                }
+                
+                // Create a new ChatMessage for each part
+                ChatMessage splitMessage = ChatMessage.createMessage(part.trim(), messageType);
+                splitMessage.setCategory(category);
+                
+                messages.add(splitMessage);
+                notifyItemInserted(messages.size() - 1);
+            }
+        } else {
+            // Single message without newlines - add normally
+            ChatMessage singleMessage = ChatMessage.createMessage(messageText, messageType);
+            singleMessage.setCategory(category);
+            
+            messages.add(singleMessage);
+            notifyItemInserted(messages.size() - 1);
+        }
     }
 
     static class MessageViewHolder extends RecyclerView.ViewHolder {

@@ -307,8 +307,7 @@ public class ChatbotManager {
             
             // Build the combined message
             StringBuilder combinedMessage = new StringBuilder();
-            
-            // Add message1 if it exists (leftover message)
+              // Add message1 if it exists (leftover message)
             if (message1 != null && !message1.isEmpty()) {
                 Log.d(TAG, "Adding message1 to combined message");
                 combinedMessage.append(message1);
@@ -364,16 +363,21 @@ public class ChatbotManager {
             Log.e(TAG, "Node with category not found: " + category);
             return "Συγγνώμη, δεν βρέθηκε απάντηση.";
         }
-        currentNode = foundNode;
-
-        // Get both message1 and message2 from the node
+        currentNode = foundNode;        // Get both message1 and message2 from the node
         String message1 = foundNode.getMessage();
         String message2 = foundNode.getMessage2();
         
-        // Combine message1 and message2 with a newline between them
-        String combinedMessage = message1;
+        // Combine message1 and message2 with a newline between them, avoiding empty lines
+        String combinedMessage = "";
+        if (message1 != null && !message1.isEmpty()) {
+            combinedMessage = message1;
+        }
         if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
-            combinedMessage += "\n" + message2;
+            if (!combinedMessage.isEmpty()) {
+                combinedMessage += "\n" + message2;
+            } else {
+                combinedMessage = message2;
+            }
         }
 
         Log.d(TAG, "Using system message from node: " + foundNode.getId());
@@ -418,15 +422,21 @@ public class ChatbotManager {
             }
         }
 
-        if (node != null) {
-            // Get both message1 and message2 from the node
+        if (node != null) {            // Get both message1 and message2 from the node
             String message1 = node.getMessage();
             String message2 = node.getMessage2();
             
-            // Combine message1 and message2 with a newline between them
-            String combinedMessage = message1;
+            // Combine message1 and message2 with a newline between them, avoiding empty lines
+            String combinedMessage = "";
+            if (message1 != null && !message1.isEmpty()) {
+                combinedMessage = message1;
+            }
             if (message2 != null && !message2.isEmpty() && !message2.equals(message1)) {
-                combinedMessage += "\n" + message2;
+                if (!combinedMessage.isEmpty()) {
+                    combinedMessage += "\n" + message2;
+                } else {
+                    combinedMessage = message2;
+                }
             }
             
             return combinedMessage;

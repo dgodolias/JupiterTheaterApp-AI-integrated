@@ -1512,14 +1512,16 @@ public class ChatbotNode {
                 System.out.println("WARNING: Failed to process message for node: " + this.id);
                 return "Sorry, I could not process that message properly.";
             }
-        }
-
-        // 3. Combine message1 and message2 with a newline between them
+        }        // 3. Combine message1 and message2 with a newline between them, avoiding empty lines
         String combinedMessage = getMessage();
         String message2 = getMessage2();
-        if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
+        
+        // Smart message combination to avoid empty lines when message1 is empty
+        if (combinedMessage == null || combinedMessage.isEmpty()) {
+            combinedMessage = (message2 != null && !message2.isEmpty()) ? message2 : "";
+        } else if (message2 != null && !message2.isEmpty() && !message2.equals(combinedMessage)) {
             combinedMessage += "\n" + message2;
-        } // 4. Add state-specific modifications to the response
+        }// 4. Add state-specific modifications to the response
         switch (state) {
             case CONFIRMATION:
                 // If we're in confirmation state but the message doesn't already include a
