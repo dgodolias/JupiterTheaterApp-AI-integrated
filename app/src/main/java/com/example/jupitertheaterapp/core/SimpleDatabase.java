@@ -200,13 +200,18 @@ public class SimpleDatabase {
                 JSONObject fieldObj = record.getJSONObject(field);
                 String recordValue = fieldObj.getString("value");
                 Log.d(TAG, "matchesTemplate: Record value for field '" + field + "': '" + recordValue + "'");
-                
-                // Check if any of the template values match the record value
+                  // Check if any of the template values match the record value
                 boolean foundMatch = false;
                 for (String value : values) {
                     Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
-                    if (caseInsensitiveMatch(recordValue, value)) {
-                        Log.d(TAG, "matchesTemplate: MATCH FOUND for field '" + field + "'");
+                    
+                    // Use smart comparison for special fields
+                    if (smartFieldComparison(field, recordValue, value)) {
+                        Log.d(TAG, "matchesTemplate: SMART MATCH FOUND for field '" + field + "'");
+                        foundMatch = true;
+                        break;
+                    } else if (caseInsensitiveMatch(recordValue, value)) {
+                        Log.d(TAG, "matchesTemplate: EXACT MATCH FOUND for field '" + field + "'");
                         foundMatch = true;
                         break;
                     }
@@ -227,8 +232,7 @@ public class SimpleDatabase {
         Log.d(TAG, "matchesTemplate: ALL criteria matched - record accepted");
         return true;
     }
-    
-    /**
+      /**
      * Case-insensitive string matching
      * @param str1 First string
      * @param str2 Second string
@@ -237,6 +241,113 @@ public class SimpleDatabase {
     private boolean caseInsensitiveMatch(String str1, String str2) {
         if (str1 == null || str2 == null) return false;
         return str1.toLowerCase(Locale.ROOT).equals(str2.toLowerCase(Locale.ROOT));
+    }
+    
+    /**
+     * Smart field comparison for special fields with business logic
+     * @param fieldName The name of the field being compared
+     * @param recordValue The value from the database record
+     * @param templateValue The value from the user template
+     * @return True if the values match according to the field's business rules
+     */
+    private boolean smartFieldComparison(String fieldName, String recordValue, String templateValue) {
+        // Handle age field comparisons
+        if ("age".equals(fieldName)) {
+            return compareAgeFields(recordValue, templateValue);
+        }
+        
+        // Handle stars field comparisons (higher ratings include lower search values)
+        if ("stars".equals(fieldName)) {
+            return compareStarsFields(recordValue, templateValue);
+        }
+        
+        // Handle number of people field comparisons (equal or fewer people)
+        if ("no_of_people".equals(fieldName) || "numberOfPeople".equals(fieldName)) {
+            return compareNumberOfPeopleFields(recordValue, templateValue);
+        }
+        
+        // For other fields, use regular comparison
+        return false;
+    }
+    
+    /**
+     * Compare age fields with special logic:
+     * - If user searches for <18, match only <18
+     * - If user searches for >18, match both >18 and >65
+     * - If user searches for >65, match only >65
+     */
+    private boolean compareAgeFields(String recordValue, String templateValue) {
+        try {
+            Log.d(TAG, "compareAgeFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
+            
+            // Direct match first
+            if (caseInsensitiveMatch(recordValue, templateValue)) {
+                Log.d(TAG, "compareAgeFields: Direct match found");
+                return true;
+            }
+            
+            // Special logic for >18 template value
+            if ("> 18".equals(templateValue.trim())) {
+                // Match both "> 18" and "> 65" records
+                boolean matches = "> 18".equals(recordValue.trim()) || "> 65".equals(recordValue.trim());
+                Log.d(TAG, "compareAgeFields: >18 template matches " + recordValue + ": " + matches);
+                return matches;
+            }
+            
+            // For <18 and >65, only exact matches (already handled above)
+            Log.d(TAG, "compareAgeFields: No special match found");
+            return false;
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error in compareAgeFields: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Compare stars fields with special logic:
+     * - If user searches for 3 stars, match 3, 4, and 5 star records
+     * - Higher user rating searches include all higher actual ratings
+     */
+    private boolean compareStarsFields(String recordValue, String templateValue) {
+        try {
+            Log.d(TAG, "compareStarsFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
+            
+            int recordStars = Integer.parseInt(recordValue.trim());
+            int templateStars = Integer.parseInt(templateValue.trim());
+            
+            // Record stars must be >= template stars (higher ratings include lower search values)
+            boolean matches = recordStars >= templateStars;
+            Log.d(TAG, "compareStarsFields: " + recordStars + " >= " + templateStars + ": " + matches);
+            return matches;
+            
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Error parsing stars values in compareStarsFields: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Compare number of people fields with special logic:
+     * - If user searches for 10 people, match 10, 9, 8, 7... (equal or fewer people discounts)
+     * - User can benefit from discounts for equal or fewer people
+     */
+    private boolean compareNumberOfPeopleFields(String recordValue, String templateValue) {
+        try {
+            Log.d(TAG, "compareNumberOfPeopleFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
+            
+            int recordPeople = Integer.parseInt(recordValue.trim());
+            int templatePeople = Integer.parseInt(templateValue.trim());
+            
+            // Record people must be <= template people (user can use discounts for equal or fewer people)
+            boolean matches = recordPeople <= templatePeople;
+            Log.d(TAG, "compareNumberOfPeopleFields: " + recordPeople + " <= " + templatePeople + ": " + matches);
+            return matches;
+            
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Error parsing number of people values in compareNumberOfPeopleFields: " + e.getMessage());
+            return false;
+        }
     }
     
     /**
