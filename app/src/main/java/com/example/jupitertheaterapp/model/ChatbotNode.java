@@ -577,23 +577,19 @@ public class ChatbotNode {
                 // Add logging for the ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ category as well
                 else if (msgTemplate != null
                         && msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
-                    com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
+                    com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;                // Get all field values
+                String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
+                String numberOfPeople = template.getNumberOfPeople().isEmpty() ? "" : template.getNumberOfPeople().get(0);
+                String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
+                String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
 
-                    // Get all field values
-                    String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
-                    int numberOfPeople = template.getNumberOfPeople();
-                    String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
-                    String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
-
-                    System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - DiscountTemplate content:");
-                    System.out.println("DEBUG:   showName: '" + showName + "'");
-                    System.out.println("DEBUG:   numberOfPeople: " + numberOfPeople);
-                    System.out.println("DEBUG:   age: '" + age + "'");
-                    System.out.println("DEBUG:   date: '" + date + "'");
-
-                    // Check if any fields are populated
-                    boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 ||
-                            !age.isEmpty() || !date.isEmpty();
+                System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - DiscountTemplate content:");
+                System.out.println("DEBUG:   showName: '" + showName + "'");
+                System.out.println("DEBUG:   numberOfPeople: '" + numberOfPeople + "'");
+                System.out.println("DEBUG:   age: '" + age + "'");
+                    System.out.println("DEBUG:   date: '" + date + "'");                // Check if any fields are populated
+                boolean hasAtLeastOneField = !showName.isEmpty() || (numberOfPeople != null && !numberOfPeople.isEmpty()) ||
+                        !age.isEmpty() || !date.isEmpty();
 
                     System.out.println(
                             "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
@@ -1074,20 +1070,19 @@ public class ChatbotNode {
         }
 
         // ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Consider "some" information as complete
+        // ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Consider "some" information as complete
         // (discount_some node)
         else if ("ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(category)) {
             // This is a DiscountTemplate, check if we have any populated fields at all
             if (msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
-                com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;
-
-                // Get all field values
+                com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;                // Get all field values
                 String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
-                int numberOfPeople = template.getNumberOfPeople();
+                String numberOfPeople = template.getNumberOfPeople().isEmpty() ? "" : template.getNumberOfPeople().get(0);
                 String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
                 String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
 
                 // Check if any fields are populated
-                boolean hasAtLeastOneField = !showName.isEmpty() || numberOfPeople > 0 ||
+                boolean hasAtLeastOneField = !showName.isEmpty() || !numberOfPeople.isEmpty() ||
                         !age.isEmpty() || !date.isEmpty();
 
                 System.out.println(

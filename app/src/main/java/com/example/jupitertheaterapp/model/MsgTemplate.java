@@ -23,9 +23,10 @@ public abstract class MsgTemplate {
 
     // Map for translating field names to Greek for display
     protected Map<String, String> fieldNameMap;
-    
+
     /**
      * Gets the Greek display name for a field
+     * 
      * @param fieldName The field name in English
      * @return The field name in Greek, or the original name if not found
      */
@@ -34,8 +35,11 @@ public abstract class MsgTemplate {
             return fieldNameMap.get(fieldName);
         }
         return fieldName;
-    }    /**
+    }
+
+    /**
      * Get a comma-separated list of missing fields in Greek
+     * 
      * @param missingFields List of missing field names in English
      * @return Comma-separated list of missing fields in Greek
      */
@@ -49,7 +53,7 @@ public abstract class MsgTemplate {
         }
         return result.toString();
     }
-    
+
     /**
      * Merges data from another template of the same type
      * This allows template data to be preserved when navigating between nodes
@@ -63,20 +67,21 @@ public abstract class MsgTemplate {
             System.out.println("DEBUG: Cannot merge templates of different types");
             return false;
         }
-        
+
         System.out.println("DEBUG: Merging template data from " + otherTemplate.getClass().getSimpleName());
         return true; // Base implementation, subclasses will override with actual merging logic
     }
-       
 
     /**
      * Get a list of field names that are missing or incomplete
+     * 
      * @return List of field names that are missing values
      */
     public abstract List<String> getMissingFields();
-    
+
     /**
      * Get a comma-separated string of missing field names in Greek
+     * 
      * @return Comma-separated string of missing field names in Greek
      */
     public String getMissingFieldsAsGreekString() {
@@ -86,31 +91,39 @@ public abstract class MsgTemplate {
 
     /**
      * Get a list of field names that have values (not missing)
+     * 
      * @return List of field names that have values
      */
     public abstract List<String> getExistingFields();
-    
+
     /**
      * Get a comma-separated string of existing field names in Greek
+     * 
      * @return Comma-separated string of existing field names in Greek
      */
     public String getExistingFieldsAsGreekString() {
         List<String> existing = getExistingFields();
         return getMissingFieldsInGreek(existing); // Reusing the same method for Greek translation
-    }    /**
+    }
+
+    /**
      * Abstract method to get a map of existing field names and their values
+     * 
      * @return Map with field names as keys and their values as values
      */
     public abstract Map<String, String> getExistingFieldsWithValues();
-    
+
     /**
      * Get a map of field names to their values list for database queries
+     * 
      * @return Map with field names as keys and list of values as values
      */
     public abstract Map<String, List<String>> getFieldValuesMap();
-    
+
     /**
-     * Checks if the template has any non-empty field values that can be used for queries
+     * Checks if the template has any non-empty field values that can be used for
+     * queries
+     * 
      * @return true if at least one field has values, false otherwise
      */
     public boolean hasQueryableFields() {
@@ -122,9 +135,10 @@ public abstract class MsgTemplate {
         }
         return false;
     }
-    
+
     /**
      * Get a formatted string of existing field names with their values in Greek
+     * 
      * @return Formatted string of existing field names with values
      */
     public String getExistingFieldsWithValuesAsGreekString() {
@@ -151,20 +165,22 @@ public abstract class MsgTemplate {
      *                       format
      * @return Processed string with all variables replaced with their values
      */
-    public abstract String processTemplate(String templateString);    // Special handler for the <missing> placeholder in templates
+    public abstract String processTemplate(String templateString); // Special handler for the <missing> placeholder in
+                                                                   // templates
+
     protected String processMissingFieldsPlaceholder(String templateString) {
         // Handle <missing> placeholder for missing fields
         if (templateString.contains("<missing>")) {
             String missingFieldsGreek = getMissingFieldsAsGreekString();
             templateString = templateString.replace("<missing>", missingFieldsGreek);
         }
-        
+
         // Handle <!missing> placeholder for existing fields with their values
         if (templateString.contains("<!missing>")) {
             String existingFieldsWithValuesGreek = getExistingFieldsWithValuesAsGreekString();
             templateString = templateString.replace("<!missing>", existingFieldsWithValuesGreek);
         }
-        
+
         return templateString;
     }
 
@@ -296,6 +312,21 @@ public abstract class MsgTemplate {
      */
     protected String extractStringValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
+            Object valueObj = fieldObject.get("value");
+            System.out.println("DEBUG: extractStringValue - valueObj type: " + valueObj.getClass().getSimpleName()
+                    + ", value: " + valueObj);
+
+            // Handle the case where value is an empty JSON array
+            if (valueObj instanceof JSONArray) {
+                JSONArray valueArray = (JSONArray) valueObj;
+                if (valueArray.length() == 0) {
+                    System.out.println("DEBUG: extractStringValue - Empty array detected, returning empty string");
+                    return "";
+                }
+                // If array has elements, convert first element to string
+                return valueArray.getString(0);
+            }
+
             return fieldObject.getString("value");
         }
         return "";
@@ -377,7 +408,7 @@ class ShowInfoTemplate extends MsgTemplate {
 
         possibleDays = new ArrayList<>();
         possibleStarRatings = new ArrayList<>();
-        
+
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("name", "όνομα παράστασης");
@@ -388,7 +419,9 @@ class ShowInfoTemplate extends MsgTemplate {
         fieldNameMap.put("room", "αίθουσα");
         fieldNameMap.put("duration", "διάρκεια");
         fieldNameMap.put("stars", "βαθμολογία");
-    }    @Override
+    }
+
+    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
@@ -470,28 +503,44 @@ class ShowInfoTemplate extends MsgTemplate {
     @Override
     public List<String> getMissingFields() {
         List<String> missingFields = new ArrayList<>();
-        if (name.isEmpty()) missingFields.add("name");
-        if (day.isEmpty()) missingFields.add("day");
-        if (topic.isEmpty()) missingFields.add("topic");
-        if (time.isEmpty()) missingFields.add("time");
-        if (cast.isEmpty()) missingFields.add("cast");
-        if (room.isEmpty()) missingFields.add("room");
-        if (duration.isEmpty()) missingFields.add("duration");
-        if (stars.isEmpty()) missingFields.add("stars");
+        if (name.isEmpty())
+            missingFields.add("name");
+        if (day.isEmpty())
+            missingFields.add("day");
+        if (topic.isEmpty())
+            missingFields.add("topic");
+        if (time.isEmpty())
+            missingFields.add("time");
+        if (cast.isEmpty())
+            missingFields.add("cast");
+        if (room.isEmpty())
+            missingFields.add("room");
+        if (duration.isEmpty())
+            missingFields.add("duration");
+        if (stars.isEmpty())
+            missingFields.add("stars");
         return missingFields;
     }
 
     @Override
     public List<String> getExistingFields() {
         List<String> existingFields = new ArrayList<>();
-        if (!name.isEmpty()) existingFields.add("name");
-        if (!day.isEmpty()) existingFields.add("day");
-        if (!topic.isEmpty()) existingFields.add("topic");
-        if (!time.isEmpty()) existingFields.add("time");
-        if (!cast.isEmpty()) existingFields.add("cast");
-        if (!room.isEmpty()) existingFields.add("room");
-        if (!duration.isEmpty()) existingFields.add("duration");
-        if (!stars.isEmpty()) existingFields.add("stars");
+        if (!name.isEmpty())
+            existingFields.add("name");
+        if (!day.isEmpty())
+            existingFields.add("day");
+        if (!topic.isEmpty())
+            existingFields.add("topic");
+        if (!time.isEmpty())
+            existingFields.add("time");
+        if (!cast.isEmpty())
+            existingFields.add("cast");
+        if (!room.isEmpty())
+            existingFields.add("room");
+        if (!duration.isEmpty())
+            existingFields.add("duration");
+        if (!stars.isEmpty())
+            existingFields.add("stars");
         return existingFields;
     }
 
@@ -529,7 +578,7 @@ class ShowInfoTemplate extends MsgTemplate {
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
-        
+
         for (String n : name) {
             templateString = replaceTemplateVariable(templateString, "name", n);
         }
@@ -555,61 +604,63 @@ class ShowInfoTemplate extends MsgTemplate {
             templateString = replaceTemplateVariable(templateString, "stars", s);
         }
         return templateString;
-    }    @Override
+    }
+
+    @Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
             return false;
         }
-        
+
         // Cast to ShowInfoTemplate since we know it's the same type
         ShowInfoTemplate other = (ShowInfoTemplate) otherTemplate;
-        
+
         // Merge lists, only if this template's lists are empty
         if (this.name == null || this.name.isEmpty()) {
             this.name = new ArrayList<>(other.name);
         }
-        
+
         if (this.day == null || this.day.isEmpty()) {
             this.day = new ArrayList<>(other.day);
         }
-        
+
         if (this.topic == null || this.topic.isEmpty()) {
             this.topic = new ArrayList<>(other.topic);
         }
-        
+
         if (this.time == null || this.time.isEmpty()) {
             this.time = new ArrayList<>(other.time);
         }
-        
+
         if (this.cast == null || this.cast.isEmpty()) {
             this.cast = new ArrayList<>(other.cast);
         }
-        
+
         if (this.room == null || this.room.isEmpty()) {
             this.room = new ArrayList<>(other.room);
         }
-        
+
         if (this.duration == null || this.duration.isEmpty()) {
             this.duration = new ArrayList<>(other.duration);
         }
-        
+
         if (this.stars == null || this.stars.isEmpty()) {
             this.stars = new ArrayList<>(other.stars);
         }
-        
+
         // Merge possible values
         if (this.possibleDays == null || this.possibleDays.isEmpty()) {
             this.possibleDays = new ArrayList<>(other.possibleDays);
         }
-        
+
         if (this.possibleStarRatings == null || this.possibleStarRatings.isEmpty()) {
             this.possibleStarRatings = new ArrayList<>(other.possibleStarRatings);
         }
-        
+
         return true;
     }
-    
+
     @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
@@ -705,7 +756,7 @@ class BookingTemplate extends MsgTemplate {
         time = "";
         person = new Person();
         possibleDays = new ArrayList<>();
-        
+
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("show_name", "όνομα παράστασης");
@@ -715,7 +766,9 @@ class BookingTemplate extends MsgTemplate {
         fieldNameMap.put("person_name", "όνομα");
         fieldNameMap.put("person_age", "ηλικιακή κατηγορία");
         fieldNameMap.put("person_seat", "θέση");
-    }    @Override
+    }
+
+    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
@@ -798,26 +851,40 @@ class BookingTemplate extends MsgTemplate {
     @Override
     public List<String> getMissingFields() {
         List<String> missingFields = new ArrayList<>();
-        if (showName.isEmpty()) missingFields.add("show_name");
-        if (room.isEmpty()) missingFields.add("room");
-        if (day.isEmpty()) missingFields.add("day");
-        if (time.isEmpty()) missingFields.add("time");
-        if (person.getName().isEmpty()) missingFields.add("person_name");
-        if (person.getAge().isEmpty()) missingFields.add("person_age");
-        if (person.getSeat().isEmpty()) missingFields.add("person_seat");
+        if (showName.isEmpty())
+            missingFields.add("show_name");
+        if (room.isEmpty())
+            missingFields.add("room");
+        if (day.isEmpty())
+            missingFields.add("day");
+        if (time.isEmpty())
+            missingFields.add("time");
+        if (person.getName().isEmpty())
+            missingFields.add("person_name");
+        if (person.getAge().isEmpty())
+            missingFields.add("person_age");
+        if (person.getSeat().isEmpty())
+            missingFields.add("person_seat");
         return missingFields;
     }
 
     @Override
     public List<String> getExistingFields() {
         List<String> existingFields = new ArrayList<>();
-        if (!showName.isEmpty()) existingFields.add("show_name");
-        if (!room.isEmpty()) existingFields.add("room");
-        if (!day.isEmpty()) existingFields.add("day");
-        if (!time.isEmpty()) existingFields.add("time");
-        if (!person.getName().isEmpty()) existingFields.add("person_name");
-        if (!person.getAge().isEmpty()) existingFields.add("person_age");
-        if (!person.getSeat().isEmpty()) existingFields.add("person_seat");
+        if (!showName.isEmpty())
+            existingFields.add("show_name");
+        if (!room.isEmpty())
+            existingFields.add("room");
+        if (!day.isEmpty())
+            existingFields.add("day");
+        if (!time.isEmpty())
+            existingFields.add("time");
+        if (!person.getName().isEmpty())
+            existingFields.add("person_name");
+        if (!person.getAge().isEmpty())
+            existingFields.add("person_age");
+        if (!person.getSeat().isEmpty())
+            existingFields.add("person_seat");
         return existingFields;
     }
 
@@ -838,7 +905,7 @@ class BookingTemplate extends MsgTemplate {
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
-        
+
         templateString = replaceTemplateVariable(templateString, "show_name", showName);
         templateString = replaceTemplateVariable(templateString, "room", room);
         templateString = replaceTemplateVariable(templateString, "day", day);
@@ -847,33 +914,36 @@ class BookingTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "person_age", person.getAge());
         templateString = replaceTemplateVariable(templateString, "person_seat", person.getSeat());
         return templateString;
-    }    @Override
+    }
+
+    @Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
             return false;
         }
-        
+
         // Cast to BookingTemplate since we know it's the same type
         BookingTemplate other = (BookingTemplate) otherTemplate;
-        
-        // Only merge fields that are empty in this template but have values in the other
+
+        // Only merge fields that are empty in this template but have values in the
+        // other
         if (this.showName == null || this.showName.isEmpty()) {
             this.showName = other.showName;
         }
-        
+
         if (this.room == null || this.room.isEmpty()) {
             this.room = other.room;
         }
-        
+
         if (this.day == null || this.day.isEmpty()) {
             this.day = other.day;
         }
-        
+
         if (this.time == null || this.time.isEmpty()) {
             this.time = other.time;
         }
-        
+
         // Handle person object specially
         if (this.person == null) {
             this.person = other.person;
@@ -882,28 +952,28 @@ class BookingTemplate extends MsgTemplate {
             if (this.person.getName() == null || this.person.getName().isEmpty()) {
                 this.person.setName(other.person.getName());
             }
-            
+
             if (this.person.getAge() == null || this.person.getAge().isEmpty()) {
                 this.person.setAge(other.person.getAge());
             }
-            
+
             if (this.person.getSeat() == null || this.person.getSeat().isEmpty()) {
                 this.person.setSeat(other.person.getSeat());
             }
         }
-        
+
         // Merge possible days list
         if (this.possibleDays == null || this.possibleDays.isEmpty()) {
             this.possibleDays = new ArrayList<>(other.possibleDays);
         }
-        
+
         return true;
     }
-    
+
     @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
-        
+
         // Convert single string values to lists for consistent interface
         if (showName != null && !showName.isEmpty()) {
             List<String> showNameList = new ArrayList<>();
@@ -912,7 +982,7 @@ class BookingTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("show_name", new ArrayList<>());
         }
-        
+
         if (room != null && !room.isEmpty()) {
             List<String> roomList = new ArrayList<>();
             roomList.add(room);
@@ -920,7 +990,7 @@ class BookingTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("room", new ArrayList<>());
         }
-        
+
         if (day != null && !day.isEmpty()) {
             List<String> dayList = new ArrayList<>();
             dayList.add(day);
@@ -928,7 +998,7 @@ class BookingTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("day", new ArrayList<>());
         }
-        
+
         if (time != null && !time.isEmpty()) {
             List<String> timeList = new ArrayList<>();
             timeList.add(time);
@@ -936,7 +1006,7 @@ class BookingTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("time", new ArrayList<>());
         }
-        
+
         // Add person data if available
         if (person != null) {
             if (person.getName() != null && !person.getName().isEmpty()) {
@@ -946,10 +1016,10 @@ class BookingTemplate extends MsgTemplate {
             } else {
                 fieldsMap.put("person_name", new ArrayList<>());
             }
-            
+
             // Add other person fields as needed
         }
-        
+
         return fieldsMap;
     }
 
@@ -1046,15 +1116,19 @@ class BookingTemplate extends MsgTemplate {
  */
 class CancellationTemplate extends MsgTemplate {
     private String reservationNumber;
-    private String passcode;    public CancellationTemplate() {
+    private String passcode;
+
+    public CancellationTemplate() {
         reservationNumber = "";
         passcode = "";
-        
+
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("reservation_number", "αριθμός κράτησης");
         fieldNameMap.put("reservation_password", "κωδικός επιβεβαίωσης");
-    }@Override
+    }
+
+    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
@@ -1071,7 +1145,7 @@ class CancellationTemplate extends MsgTemplate {
                     passcode = newPasscode;
                 }
             }
-            
+
             // Also handle reservation_password field from database records
             if (jsonObject.has("reservation_password")) {
                 String newPasscode = extractStringValue(jsonObject.getJSONObject("reservation_password"));
@@ -1085,41 +1159,48 @@ class CancellationTemplate extends MsgTemplate {
             e.printStackTrace();
             return false;
         }
-    }@Override
+    }
+
+    @Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
             return false;
         }
-        
+
         // Cast to CancellationTemplate since we know it's the same type
         CancellationTemplate other = (CancellationTemplate) otherTemplate;
-        
-        // Only merge fields that are empty in this template but have values in the other
+
+        // Only merge fields that are empty in this template but have values in the
+        // other
         if (this.reservationNumber == null || this.reservationNumber.isEmpty()) {
             this.reservationNumber = other.getReservationNumber();
         }
-        
+
         if (this.passcode == null || this.passcode.isEmpty()) {
             this.passcode = other.getPasscode();
         }
-        
+
         return true;
     }
 
     @Override
     public List<String> getMissingFields() {
         List<String> missingFields = new ArrayList<>();
-        if (reservationNumber.isEmpty()) missingFields.add("reservation_number");
-        if (passcode.isEmpty()) missingFields.add("passcode");
+        if (reservationNumber.isEmpty())
+            missingFields.add("reservation_number");
+        if (passcode.isEmpty())
+            missingFields.add("passcode");
         return missingFields;
     }
 
     @Override
     public List<String> getExistingFields() {
         List<String> existingFields = new ArrayList<>();
-        if (!reservationNumber.isEmpty()) existingFields.add("reservation_number");
-        if (!passcode.isEmpty()) existingFields.add("passcode");
+        if (!reservationNumber.isEmpty())
+            existingFields.add("reservation_number");
+        if (!passcode.isEmpty())
+            existingFields.add("passcode");
         return existingFields;
     }
 
@@ -1135,31 +1216,34 @@ class CancellationTemplate extends MsgTemplate {
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
-        
+
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         return templateString;
-    }    @Override
+    }
+
+    @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
-        
+
         // Convert single string values to lists for consistency
         if (reservationNumber != null && !reservationNumber.isEmpty()) {
             List<String> reservationList = new ArrayList<>();
             reservationList.add(reservationNumber);
-            fieldsMap.put("reservation_id", reservationList);  // Use "reservation_id" to match the field in JSON
+            fieldsMap.put("reservation_id", reservationList); // Use "reservation_id" to match the field in JSON
         } else {
             fieldsMap.put("reservation_id", new ArrayList<>());
         }
-        
+
         if (passcode != null && !passcode.isEmpty()) {
             List<String> passcodeList = new ArrayList<>();
             passcodeList.add(passcode);
-            fieldsMap.put("reservation_password", passcodeList);  // Use "reservation_password" to match the field in JSON
+            fieldsMap.put("reservation_password", passcodeList); // Use "reservation_password" to match the field in
+                                                                 // JSON
         } else {
             fieldsMap.put("reservation_password", new ArrayList<>());
         }
-        
+
         return fieldsMap;
     }
 
@@ -1188,58 +1272,60 @@ class CancellationTemplate extends MsgTemplate {
  */
 class DiscountTemplate extends MsgTemplate {
     private List<String> showName;
-    private int numberOfPeople;
+    private List<String> numberOfPeople;
     private List<String> age;
     private List<String> date;
     private List<String> possibleAgeCategories;
 
     public DiscountTemplate() {
         showName = new ArrayList<>();
-        numberOfPeople = 0;
+        numberOfPeople = new ArrayList<>();
         age = new ArrayList<>();
         date = new ArrayList<>();
         possibleAgeCategories = new ArrayList<>();
-        
+
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("show_name", "όνομα παράστασης");
         fieldNameMap.put("no_of_people", "αριθμός ατόμων");
         fieldNameMap.put("age", "ηλικιακή κατηγορία");
         fieldNameMap.put("date", "ημερομηνία");
-    }    @Override
+    }
+
+    @Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
             return false;
         }
-        
+
         // Cast to DiscountTemplate since we know it's the same type
         DiscountTemplate other = (DiscountTemplate) otherTemplate;
-        
-        // Only merge fields that are empty in this template but have values in the other
+
+        // Only merge fields that are empty in this template but have values in the
+        // other
         if (this.showName == null || this.showName.isEmpty()) {
             this.showName = new ArrayList<>(other.getShowName());
         }
-        
-        if (this.numberOfPeople == 0) {
-            this.numberOfPeople = other.getNumberOfPeople();
+        if (this.numberOfPeople == null || this.numberOfPeople.isEmpty()) {
+            this.numberOfPeople = new ArrayList<>(other.getNumberOfPeople());
         }
-        
+
         if (this.age == null || this.age.isEmpty()) {
             this.age = new ArrayList<>(other.getAge());
         }
-        
+
         if (this.date == null || this.date.isEmpty()) {
             this.date = new ArrayList<>(other.getDate());
         }
-        
+
         if (this.possibleAgeCategories == null || this.possibleAgeCategories.isEmpty()) {
             this.possibleAgeCategories = new ArrayList<>(other.getPossibleAgeCategories());
         }
-        
+
         return true;
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
@@ -1249,11 +1335,9 @@ class DiscountTemplate extends MsgTemplate {
                 if (newShowName != null && !newShowName.isEmpty()) {
                     showName = newShowName;
                 }
-            }
-
-            if (jsonObject.has("no_of_people")) {
-                int newNumberOfPeople = extractIntValue(jsonObject.getJSONObject("no_of_people"));
-                if (newNumberOfPeople > 0) {
+            }            if (jsonObject.has("no_of_people")) {
+                List<String> newNumberOfPeople = extractStringListValue(jsonObject.getJSONObject("no_of_people"));
+                if (newNumberOfPeople != null && !newNumberOfPeople.isEmpty()) {
                     numberOfPeople = newNumberOfPeople;
                 }
             }
@@ -1288,20 +1372,28 @@ class DiscountTemplate extends MsgTemplate {
     @Override
     public List<String> getMissingFields() {
         List<String> missingFields = new ArrayList<>();
-        if (showName.isEmpty()) missingFields.add("show_name");
-        if (numberOfPeople <= 0) missingFields.add("no_of_people");
-        if (age.isEmpty()) missingFields.add("age");
-        if (date.isEmpty()) missingFields.add("date");
+        if (showName.isEmpty())
+            missingFields.add("show_name");
+        if (numberOfPeople == null || numberOfPeople.isEmpty())
+            missingFields.add("no_of_people");
+        if (age.isEmpty())
+            missingFields.add("age");
+        if (date.isEmpty())
+            missingFields.add("date");
         return missingFields;
     }
 
     @Override
     public List<String> getExistingFields() {
         List<String> existingFields = new ArrayList<>();
-        if (!showName.isEmpty()) existingFields.add("show_name");
-        if (numberOfPeople > 0) existingFields.add("no_of_people");
-        if (!age.isEmpty()) existingFields.add("age");
-        if (!date.isEmpty()) existingFields.add("date");
+        if (!showName.isEmpty())
+            existingFields.add("show_name");
+        if (numberOfPeople != null && !numberOfPeople.isEmpty())
+            existingFields.add("no_of_people");
+        if (!age.isEmpty())
+            existingFields.add("age");
+        if (!date.isEmpty())
+            existingFields.add("date");
         return existingFields;
     }
 
@@ -1311,7 +1403,9 @@ class DiscountTemplate extends MsgTemplate {
         for (String s : showName) {
             fieldsWithValues.put("show_name", s);
         }
-        fieldsWithValues.put("no_of_people", String.valueOf(numberOfPeople));
+        for (String noOfPeople : numberOfPeople) {
+            fieldsWithValues.put("no_of_people", noOfPeople);
+        }
         for (String a : age) {
             fieldsWithValues.put("age", a);
         }
@@ -1319,17 +1413,17 @@ class DiscountTemplate extends MsgTemplate {
             fieldsWithValues.put("date", d);
         }
         return fieldsWithValues;
-    }
-
-    @Override
+    }    @Override
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
-        
+
         for (String s : showName) {
             templateString = replaceTemplateVariable(templateString, "show_name", s);
         }
-        templateString = replaceTemplateVariable(templateString, "no_of_people", String.valueOf(numberOfPeople));
+        for (String noOfPeople : numberOfPeople) {
+            templateString = replaceTemplateVariable(templateString, "no_of_people", noOfPeople);
+        }
         for (String a : age) {
             templateString = replaceTemplateVariable(templateString, "age", a);
         }
@@ -1337,49 +1431,42 @@ class DiscountTemplate extends MsgTemplate {
             templateString = replaceTemplateVariable(templateString, "date", d);
         }
         return templateString;
-    }    // Getter methods needed for mergeFrom
+    }// Getter methods needed for mergeFrom
+
     public List<String> getShowName() {
         return showName;
     }
-    
-    public int getNumberOfPeople() {
+
+    public List<String> getNumberOfPeople() {
         return numberOfPeople;
     }
-    
+
     public List<String> getAge() {
         return age;
     }
-    
+
     public List<String> getDate() {
         return date;
     }
-    
+
     public List<String> getPossibleAgeCategories() {
         return possibleAgeCategories;
     }
-    
+
     public int getTotalFieldCount() {
         return 4; // showName, numberOfPeople, age, date
     }
-    
+
     @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
         fieldsMap.put("show_name", showName);
         fieldsMap.put("age", age);
         fieldsMap.put("date", date);
-        
-        // Handle numeric value
-        if (numberOfPeople > 0) {
-            List<String> peopleList = new ArrayList<>();
-            peopleList.add(String.valueOf(numberOfPeople));
-            fieldsMap.put("no_of_people", peopleList);
-        } else {
-            fieldsMap.put("no_of_people", new ArrayList<>());
-        }
-        
+        fieldsMap.put("no_of_people", numberOfPeople);
+
         return fieldsMap;
-    }    // NOTE: Removed duplicated getTotalFieldCount and getter methods
+    } // NOTE: Removed duplicated getTotalFieldCount and getter methods
 
     // tostring
     @Override
@@ -1410,7 +1497,7 @@ class ReviewTemplate extends MsgTemplate {
         stars = 0;
         review = "";
         possibleStarRatings = new ArrayList<>();
-        
+
         // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("reservation_number", "αριθμός κράτησης");
@@ -1418,41 +1505,42 @@ class ReviewTemplate extends MsgTemplate {
         fieldNameMap.put("stars", "βαθμολογία αστεριών");
         fieldNameMap.put("review", "σχόλιο αξιολόγησης");
     }
-    
+
     @Override
     public boolean mergeFrom(MsgTemplate otherTemplate) {
         // Call parent method to ensure same type check
         if (!super.mergeFrom(otherTemplate)) {
             return false;
         }
-        
+
         // Cast to ReviewTemplate since we know it's the same type
         ReviewTemplate other = (ReviewTemplate) otherTemplate;
-        
-        // Only merge fields that are empty in this template but have values in the other
+
+        // Only merge fields that are empty in this template but have values in the
+        // other
         if (this.reservationNumber == null || this.reservationNumber.isEmpty()) {
             this.reservationNumber = other.getReservationNumber();
         }
-        
+
         if (this.passcode == null || this.passcode.isEmpty()) {
             this.passcode = other.getPasscode();
         }
-        
+
         if (this.stars == 0) {
             this.stars = other.getStars();
         }
-        
+
         if (this.review == null || this.review.isEmpty()) {
             this.review = other.getReview();
         }
-        
+
         if (this.possibleStarRatings == null || this.possibleStarRatings.isEmpty()) {
             this.possibleStarRatings = new ArrayList<>(other.getPossibleStarRatings());
         }
-        
+
         return true;
     }
-    
+
     @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
@@ -1501,9 +1589,12 @@ class ReviewTemplate extends MsgTemplate {
     @Override
     public List<String> getMissingFields() {
         List<String> missingFields = new ArrayList<>();
-        if (reservationNumber.isEmpty()) missingFields.add("reservation_number");
-        if (passcode.isEmpty()) missingFields.add("passcode");
-        if (stars <= 0) missingFields.add("stars");
+        if (reservationNumber.isEmpty())
+            missingFields.add("reservation_number");
+        if (passcode.isEmpty())
+            missingFields.add("passcode");
+        if (stars <= 0)
+            missingFields.add("stars");
         // Review is optional, so we don't check for it
         return missingFields;
     }
@@ -1511,9 +1602,12 @@ class ReviewTemplate extends MsgTemplate {
     @Override
     public List<String> getExistingFields() {
         List<String> existingFields = new ArrayList<>();
-        if (!reservationNumber.isEmpty()) existingFields.add("reservation_number");
-        if (!passcode.isEmpty()) existingFields.add("passcode");
-        if (stars > 0) existingFields.add("stars");
+        if (!reservationNumber.isEmpty())
+            existingFields.add("reservation_number");
+        if (!passcode.isEmpty())
+            existingFields.add("passcode");
+        if (stars > 0)
+            existingFields.add("stars");
         // Review is optional, so we don't check for it
         return existingFields;
     }
@@ -1532,24 +1626,26 @@ class ReviewTemplate extends MsgTemplate {
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);
-        
+
         templateString = replaceTemplateVariable(templateString, "reservation_number", reservationNumber);
         templateString = replaceTemplateVariable(templateString, "passcode", passcode);
         templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
         templateString = replaceTemplateVariable(templateString, "review", review);
         return templateString;
-    }    @Override
+    }
+
+    @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
-        
+
         if (reservationNumber != null && !reservationNumber.isEmpty()) {
             List<String> reservationList = new ArrayList<>();
             reservationList.add(reservationNumber);
-            fieldsMap.put("reservation_number", reservationList);  
+            fieldsMap.put("reservation_number", reservationList);
         } else {
             fieldsMap.put("reservation_number", new ArrayList<>());
         }
-        
+
         if (passcode != null && !passcode.isEmpty()) {
             List<String> passcodeList = new ArrayList<>();
             passcodeList.add(passcode);
@@ -1557,7 +1653,7 @@ class ReviewTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("passcode", new ArrayList<>());
         }
-        
+
         if (stars > 0) {
             List<String> starsList = new ArrayList<>();
             starsList.add(String.valueOf(stars));
@@ -1565,15 +1661,15 @@ class ReviewTemplate extends MsgTemplate {
         } else {
             fieldsMap.put("stars", new ArrayList<>());
         }
-        
+
         if (review != null && !review.isEmpty()) {
             List<String> reviewList = new ArrayList<>();
             reviewList.add(review);
-            fieldsMap.put("review", reviewList);  
+            fieldsMap.put("review", reviewList);
         } else {
             fieldsMap.put("review", new ArrayList<>());
         }
-        
+
         return fieldsMap;
     }
 

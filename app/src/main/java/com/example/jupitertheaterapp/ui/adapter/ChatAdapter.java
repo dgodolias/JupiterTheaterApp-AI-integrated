@@ -50,7 +50,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         holder.messageTextView.setText(message.getMessage());
         
         // Ensure padding is consistent
-        holder.messageTextView.setPadding(12, 12, 12, 12);
+        //holder.messageTextView.setPadding(12, 12, 12, 12);
 
         // Apply animation
         Animation animation = AnimationUtils.loadAnimation(
