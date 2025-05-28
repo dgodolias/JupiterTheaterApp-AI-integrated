@@ -137,12 +137,37 @@ public class ChatbotNode {
 
     public String getType() {
         return type;
-    }
-
-    public String getMessage() {
+    }    public String getMessage() {
         // Return message1 from the node directly
-        return message1 != null ? message1 : "";
-    }    /**
+        String result = message1 != null ? message1 : "";
+        
+        // Check if the message contains a <leftover> tag and if this is the root node
+        if (result.contains("<leftover>") && "root".equals(this.id)) {
+            System.out.println("DEBUG: Found <leftover> placeholder in root node message1: " + result);
+            
+            // Get the ChatbotManager instance
+            ChatbotManager manager = ChatbotManager.getInstance();
+            if (manager != null) {
+                // Get the leftover message from the manager
+                String leftoverMessage = manager.getLeftoverMessage();
+                System.out.println("DEBUG: Retrieved leftover message from manager: " + leftoverMessage);
+                
+                if (leftoverMessage != null && !leftoverMessage.isEmpty()) {
+                    result = result.replace("<leftover>", leftoverMessage);
+                    System.out.println("DEBUG: Replaced <leftover> with actual message: " + result);
+                } else {
+                    // If no leftover message (for information requests), return null to show only message_2
+                    System.out.println("DEBUG: No leftover message available, returning null to show only message2");
+                    result = null;
+                }
+            } else {
+                System.out.println("DEBUG: ChatbotManager instance is null");
+                result = null;
+            }
+        }
+        
+        return result;
+    }/**
      * Gets message_2 (the alternative message format, often all caps)
      * If the message contains a <results> tag, it will be processed to include database query results
      */

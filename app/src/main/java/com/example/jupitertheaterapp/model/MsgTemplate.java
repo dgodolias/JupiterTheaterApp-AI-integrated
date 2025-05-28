@@ -1545,7 +1545,7 @@ class ReviewTemplate extends MsgTemplate {
         if (reservationNumber != null && !reservationNumber.isEmpty()) {
             List<String> reservationList = new ArrayList<>();
             reservationList.add(reservationNumber);
-            fieldsMap.put("reservation_number", reservationList);  // Fixed: was "reservation_id"
+            fieldsMap.put("reservation_number", reservationList);  
         } else {
             fieldsMap.put("reservation_number", new ArrayList<>());
         }
@@ -1569,7 +1569,7 @@ class ReviewTemplate extends MsgTemplate {
         if (review != null && !review.isEmpty()) {
             List<String> reviewList = new ArrayList<>();
             reviewList.add(review);
-            fieldsMap.put("review", reviewList);  // Fixed: was "comment"
+            fieldsMap.put("review", reviewList);  
         } else {
             fieldsMap.put("review", new ArrayList<>());
         }
