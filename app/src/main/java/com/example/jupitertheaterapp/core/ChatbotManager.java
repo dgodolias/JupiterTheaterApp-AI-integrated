@@ -957,8 +957,7 @@ public class ChatbotManager {
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
                             }
-                            break;
-                              case "review_confirmation":
+                            break;                              case "review_confirmation":
                             Log.d(TAG, "Adding review to database");
                             operationSuccess = database.addReview(currentNode.getMessageTemplate());
                             if (operationSuccess) {
@@ -976,7 +975,7 @@ public class ChatbotManager {
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                            } else {
                                 Log.e(TAG, "Failed to add review to database");
-                                String leftoverMsg = "Υπήρξε πρόβλημα με την καταχώρηση της αξιολόγησής σας. Παρακαλώ δοκιμάστε ξανά."+ sepChar;
+                                String leftoverMsg = "Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων. Παρακαλώ ελέγξτε τα στοιχεία κράτησης και δοκιμάστε ξανά."+ sepChar;
                                 Log.d(TAG, "Setting leftover message for review failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());

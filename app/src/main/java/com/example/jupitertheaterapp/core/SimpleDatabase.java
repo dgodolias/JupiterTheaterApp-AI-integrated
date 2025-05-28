@@ -236,6 +236,74 @@ public class SimpleDatabase {
         return true;
     }
       /**
+     * Check if a record matches the given criteria map
+     * @param record The record to check
+     * @param criteria The criteria map containing field names and values
+     * @return True if the record matches all criteria
+     */
+    private boolean matchesTemplate(JSONObject record, Map<String, List<String>> criteria) {
+        Log.d(TAG, "matchesTemplate: Starting comparison with criteria: " + criteria);
+        
+        for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {
+            String field = entry.getKey();
+            List<String> values = entry.getValue();
+            
+            Log.d(TAG, "matchesTemplate: Checking field '" + field + "' with values: " + values);
+            
+            if (values == null || values.isEmpty()) {
+                Log.d(TAG, "matchesTemplate: Skipping empty field '" + field + "'");
+                continue; // Skip empty criteria
+            }
+
+            // Check if record has this field
+            if (!record.has(field)) {
+                // Handle special cases like 'name' vs 'show_name' in different tables
+                if (record.has("show_" + field)) {
+                    field = "show_" + field;
+                    Log.d(TAG, "matchesTemplate: Found field with 'show_' prefix: " + field);
+                } else {
+                    Log.d(TAG, "matchesTemplate: Field '" + field + "' not found in record");
+                    return false; // Field doesn't exist
+                }
+            }
+
+            // Get field value from record - handle both string and array formats
+            List<String> recordValues = getFieldValues(record, field);
+
+            Log.d(TAG, "matchesTemplate: Record values for field '" + field + "': " + recordValues);
+
+            // Check if any of the template values match any of the record values
+            boolean foundMatch = false;
+            for (String value : values) {
+                for (String recordValue : recordValues) {
+                    Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
+
+                    // Use smart comparison for special fields
+                    if (smartFieldComparison(field, recordValue, value)) {
+                        Log.d(TAG, "matchesTemplate: SMART MATCH FOUND for field '" + field + "'");
+                        foundMatch = true;
+                        break;
+                    } else if (caseInsensitiveMatch(recordValue, value)) {
+                        Log.d(TAG, "matchesTemplate: EXACT MATCH FOUND for field '" + field + "'");
+                        foundMatch = true;
+                        break;
+                    }
+                }
+                if (foundMatch) break;
+            }
+
+            // If no match found for this field, record doesn't match criteria
+            if (!foundMatch) {
+                Log.d(TAG, "matchesTemplate: NO MATCH found for field '" + field + "' - record rejected");
+                return false;
+            }
+        }
+        
+        // All criteria matched
+        Log.d(TAG, "matchesTemplate: ALL criteria matched - record accepted");
+        return true;
+    }
+      /**
      * Case-insensitive string matching
      * @param str1 First string
      * @param str2 Second string
@@ -482,8 +550,64 @@ public class SimpleDatabase {
         } catch (JSONException e) {
             Log.e(TAG, "Error removing booking: " + e.getMessage());
         }
-        return false;
-    }    /**
+        return false;    }    /**
+     * Validate that a reservation exists in the bookings database
+     * @param template The message template containing reservation details
+     * @return True if a matching reservation exists, false otherwise
+     */
+    public boolean validateReservationExists(MsgTemplate template) {
+        try {
+            JSONArray bookingsTable = tables.get("bookings");
+            if (bookingsTable == null) {
+                Log.e(TAG, "validateReservationExists: Bookings table is null!");
+                return false;
+            }
+            
+            Log.d(TAG, "validateReservationExists: Starting validation with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "validateReservationExists: Template field values: " + template.getFieldValuesMap());
+            }
+            
+            // Get field values from template using getFieldValuesMap
+            Map<String, List<String>> templateFields = template.getFieldValuesMap();
+            
+            // Create a filtered map containing only reservation-related fields for validation
+            Map<String, List<String>> reservationFields = new HashMap<>();
+            if (templateFields.containsKey("reservation_id")) {
+                reservationFields.put("reservation_id", templateFields.get("reservation_id"));
+            }
+            if (templateFields.containsKey("reservation_password")) {
+                reservationFields.put("reservation_password", templateFields.get("reservation_password"));
+            }
+            
+            Log.d(TAG, "validateReservationExists: Validation criteria (reservation fields only): " + reservationFields);
+            
+            // Check each booking record
+            for (int i = 0; i < bookingsTable.length(); i++) {
+                JSONObject booking = bookingsTable.getJSONObject(i);
+                Log.d(TAG, "validateReservationExists: Checking booking " + i + ": reservation_id=" + 
+                      booking.optJSONObject("reservation_id").optString("value") + 
+                      ", reservation_password=" + 
+                      booking.optJSONObject("reservation_password").optString("value"));
+                
+                if (matchesTemplate(booking, reservationFields)) {
+                    Log.d(TAG, "validateReservationExists: Found matching reservation in booking " + i);
+                    return true;
+                } else {
+                    Log.d(TAG, "validateReservationExists: Booking " + i + " does not match criteria");
+                }
+            }
+            
+            Log.d(TAG, "validateReservationExists: No matching reservation found");
+            return false;
+            
+        } catch (JSONException e) {
+            Log.e(TAG, "validateReservationExists: Error validating reservation: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Add a new review to the database
      * @param template The message template containing review data
      * @return True if review was added successfully
@@ -493,6 +617,12 @@ public class SimpleDatabase {
             Log.d(TAG, "addReview: Starting review addition with template: " + template);
             if (template != null) {
                 Log.d(TAG, "addReview: Template field values: " + template.getFieldValuesMap());
+            }
+            
+            // First validate that the reservation exists
+            if (!validateReservationExists(template)) {
+                Log.w(TAG, "addReview: Cannot add review - reservation does not exist");
+                return false;
             }
             
             JSONObject newReview = createReviewFromTemplate(template);
@@ -514,7 +644,7 @@ public class SimpleDatabase {
             Log.e(TAG, "addReview: Error adding review: " + e.getMessage());
         }
         return false;
-    }    /**
+    }/**
      * Create a booking JSON object from template data
      * @param template The message template containing booking data
      * @return JSONObject representing the booking

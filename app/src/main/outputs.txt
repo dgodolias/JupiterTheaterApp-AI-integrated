@@ -1,103 +1,33 @@
-Combined message: Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;
- Current Node: ChatbotNode{
-   id='review_confirmation',
-   category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-   type='EXTRACT',
-   message1='',
-   message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-   systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"","pvalues":[]},"passcode":{"value":"","pvalues":[]},"stars":{"value":4,"pvalues":[1,2,3,4,5]},"review":{"value":"Δεν μου αρεσε","pvalues":[]}}, error='null', type=2},
-   userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-   content='',
-   fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-   childrenCount=2,
-   parent=axiologiseis_sxolia,
-   pendingChildIds=[],
-   msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=4, review='Δεν μου αρεσε', possibleStarRatings=[1, 2, 3, 4, 5]}
- }
- Installing profile for com.example.jupitertheaterapp
- Current Node: ChatbotNode{
-   id='review_confirmation',
-   category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-   type='EXTRACT',
-   message1='',
-   message2='Έχετε υποβάλει αξιολόγηση για την κράτηση DUMMY123 με κωδικό 12345. Η βαθμολογία σας είναι 5/5 αστέρια. Σχόλιο: "This is a dummy review for testing.". Θα θέλατε να επιβεβαιώσετε την υποβολή;',
-   systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"","pvalues":[]},"passcode":{"value":"","pvalues":[]},"stars":{"value":4,"pvalues":[1,2,3,4,5]},"review":{"value":"Δεν μου αρεσε","pvalues":[]}}, error='null', type=2},
-   userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-   content='',
-   fallback='Η αξιολόγησή σας έχει καταχωρηθεί. Σας ευχαριστούμε για τα σχόλιά σας!',
-   childrenCount=2,
-   parent=axiologiseis_sxolia,
-   pendingChildIds=[],
-   msgTemplate=ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=4, review='Δεν μου αρεσε', possibleStarRatings=[1, 2, 3, 4, 5]}
- }
- Getting response for user message: ναι
- User confirmed at confirmation node - navigating to root without server request
- Performing database operation for node: review_confirmation
- Adding review to database
- addReview: Starting review addition with template: ReviewTemplate{reservationNumber='DUMMY123', passcode='12345', stars=4, review='Δεν μου αρεσε', possibleStarRatings=[1, 2, 3, 4, 5]}
- addReview: Template field values: {review=[Δεν μου αρεσε], stars=[4], reservation_number=[DUMMY123], passcode=[12345]}
- createReviewFromTemplate: Starting review creation
- createReviewFromTemplate: Template fields: {review=[Δεν μου αρεσε], stars=[4], reservation_number=[DUMMY123], passcode=[12345]}
- createReviewFromTemplate: Processing field 'review' with values: [Δεν μου αρεσε]
- createReviewFromTemplate: Setting field 'review' to value 'Δεν μου αρεσε'
- createReviewFromTemplate: Processing field 'stars' with values: [4]
- createReviewFromTemplate: Setting field 'stars' to value '4'
- createReviewFromTemplate: Processing field 'reservation_number' with values: [DUMMY123]
- createReviewFromTemplate: Setting field 'reservation_number' to value 'DUMMY123'
- createReviewFromTemplate: Processing field 'passcode' with values: [12345]
- createReviewFromTemplate: Setting field 'passcode' to value '12345'
- creat }
- }
- addReview: Added new review to in-memory database. Total reviews: 6
- Successfully wrote reviews table to test_reviews.json
- File location: /data/user/0/com.example.jupitertheaterapp/files/test_reviews.json
- Table now contains 6 records
- Review successfully added to database
- Reviews table now has 6 records
- Database operation completed successfully for review_confirmation
- === DATABASE STATE ===
- Table 'shows': 7 records
- Table 'discounts': 5 records
- Table 'reviews': 6 records
- Table 'bookings': 5 records
- =====================
- DEBUG: Choosing next node with actual user input: ναι
- DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
- DEBUG: Current node ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
- DEBUG: Available children count: 2
- DEBUG: Available child nodes for matching:
- DEBUG:   - ID: root, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
- DEBUG:   - ID: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
- DEBUG: Path length: 3
- DEBUG: Path from root to current node: 
- DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
- DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
- DEBUG:   - review_confirmation (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
- DEBUG: isConfirmation: true, isRejection: false
- DEBUG: At confirmation node: review_confirmation
- DEBUG: At confirmation node with YES - going to root
- DEBUG: Found root node as first child: root
- DEBUG: Selected next node: root, handling state transition
- DEBUG: Next node is root. Clearing its message template.
- DEBUG: Handling node transition for node root
- DEBUG: Current state: LLM_GET_INFO
- DEBUG: Setting state to INITIAL for root node
- DEBUG: State updated to: INITIAL
- Successfully navigating to root node - skipping server communication
- Returning root message without server request: 
- Combined message:Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;
- Current Node: ChatbotNode{
-   id='root',
-   category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
-   type='CATEGORISE',
-   message1='<leftover>',
-   message2='Γεια σας! Καλωσήρθατε στο Θέατρο Jupiter. Πώς μπορώ να σας βοηθήσω;',
-   systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details=null, error='null', type=2},
-   userMessage=UserMessage{category='-'type=0, message='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'},
-   content='',
-   fallback='Δεν είμαι σίγουρος ότι καταλαβαίνω. Μπορώ να σας βοηθήσω με κρατήσεις, ακυρώσεις, πληροφορίες, αξιολογήσεις ή προσφορές για το θέατρό μας;',
-   childrenCount=5,
-   parent=null,
-   pendingChildIds=[],
-   msgTemplate=null
- }
+2025-05-28 23:37:48.288 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ναι
+2025-05-28 23:37:48.288 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  User confirmed at confirmation node - navigating to root without server request
+2025-05-28 23:37:48.288 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  Performing database operation for node: review_confirmation
+2025-05-28 23:37:48.288 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  Adding review to database
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  addReview: Starting review addition with template: ReviewTemplate{reservationNumber='RES12345', passcode='pass123', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  addReview: Template field values: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Starting validation with template: ReviewTemplate{reservationNumber='RES12345', passcode='pass123', stars=5, review='This is a dummy review for testing.', possibleStarRatings=[1, 2, 3, 4, 5]}
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Template field values: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Checking booking 0: reservation_id=RES12345, reservation_password=pass123
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Starting comparison with criteria: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Checking field 'review' with values: [This is a dummy review for testing.]
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Field 'review' not found in record
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Booking 0 does not match criteria
+2025-05-28 23:37:48.288 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Checking booking 1: reservation_id=RES23456, reservation_password=pass234
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Starting comparison with criteria: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Checking field 'review' with values: [This is a dummy review for testing.]
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Field 'review' not found in record
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Booking 1 does not match criteria
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Checking booking 2: reservation_id=RES34567, reservation_password=pass345
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Starting comparison with criteria: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Checking field 'review' with values: [This is a dummy review for testing.]
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Field 'review' not found in record
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Booking 2 does not match criteria
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Checking booking 3: reservation_id=RES45678, reservation_password=pass456
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Starting comparison with criteria: {review=[This is a dummy review for testing.], stars=[5], reservation_number=[RES12345], passcode=[pass123]}
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Checking field 'review' with values: [This is a dummy review for testing.]
+2025-05-28 23:37:48.289 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  matchesTemplate: Field 'review' not found in record
+2025-05-28 23:37:48.290 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: Booking 3 does not match criteria
+2025-05-28 23:37:48.290 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        D  validateReservationExists: No matching reservation found
+2025-05-28 23:37:48.290 22194-22194 SimpleDatabase          com.example.jupitertheaterapp        W  addReview: Cannot add review - reservation does not exist
+2025-05-28 23:37:48.290 22194-22194 ChatbotManager          com.example.jupitertheaterapp        E  Failed to add review to database
+2025-05-28 23:37:48.290 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  Setting leftover message for review failure: Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων. Παρακαλώ ελέγξτε τα στοιχεία κράτησης και δοκιμάστε ξανά.<sep>
+2025-05-28 23:37:48.290 22194-22194 ChatbotManager          com.example.jupitertheaterapp        D  Leftover message set, current value: Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων. Παρακαλώ ελέγξτε τα στοιχεία κράτησης και δοκιμάστε ξανά.<sep>

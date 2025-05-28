@@ -1505,12 +1505,12 @@ class ReviewTemplate extends MsgTemplate {
         passcode = "";
         stars = 0;
         review = "";
-        possibleStarRatings = new ArrayList<>();
-
-        // Initialize Greek field name mapping
+        possibleStarRatings = new ArrayList<>();        // Initialize Greek field name mapping
         fieldNameMap = new HashMap<>();
         fieldNameMap.put("reservation_number", "αριθμός κράτησης");
+        fieldNameMap.put("reservation_id", "αριθμός κράτησης"); // Database field name
         fieldNameMap.put("passcode", "κωδικός επιβεβαίωσης");
+        fieldNameMap.put("reservation_password", "κωδικός επιβεβαίωσης"); // Database field name
         fieldNameMap.put("stars", "βαθμολογία αστεριών");
         fieldNameMap.put("review", "σχόλιο αξιολόγησης");
     }
@@ -1548,9 +1548,7 @@ class ReviewTemplate extends MsgTemplate {
         }
 
         return true;
-    }
-
-    @Override
+    }    @Override
     protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
@@ -1561,8 +1559,24 @@ class ReviewTemplate extends MsgTemplate {
                 }
             }
 
+            // Also handle reservation_id field from database records
+            if (jsonObject.has("reservation_id")) {
+                String newReservationNumber = extractStringValue(jsonObject.getJSONObject("reservation_id"));
+                if (newReservationNumber != null && !newReservationNumber.isEmpty()) {
+                    reservationNumber = newReservationNumber;
+                }
+            }
+
             if (jsonObject.has("passcode")) {
                 String newPasscode = extractStringValue(jsonObject.getJSONObject("passcode"));
+                if (newPasscode != null && !newPasscode.isEmpty()) {
+                    passcode = newPasscode;
+                }
+            }
+
+            // Also handle reservation_password field from database records
+            if (jsonObject.has("reservation_password")) {
+                String newPasscode = extractStringValue(jsonObject.getJSONObject("reservation_password"));
                 if (newPasscode != null && !newPasscode.isEmpty()) {
                     passcode = newPasscode;
                 }
@@ -1641,26 +1655,24 @@ class ReviewTemplate extends MsgTemplate {
         templateString = replaceTemplateVariable(templateString, "stars", String.valueOf(stars));
         templateString = replaceTemplateVariable(templateString, "review", review);
         return templateString;
-    }
-
-    @Override
+    }    @Override
     public Map<String, List<String>> getFieldValuesMap() {
         Map<String, List<String>> fieldsMap = new HashMap<>();
 
         if (reservationNumber != null && !reservationNumber.isEmpty()) {
             List<String> reservationList = new ArrayList<>();
             reservationList.add(reservationNumber);
-            fieldsMap.put("reservation_number", reservationList);
+            fieldsMap.put("reservation_id", reservationList); // Use "reservation_id" to match the field in JSON
         } else {
-            fieldsMap.put("reservation_number", new ArrayList<>());
+            fieldsMap.put("reservation_id", new ArrayList<>());
         }
 
         if (passcode != null && !passcode.isEmpty()) {
             List<String> passcodeList = new ArrayList<>();
             passcodeList.add(passcode);
-            fieldsMap.put("passcode", passcodeList);
+            fieldsMap.put("reservation_password", passcodeList); // Use "reservation_password" to match the field in JSON
         } else {
-            fieldsMap.put("passcode", new ArrayList<>());
+            fieldsMap.put("reservation_password", new ArrayList<>());
         }
 
         if (stars > 0) {
