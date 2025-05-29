@@ -878,6 +878,11 @@ public class ChatbotManager {
                     userMessage.toLowerCase().contains("ναι") ||
                     userMessage.toLowerCase().contains("επιβεβαιώνω") ||
                     userMessage.toLowerCase().contains("ναί") ||
+                    userMessage.toLowerCase().contains("n") ||
+                    userMessage.toLowerCase().contains("na") ||
+                    userMessage.toLowerCase().contains("nai") ||
+                    userMessage.toLowerCase().contains("naii") ||
+                    userMessage.toLowerCase().contains("ενταξει") ||
                     userMessage.toLowerCase().contains("οκ") ||
                     userMessage.toLowerCase().contains("ok");
             

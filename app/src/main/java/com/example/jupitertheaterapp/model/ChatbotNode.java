@@ -432,6 +432,9 @@ public class ChatbotNode {
                 userMessageText.toLowerCase().contains("cancel") ||
                 userMessageText.toLowerCase().contains("όχι") ||  // with accent
                 userMessageText.toLowerCase().contains("οχι") ||  // without accent
+                userMessageText.toLowerCase().contains("oxi") ||  // without accent
+                userMessageText.toLowerCase().contains("ox") ||  // without accent
+                userMessageText.toLowerCase().contains("no") ||  // without accent
                 userMessageText.toLowerCase().contains("ακύρωση") ||
                 userMessageText.toLowerCase().contains("δεν") ||
                 userMessageText.toLowerCase().contains("άκυρο");
