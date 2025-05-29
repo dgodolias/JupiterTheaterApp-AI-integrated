@@ -898,26 +898,32 @@ public class ChatbotManager {
                             Log.d(TAG, "Validating booking details against shows database");
                             // First validate that the show exists with the provided details
                             boolean showExists = database.validateShowExists(currentNode.getMessageTemplate());
-                            //sep char
-
+                            //sep char                            
                             if (showExists) {
                                 Log.d(TAG, "Show validation passed, adding booking to database");
-                                operationSuccess = database.addBooking(currentNode.getMessageTemplate());
+                                SimpleDatabase.BookingResult bookingResult = database.addBookingWithDetails(currentNode.getMessageTemplate());
+                                operationSuccess = bookingResult.success;
                                 if (operationSuccess) {
                                     Log.d(TAG, "Booking successfully added to database");
                                     // Log the current count for verification
-                                    Log.d(TAG, "Bookings table now has " + database.getTableRecordCount("bookings") + " records");                                    // Set leftover message for booking completion
+                                    Log.d(TAG, "Bookings table now has " + database.getTableRecordCount("bookings") + " records");
+                                    
+                                    // Set leftover message for booking completion with reservation details
                                     MsgTemplate template = currentNode.getMessageTemplate();
                                     String showName = getTemplateField(template, "show_name");
                                     String leftoverMsg;
                                     if (!"N/A".equals(showName)) {
-                                        leftoverMsg = "Η κράτησή σας για την παράσταση " + showName + " επιβεβαιώθηκε επιτυχώς!"+sepChar;
+                                        leftoverMsg = "Η κράτησή σας για την παράσταση " + showName + " επιβεβαιώθηκε επιτυχώς!" + sepChar +
+                                                     "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
+                                                     "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;
                                     } else {
-                                        leftoverMsg = "Η κράτησή σας επιβεβαιώθηκε επιτυχώς!"+sepChar;
-                                    }
+                                        leftoverMsg = "Η κράτησή σας επιβεβαιώθηκε επιτυχώς!" + sepChar +
+                                                     "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
+                                                     "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;                                    }
                                     Log.d(TAG, "Setting leftover message for booking: " + leftoverMsg);
                                     setLeftoverMessage(leftoverMsg);
-                                    Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                                } else {
+                                    Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
+                                }else {
                                     Log.e(TAG, "Failed to add booking to database");
                                     String leftoverMsg = "Υπήρξε πρόβλημα με την κράτησή σας. Παρακαλώ δοκιμάστε ξανά.";
                                     Log.d(TAG, "Setting leftover message for booking failure: " + leftoverMsg);

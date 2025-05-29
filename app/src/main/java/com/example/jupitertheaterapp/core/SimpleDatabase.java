@@ -456,8 +456,59 @@ public class SimpleDatabase {
     // Overloaded method for backward compatibility
     public String formatResults(JSONArray results) {
         return formatResults(results, null);
+    }    /**
+     * Result class for booking operations that include reservation details
+     */
+    public static class BookingResult {
+        public final boolean success;
+        public final String reservationId;
+        public final String reservationPassword;
+        
+        public BookingResult(boolean success, String reservationId, String reservationPassword) {
+            this.success = success;
+            this.reservationId = reservationId;
+            this.reservationPassword = reservationPassword;
+        }
     }
-      /**
+
+    /**
+     * Add a new booking to the database and return reservation details
+     * @param template The message template containing booking data
+     * @return BookingResult containing success status and reservation details
+     */
+    public BookingResult addBookingWithDetails(MsgTemplate template) {
+        try {
+            Log.d(TAG, "addBookingWithDetails: Starting booking addition with template: " + template);
+            if (template != null) {
+                Log.d(TAG, "addBookingWithDetails: Template field values: " + template.getFieldValuesMap());
+            }
+            
+            JSONObject newBooking = createBookingFromTemplate(template);
+            Log.d(TAG, "addBookingWithDetails: Created booking JSON: " + newBooking.toString(2));
+            
+            // Extract reservation details before adding to database
+            String reservationId = newBooking.getJSONObject("reservation_id").getString("value");
+            String reservationPassword = newBooking.getJSONObject("reservation_password").getString("value");
+            
+            // Add to in-memory table
+            JSONArray bookingsTable = tables.get("bookings");
+            if (bookingsTable != null) {
+                bookingsTable.put(newBooking);
+                Log.d(TAG, "addBookingWithDetails: Added new booking to in-memory database. Total bookings: " + bookingsTable.length());
+                
+                // Write to internal storage for verification
+                writeTableToInternalStorage("bookings", "test_bookings.json");
+                return new BookingResult(true, reservationId, reservationPassword);
+            } else {
+                Log.e(TAG, "addBookingWithDetails: Bookings table is null!");
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "addBookingWithDetails: Error adding booking: " + e.getMessage());
+        }
+        return new BookingResult(false, null, null);
+    }
+
+    /**
      * Add a new booking to the database
      * @param template The message template containing booking data
      * @return True if booking was added successfully
