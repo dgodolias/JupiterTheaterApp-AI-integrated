@@ -1394,13 +1394,12 @@ public class ChatbotManager {
         
         // Query the database
         JSONArray results = db.queryRecords(tableName, template);
-        
-        // Format the results
+          // Format the results
         String formattedResults;
         if (results == null || results.length() == 0) {
             formattedResults = "Δεν βρέθηκαν αποτελέσματα που να ταιριάζουν με τα κριτήρια σας.";
         } else {
-            formattedResults = db.formatResults(results);
+            formattedResults = db.formatResults(results, template);
         }
         
         // Replace the <results> tag with formatted results

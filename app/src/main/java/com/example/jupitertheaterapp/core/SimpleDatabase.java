@@ -358,7 +358,7 @@ public class SimpleDatabase {
      * @param results JSONArray of query results
      * @return Formatted string for display
      */
-    public String formatResults(JSONArray results) {
+    public String formatResults(JSONArray results, MsgTemplate template) {
         if (results == null || results.length() == 0) {
             return "Δεν βρέθηκαν αποτελέσματα.";
         }
@@ -369,6 +369,9 @@ public class SimpleDatabase {
         try {
             for (int i = 0; i < results.length(); i++) {
                 JSONObject record = results.getJSONObject(i);
+                
+                // Add <sep> before each result
+                sb.append("<sep>\n");
                 sb.append("• Αποτέλεσμα ").append(i + 1).append(":\n");
                 
                 // Add all fields from the record
@@ -379,15 +382,38 @@ public class SimpleDatabase {
                         try {
                             JSONObject fieldObj = record.getJSONObject(name);
                             String value = fieldObj.getString("value");
+                              // Get Greek field name from template, fallback to English if not available
+                            String displayName;
+                            if (template != null) {
+                                displayName = template.getGreekFieldName(name);
+                                // If no Greek translation found, use formatted English name
+                                if (displayName.equals(name)) {
+                                    displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
+                                }
+                            } else {
+                                // Fallback to formatted English name
+                                displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
+                            }
                             
-                            // Format field name nicely
-                            String displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
-                            sb.append("  - ").append(displayName).append(": ").append(value).append("\n");
+                            // Remove brackets from value and format
+                            String cleanValue = value.replaceAll("^\\[|\\]$", "").replaceAll("\"", "");
+                            sb.append(displayName).append(": ").append(cleanValue).append("\n");
                         } catch (JSONException e) {
                             // Handle special case for nested objects like "person"
                             try {
                                 JSONObject nestedObj = record.getJSONObject(name);
-                                sb.append("  - ").append(name).append(":\n");
+                                  // Get Greek field name for nested object
+                                String displayName;
+                                if (template != null) {
+                                    displayName = template.getGreekFieldName(name);
+                                    // If no Greek translation found, use original name
+                                    if (displayName.equals(name)) {
+                                        displayName = name;
+                                    }
+                                } else {
+                                    displayName = name;
+                                }
+                                sb.append(displayName).append(":\n");
                                 
                                 JSONArray nestedNames = nestedObj.names();
                                 if (nestedNames != null) {
@@ -395,7 +421,20 @@ public class SimpleDatabase {
                                         String nestedName = nestedNames.getString(k);
                                         JSONObject nestedFieldObj = nestedObj.getJSONObject(nestedName);
                                         String nestedValue = nestedFieldObj.getString("value");
-                                        sb.append("    * ").append(nestedName).append(": ").append(nestedValue).append("\n");
+                                          // Get Greek field name for nested field
+                                        String nestedDisplayName;
+                                        if (template != null) {
+                                            nestedDisplayName = template.getGreekFieldName(nestedName);
+                                            // If no Greek translation found, use original name
+                                            if (nestedDisplayName.equals(nestedName)) {
+                                                nestedDisplayName = nestedName;
+                                            }
+                                        } else {
+                                            nestedDisplayName = nestedName;
+                                        }
+                                        
+                                        String cleanNestedValue = nestedValue.replaceAll("^\\[|\\]$", "").replaceAll("\"", "");
+                                        sb.append("  ").append(nestedDisplayName).append(": ").append(cleanNestedValue).append("\n");
                                     }
                                 }
                             } catch (JSONException e2) {
@@ -412,6 +451,11 @@ public class SimpleDatabase {
         }
         
         return sb.toString();
+    }
+
+    // Overloaded method for backward compatibility
+    public String formatResults(JSONArray results) {
+        return formatResults(results, null);
     }
       /**
      * Add a new booking to the database
