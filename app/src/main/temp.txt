@@ -1,275 +1,210 @@
-2025-05-29 16:52:30.927 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: '"Θέλω να δω τον vissin0okipo στη αιθουσα Απολλων"', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
-2025-05-29 16:52:30.927 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: "Θέλω να δω τον vissin0okipo στη αιθουσα Απολλων"
-2025-05-29 16:52:30.927 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.927 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: plirofories, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.927 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 2
-2025-05-29 16:52:30.927 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: info_incomplete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 2
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: true, isRejection: false
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: At category node plirofories, checking template completeness
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template field check - name: 'Ο Βυσσινόκηπος', day: '', topic: '', time: '', cast: '', room: 'Απολλων', duration: '', stars: ''
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ template check - Total fields: 8, Missing fields: 6, Has at least one field: true
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ has some information available - using info_some
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness: true
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template class: ShowInfoTemplate, Missing fields count: 6, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ category has SOME information available
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: [day, topic, time, cast, duration, stars]
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness check result: true
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template state:
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Class: ShowInfoTemplate
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Missing fields: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Has complete info: true
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'cofirmation' pattern for available info, 'incomplete' for no info
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template state: hasCompleteInfo=true, Will search for child with 'cofirmation' in ID
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - ShowInfoTemplate content:
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   name: 'Ο Βυσσινόκηπος'
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   day: ''
-2025-05-29 16:52:30.928 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   time: ''
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   room: 'Απολλων'
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   topic: ''
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   cast: ''
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   duration: ''
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   stars: ''
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: ΠΛΗΡΟΦΟΡΙΕΣ - Has at least one field populated: true
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Looking for child with pattern: cofirmation based on completeness check: true
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children to match pattern:
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Child ID: info_confirmation, matches pattern? false
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Child ID: info_incomplete, matches pattern? false
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: No child with pattern 'cofirmation' was found!
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Found confirmation-related node through pattern matching: info_confirmation
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: info_confirmation, handling state transition
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Both nodes have templates, attempting merge from plirofories to info_confirmation
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merging template data from ShowInfoTemplate
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merge successful: true
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:30.929 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:30.930 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'plirofories' to 'info_confirmation'
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: info_confirmation
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 6
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Should navigate to: info_some
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:30.930 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: ShowInfoTemplate
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 6
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template still has missing fields: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: {name=Ο Βυσσινόκηπος, room=Απολλων}
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: name, Greek: όνομα παράστασης, Value: Ο Βυσσινόκηπος
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: room, Greek: αίθουσα, Value: Απολλων
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Final result: όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων. <sep>Σωστά;
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing template placeholders in getMessage2() for: info_confirmation
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Original message2: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, <!missing>. <sep>Σωστά;
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: {name=Ο Βυσσινόκηπος, room=Απολλων}
-2025-05-29 16:52:30.931 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: name, Greek: όνομα παράστασης, Value: Ο Βυσσινόκηπος
-2025-05-29 16:52:30.932 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: room, Greek: αίθουσα, Value: Απολλων
-2025-05-29 16:52:30.932 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Final result: όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων
-2025-05-29 16:52:30.932 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processed message2: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων. <sep>Σωστά;
-2025-05-29 16:52:30.932 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: info_confirmation
-2025-05-29 16:52:30.932 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-29 16:52:30.932 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: info_confirmation
-2025-05-29 16:52:30.932 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων. <sep>Σωστά;
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, <!missing>. <sep>Σωστά;',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["Ο Βυσσινόκηπος"],"pvalues":["Ο Μάγος του Οζ","Η Παναγία των Παρισίων","Το Τέρας της Λίμνης","Η Καλύβα του Μπαρμπα-Θωμά","Το Μυστικό της Αλίκης","Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων","Ο Βυσσινόκηπος"]},"day":{"value":[],"pvalues":["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο","Κυριακή"]},"topic":{"value":[],"pvalues":["Παιδικό Θέατρο","Αρχαία Τραγωδία","Δράμα","Θρίλερ","Κλασικό Θέατρο","Κωμωδία"]},"time":{"value":[],"pvalues":["18:00","19:30","20:00","20:30","21:00","21:30","22:00"]},"cast":{"value":[],"pvalues":["Αλέξανδρος Παπαδόπουλος","Βασίλης Κωνσταντίνου","Γιώργος Δημητρίου","Δημήτρης Παπαδημητρίου","Ελένη Παπαδάκη","Νίκος Ιωάννου","Σοφία Καραγιάννη","Χρήστος Παπακωνσταντίνου","Κωνσταντίνος Αλεξίου","Μαρία Σταθοπούλου","Ανδρέας Παπαδόπουλος","Ευαγγελία Κωνσταντίνου","Ιωάννα Παπαδοπούλου","Στέφανος Ιωαννίδης"]},"room":{"value":["Απολλων"],"pvalues":["Απόλλων","Διόνυσος","Αθηνά","Ερμής","Άρτεμις"]},"duration":{"value":[],"pvalues":["90","120","150"]},"stars":{"value":[],"pvalues":[1,2,3,4,5]}}, error='null', type=2},
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. <sep>Μπορώ να σας βοηθήσω με κάτι άλλο;',
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[Ο Βυσσινόκηπος], day=[], topic=[], time=[], cast=[], room=[Απολλων], duration=[], stars=[]}
-2025-05-29 16:52:30.934 13071-13071 System.out              com.example.jupitertheaterapp        I  }
-2025-05-29 16:52:34.835 13071-13071 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-29 16:52:34.835 13071-13071 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
-2025-05-29 16:52:34.835 13071-13071 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, <!missing>. <sep>Σωστά;',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["Ο Βυσσινόκηπος"],"pvalues":["Ο Μάγος του Οζ","Η Παναγία των Παρισίων","Το Τέρας της Λίμνης","Η Καλύβα του Μπαρμπα-Θωμά","Το Μυστικό της Αλίκης","Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων","Ο Βυσσινόκηπος"]},"day":{"value":[],"pvalues":["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο","Κυριακή"]},"topic":{"value":[],"pvalues":["Παιδικό Θέατρο","Αρχαία Τραγωδία","Δράμα","Θρίλερ","Κλασικό Θέατρο","Κωμωδία"]},"time":{"value":[],"pvalues":["18:00","19:30","20:00","20:30","21:00","21:30","22:00"]},"cast":{"value":[],"pvalues":["Αλέξανδρος Παπαδόπουλος","Βασίλης Κωνσταντίνου","Γιώργος Δημητρίου","Δημήτρης Παπαδημητρίου","Ελένη Παπαδάκη","Νίκος Ιωάννου","Σοφία Καραγιάννη","Χρήστος Παπακωνσταντίνου","Κωνσταντίνος Αλεξίου","Μαρία Σταθοπούλου","Ανδρέας Παπαδόπουλος","Ευαγγελία Κωνσταντίνου","Ιωάννα Παπαδοπούλου","Στέφανος Ιωαννίδης"]},"room":{"value":["Απολλων"],"pvalues":["Απόλλων","Διόνυσος","Αθηνά","Ερμής","Άρτεμις"]},"duration":{"value":[],"pvalues":["90","120","150"]},"stars":{"value":[],"pvalues":[1,2,3,4,5]}}, error='null', type=2},
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. <sep>Μπορώ να σας βοηθήσω με κάτι άλλο;',
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[Ο Βυσσινόκηπος], day=[], topic=[], time=[], cast=[], room=[Απολλων], duration=[], stars=[]}
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  }
-2025-05-29 16:52:34.836 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: ναι
-2025-05-29 16:52:34.836 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  User confirmed at confirmation node - navigating to root without server request
-2025-05-29 16:52:34.836 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Performing database operation for node: info_confirmation
-2025-05-29 16:52:34.836 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  No database operation needed for node: info_confirmation
-2025-05-29 16:52:34.836 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Database operation completed successfully for info_confirmation
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  === DATABASE STATE ===
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  Table 'shows': 8 records
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  Table 'discounts': 10 records
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  Table 'reviews': 5 records
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  Table 'bookings': 4 records
-2025-05-29 16:52:34.836 13071-13071 SimpleDatabase          com.example.jupitertheaterapp        D  =====================
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ναι
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: 
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 1
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - info_confirmation (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: true, isRejection: false
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: info_confirmation
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with YES - going to root
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Found child with matching category: info_complete
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: info_complete, handling state transition
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Both nodes have templates, attempting merge from info_confirmation to info_complete
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merging template data from ShowInfoTemplate
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merge successful: true
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_complete
-2025-05-29 16:52:34.836 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:34.837 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:34.837 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Chosen next node after confirmation: info_complete
-2025-05-29 16:52:34.837 13071-13071 ChatbotManager          com.example.jupitertheaterapp        W  Next node is not root or is null - continuing with normal flow
-2025-05-29 16:52:34.837 13071-13071 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
-2025-05-29 16:52:34.837 13071-13071 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    id='info_confirmation',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    message1='',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    message2='Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, <!missing>. <sep>Σωστά;',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":["Ο Βυσσινόκηπος"],"pvalues":["Ο Μάγος του Οζ","Η Παναγία των Παρισίων","Το Τέρας της Λίμνης","Η Καλύβα του Μπαρμπα-Θωμά","Το Μυστικό της Αλίκης","Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων","Ο Βυσσινόκηπος"]},"day":{"value":[],"pvalues":["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο","Κυριακή"]},"topic":{"value":[],"pvalues":["Παιδικό Θέατρο","Αρχαία Τραγωδία","Δράμα","Θρίλερ","Κλασικό Θέατρο","Κωμωδία"]},"time":{"value":[],"pvalues":["18:00","19:30","20:00","20:30","21:00","21:30","22:00"]},"cast":{"value":[],"pvalues":["Αλέξανδρος Παπαδόπουλος","Βασίλης Κωνσταντίνου","Γιώργος Δημητρίου","Δημήτρης Παπαδημητρίου","Ελένη Παπαδάκη","Νίκος Ιωάννου","Σοφία Καραγιάννη","Χρήστος Παπακωνσταντίνου","Κωνσταντίνος Αλεξίου","Μαρία Σταθοπούλου","Ανδρέας Παπαδόπουλος","Ευαγγελία Κωνσταντίνου","Ιωάννα Παπαδοπούλου","Στέφανος Ιωαννίδης"]},"room":{"value":["Απολλων"],"pvalues":["Απόλλων","Διόνυσος","Αθηνά","Ερμής","Άρτεμις"]},"duration":{"value":[],"pvalues":["90","120","150"]},"stars":{"value":[],"pvalues":[1,2,3,4,5]}}, error='null', type=2},
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='ναι'},
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. <sep>Μπορώ να σας βοηθήσω με κάτι άλλο;',
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    parent=plirofories,
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[Ο Βυσσινόκηπος], day=[], topic=[], time=[], cast=[], room=[Απολλων], duration=[], stars=[]}
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I  }
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
-2025-05-29 16:52:34.838 13071-13071 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:34.840 13071-13125 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
-2025-05-29 16:52:34.840 13071-13125 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΠΛΗΡΟΦΟΡΙΕΣ","message":"ναι"}
-2025-05-29 16:52:35.916 13071-13125 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης", "Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]}, "day": {"value": [], "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]}, "topic": {"value": [], "pvalues": ["Παιδικό Θέατρο", "Αρχαία Τραγωδία", "Δράμα", "Θρίλερ", "Κλασικό Θέατρο", "Κωμωδία"]}, "time": {"value": [], "pvalues": ["18:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"]}, "cast": {"value": [], "pvalues": ["Αλέξανδρος Παπαδόπουλος", "Βασίλης Κωνσταντίνου", "Γιώργος Δημητρίου", "Δημήτρης Παπαδημητρίου", "Ελένη Παπαδάκη", "Νίκος Ιωάννου", "Σοφία Καραγιάννη", "Χρήστος Παπακωνσταντίνου", "Κωνσταντίνος Αλεξίου", "Μαρία Σταθοπούλου", "Ανδρέας Παπαδόπουλος", "Ευαγγελία Κωνσταντίνου", "Ιωάννα Παπαδοπούλου", "Στέφανος Ιωαννίδης"]}, "room": {"value": [], "pvalues": ["Απόλλων", "Διόνυσος", "Αθηνά", "Ερμής", "Άρτεμις"]}, "duration": {"value": [], "pvalues": ["90", "120", "150"]}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5]}}, "error": null}
-2025-05-29 16:52:35.916 13071-13125 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΠΛΗΡΟΦΟΡΙΕΣ", "details": {"name": {"value": [], "pvalues": ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης", "Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]}, "day": {"value": [], "pvalues": ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]}, "topic": {"value": [], "pvalues": ["Παιδικό Θέατρο", "Αρχαία Τραγωδία", "Δράμα", "Θρίλερ", "Κλασικό Θέατρο", "Κωμωδία"]}, "time": {"value": [], "pvalues": ["18:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"]}, "cast": {"value": [], "pvalues": ["Αλέξανδρος Παπαδόπουλος", "Βασίλης Κωνσταντίνου", "Γιώργος Δημητρίου", "Δημήτρης Παπαδημητρίου", "Ελένη Παπαδάκη", "Νίκος Ιωάννου", "Σοφία Καραγιάννη", "Χρήστος Παπακωνσταντίνου", "Κωνσταντίνος Αλεξίου", "Μαρία Σταθοπούλου", "Ανδρέας Παπαδόπουλος", "Ευαγγελία Κωνσταντίνου", "Ιωάννα Παπαδοπούλου", "Στέφανος Ιωαννίδης"]}, "room": {"value": [], "pvalues": ["Απόλλων", "Διόνυσος", "Αθηνά", "Ερμής", "Άρτεμις"]}, "duration": {"value": [], "pvalues": ["90", "120", "150"]}, "stars": {"value": [], "pvalues": [1, 2, 3, 4, 5]}}, "error": null}
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@79121b7
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: info_confirmation
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-29 16:52:35.916 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 6
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has SOME information available
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Should navigate to: info_some
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: ShowInfoTemplate
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 6
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template still has missing fields: ημέρα, θέμα, ώρα, ηθοποιοί, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: {name=Ο Βυσσινόκηπος, room=Απολλων}
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: name, Greek: όνομα παράστασης, Value: Ο Βυσσινόκηπος
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: room, Greek: αίθουσα, Value: Απολλων
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Final result: όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων. <sep>Σωστά;
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_confirmation
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing template placeholders in getMessage2() for: info_confirmation
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Original message2: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, <!missing>. <sep>Σωστά;
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: {name=Ο Βυσσινόκηπος, room=Απολλων}
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: name, Greek: όνομα παράστασης, Value: Ο Βυσσινόκηπος
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing field - English: room, Greek: αίθουσα, Value: Απολλων
-2025-05-29 16:52:35.917 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Final result: όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processed message2: Κατάλαβα! Θα θέλατε λοιπόν πληροφορίες για παραστάσεις που πληρούν τα εξής:, όνομα παράστασης: Ο Βυσσινόκηπος, αίθουσα: Απολλων. <sep>Σωστά;
-2025-05-29 16:52:35.918 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
-2025-05-29 16:52:35.918 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Information request detected - clearing leftover message
-2025-05-29 16:52:35.918 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: 'ναι', Server category: 'ΠΛΗΡΟΦΟΡΙΕΣ'
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: ναι
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: info_confirmation, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 1
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 3
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - plirofories (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG:   - info_confirmation (ΠΛΗΡΟΦΟΡΙΕΣ)
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: true, isRejection: false
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node: info_confirmation
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: At confirmation node with YES - going to root
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Found child with matching category: info_complete
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: info_complete, handling state transition
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Both nodes have templates, attempting merge from info_confirmation to info_complete
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merging template data from ShowInfoTemplate
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Merge successful: true
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_complete
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:35.918 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'info_confirmation' to 'info_complete'
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: info_complete
-2025-05-29 16:52:35.918 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: true
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 8
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Template has NO information available
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Should navigate to: info_none
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: info_complete, Category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.919 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: ShowInfoTemplate
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated from JSON - Type: ShowInfoTemplate, Missing fields count: 8
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Template still has missing fields: όνομα παράστασης, ημέρα, θέμα, ώρα, ηθοποιοί, αίθουσα, διάρκεια, βαθμολογία
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  TEMPLATE APPLIED: <results>. <sep> Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node info_complete
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
-2025-05-29 16:52:35.920 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
-2025-05-29 16:52:35.921 13071-13071 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
-2025-05-29 16:52:35.921 13071-13071 ChatbotManager          com.example.jupitertheaterapp        E  Template has no queryable fields for category: ΠΛΗΡΟΦΟΡΙΕΣ
-2025-05-29 16:52:35.921 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: info_complete
-2025-05-29 16:52:35.921 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Current state: INITIAL
-2025-05-29 16:52:35.921 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: info_complete
-2025-05-29 16:52:35.921 13071-13071 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:
-                                                                                                    Δεν υπάρχουν επαρκή στοιχεία για αναζήτηση.. <sep> Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    id='info_complete',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    category='ΠΛΗΡΟΦΟΡΙΕΣ',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    message1='Παρακάτω είναι οι λεπτομέρειες που ζητήσατε:',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    message2='<results>. <sep> Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση!',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΠΛΗΡΟΦΟΡΙΕΣ', details={"name":{"value":[],"pvalues":["Ο Μάγος του Οζ","Η Παναγία των Παρισίων","Το Τέρας της Λίμνης","Η Καλύβα του Μπαρμπα-Θωμά","Το Μυστικό της Αλίκης","Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων","Ο Βυσσινόκηπος"]},"day":{"value":[],"pvalues":["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο","Κυριακή"]},"topic":{"value":[],"pvalues":["Παιδικό Θέατρο","Αρχαία Τραγωδία","Δράμα","Θρίλερ","Κλασικό Θέατρο","Κωμωδία"]},"time":{"value":[],"pvalues":["18:00","19:30","20:00","20:30","21:00","21:30","22:00"]},"cast":{"value":[],"pvalues":["Αλέξανδρος Παπαδόπουλος","Βασίλης Κωνσταντίνου","Γιώργος Δημητρίου","Δημήτρης Παπαδημητρίου","Ελένη Παπαδάκη","Νίκος Ιωάννου","Σοφία Καραγιάννη","Χρήστος Παπακωνσταντίνου","Κωνσταντίνος Αλεξίου","Μαρία Σταθοπούλου","Ανδρέας Παπαδόπουλος","Ευαγγελία Κωνσταντίνου","Ιωάννα Παπαδοπούλου","Στέφανος Ιωαννίδης"]},"room":{"value":[],"pvalues":["Απόλλων","Διόνυσος","Αθηνά","Ερμής","Άρτεμις"]},"duration":{"value":[],"pvalues":["90","120","150"]},"stars":{"value":[],"pvalues":[1,2,3,4,5]}}, error='null', type=2},
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    userMessage=null,
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    content='',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    fallback='Ελπίζω οι πληροφορίες που σας έδωσα να ήταν χρήσιμες. <sep>Μπορώ να σας βοηθήσω με κάτι άλλο;',
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    childrenCount=1,
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    parent=info_confirmation,
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I    msgTemplate=ShowInfoTemplate{name=[], day=[], topic=[], time=[], cast=[], room=[], duration=[], stars=[]}
-2025-05-29 16:52:35.922 13071-13071 System.out              com.example.jupitertheaterapp        I  }
+2025-05-29 17:17:32.132 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Getting response for user message: "Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!"
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"\"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!\""}
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  Current node: ChatbotNode{
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    id='axiologiseis_sxolia',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    message2='Δωστε μου το feedback σας για την παράσταση!<sep>Συγκεκριμένα, θα ήθελα να μάθω: αριθμός κράτησης, κωδικός επιβεβαίωσης, βαθμολογία αστεριών.',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details=null, error='null', type=2},
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    userMessage=UserMessage{category='-'type=0, message='"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!"'},
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    fallback='Τα σχόλια και οι αξιολογήσεις των θεατών μας είναι πολύτιμα για τη συνεχή βελτίωση των παραστάσεών μας.',
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    parent=root,
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='', passcode='', stars=0, review='', possibleStarRatings=[]}
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  }
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  CREATED EXTRACT REQUEST: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"\"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!\""}
+2025-05-29 17:17:32.132 14285-14285 System.out              com.example.jupitertheaterapp        I  CATEGORY FOR EXTRACT: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:32.133 14285-14335 Client                  com.example.jupitertheaterapp        D  Sent to server: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"\"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!\""}
+2025-05-29 17:17:32.133 14285-14335 System.out              com.example.jupitertheaterapp        I  JSON SENT TO SERVER: {"type":"EXTRACT","category":"ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ","message":"\"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!\""}
+2025-05-29 17:17:33.965 14285-14335 Client                  com.example.jupitertheaterapp        D  Received from server: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "RES23456", "pvalues": []}, "passcode": {"value": "pass234", "pvalues": []}, "stars": {"value": [5], "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς.", "pvalues": []}}, "error": null}
+2025-05-29 17:17:33.965 14285-14335 System.out              com.example.jupitertheaterapp        I  JSON RECEIVED FROM SERVER: {"category": "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", "details": {"reservation_number": {"value": "RES23456", "pvalues": []}, "passcode": {"value": "pass234", "pvalues": []}, "stars": {"value": [5], "pvalues": [1, 2, 3, 4, 5]}, "review": {"value": "Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς.", "pvalues": []}}, "error": null}
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  JSON FIELDS: java.util.LinkedHashMap$LinkedKeyIterator@f0948a8
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  CATEGORY FROM SERVER: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: axiologiseis_sxolia
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: RES23456
+2025-05-29 17:17:33.966 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: pass234
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value [5] at value of type org.json.JSONArray cannot be converted to int
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getInt(JSONObject.java:491)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractIntValue(MsgTemplate.java:339)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ReviewTemplate.populateFromJsonObject(MsgTemplate.java:1590)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:298)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:240)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1452)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:1047)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:1134)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
+2025-05-29 17:17:33.966 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+2025-05-29 17:17:33.967 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: false
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 1
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: βαθμολογία αστεριών
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: INITIAL
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.967 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with INITIAL state
+2025-05-29 17:17:33.968 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: ReviewTemplate
+2025-05-29 17:17:33.968 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: βαθμολογία αστεριών
+2025-05-29 17:17:33.968 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: RES23456
+2025-05-29 17:17:33.968 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: pass234
+2025-05-29 17:17:33.968 14285-14285 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value [5] at value of type org.json.JSONArray cannot be converted to int
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getInt(JSONObject.java:491)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractIntValue(MsgTemplate.java:339)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ReviewTemplate.populateFromJsonObject(MsgTemplate.java:1590)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:298)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:240)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:910)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1256)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1518)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:1047)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:1134)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+2025-05-29 17:17:33.969 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  Failed to parse JSON for template values
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node axiologiseis_sxolia
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: INITIAL
+2025-05-29 17:17:33.969 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: INITIAL
+2025-05-29 17:17:33.969 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Initial JSON processing complete, template populated
+2025-05-29 17:17:33.970 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Navigation debug - Original user input: '"Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!"', Server category: 'ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ'
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Choosing next node with actual user input: "Κράτηση RES23456 με κωδικό pass234 - Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς. 5 αστέρια!"
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Stored user message: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node ID: axiologiseis_sxolia, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children count: 2
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Available child nodes for matching:
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: review_confirmation, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - ID: review_incomplete, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Path length: 2
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Path from root to current node: 
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - root (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - axiologiseis_sxolia (ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ)
+2025-05-29 17:17:33.970 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: isConfirmation: false, isRejection: false
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: At category node axiologiseis_sxolia, checking template completeness
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness check - Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ, Node ID: axiologiseis_sxolia, Template type: ReviewTemplate, Missing fields: 1, isComplete: false
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: βαθμολογία αστεριών
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness: false
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template class: ReviewTemplate, Missing fields count: 1, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: [stars]
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template completeness check result: false
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template state:
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Class: ReviewTemplate
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Missing fields: βαθμολογία αστεριών
+2025-05-29 17:17:33.971 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Has complete info: false
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Looking for child with pattern: incomplete based on completeness check: false
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Available children to match pattern:
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Child ID: review_confirmation, matches pattern? false
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG:   - Child ID: review_incomplete, matches pattern? true
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Found matching child node: review_incomplete for pattern: incomplete
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Selected next node: review_incomplete, handling state transition
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Both nodes have templates, attempting merge from axiologiseis_sxolia to review_incomplete
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Merging template data from ReviewTemplate
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Merge successful: true
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_incomplete
+2025-05-29 17:17:33.972 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: INITIAL
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to LLM_GET_INFO for review_incomplete node
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: State updated to: LLM_GET_INFO
+2025-05-29 17:17:33.973 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Navigation successful - Moving from 'axiologiseis_sxolia' to 'review_incomplete'
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling conversation turn for node: review_incomplete
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing JSON response to populate template
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: RES23456
+2025-05-29 17:17:33.973 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: pass234
+2025-05-29 17:17:33.973 14285-14285 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value [5] at value of type org.json.JSONArray cannot be converted to int
+2025-05-29 17:17:33.973 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
+2025-05-29 17:17:33.973 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getInt(JSONObject.java:491)
+2025-05-29 17:17:33.973 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractIntValue(MsgTemplate.java:339)
+2025-05-29 17:17:33.973 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ReviewTemplate.populateFromJsonObject(MsgTemplate.java:1590)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:298)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:240)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1452)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:1069)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:1134)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+2025-05-29 17:17:33.974 14285-14285 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
+2025-05-29 17:17:33.975 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+2025-05-29 17:17:33.975 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Template populated: false
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: After JSON population - Missing fields: 1
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields in Greek: βαθμολογία αστεριών
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with state: LLM_GET_INFO
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current node: review_incomplete, Category: ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing message with LLM_GET_INFO state
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing review info request
+2025-05-29 17:17:33.975 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current template before processing: ReviewTemplate
+2025-05-29 17:17:33.976 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Missing fields: βαθμολογία αστεριών
+2025-05-29 17:17:33.976 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: message2 contains <missing> placeholder: Για να υποβάλετε αξιολόγηση, χρειάζομαι: <missing>.<sep>Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+2025-05-29 17:17:33.976 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: RES23456
+2025-05-29 17:17:33.976 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: extractStringValue - valueObj type: String, value: pass234
+2025-05-29 17:17:33.977 14285-14285 System.err              com.example.jupitertheaterapp        W  org.json.JSONException: Value [5] at value of type org.json.JSONArray cannot be converted to int
+2025-05-29 17:17:33.978 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSON.typeMismatch(JSON.java:101)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at org.json.JSONObject.getInt(JSONObject.java:491)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.extractIntValue(MsgTemplate.java:339)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ReviewTemplate.populateFromJsonObject(MsgTemplate.java:1590)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.populateFromDetails(MsgTemplate.java:298)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.MsgTemplate.valuesFromJson(MsgTemplate.java:240)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.fillMsg2FromTemplate(ChatbotNode.java:910)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.processMessageByState(ChatbotNode.java:1278)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.model.ChatbotNode.handleConversationTurn(ChatbotNode.java:1518)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$1.onSuccess(ChatbotManager.java:1069)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.core.ChatbotManager$2.onServerResponse(ChatbotManager.java:1134)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client.lambda$sendJsonRequest$3$com-example-jupitertheaterapp-util-Client(Client.java:205)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.example.jupitertheaterapp.util.Client$$ExternalSyntheticLambda4.run(D8$$SyntheticClass:0)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.handleCallback(Handler.java:883)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Handler.dispatchMessage(Handler.java:100)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.os.Looper.loop(Looper.java:214)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at android.app.ActivityThread.main(ActivityThread.java:7356)
+2025-05-29 17:17:33.979 14285-14285 System.err              com.example.jupitertheaterapp        W  	at java.lang.reflect.Method.invoke(Native Method)
+2025-05-29 17:17:33.980 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+2025-05-29 17:17:33.980 14285-14285 System.err              com.example.jupitertheaterapp        W  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  Failed to parse JSON for template values
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: First process result: true
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Handling node transition for node review_incomplete
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state: LLM_GET_INFO
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Setting state to LLM_GET_INFO for review_incomplete node
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: State unchanged: LLM_GET_INFO
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Current state after transition: LLM_GET_INFO
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processing template placeholders in getMessage2() for: review_incomplete
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Original message2: Για να υποβάλετε αξιολόγηση, χρειάζομαι: <missing>.<sep>Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+2025-05-29 17:17:33.980 14285-14285 System.out              com.example.jupitertheaterapp        I  DEBUG: Processed message2: Για να υποβάλετε αξιολόγηση, χρειάζομαι: βαθμολογία αστεριών.<sep>Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+2025-05-29 17:17:33.980 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Conversation turn processed for node: review_incomplete
+2025-05-29 17:17:33.981 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Current state: LLM_GET_INFO
+2025-05-29 17:17:33.981 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Using system message from node: review_incomplete
+2025-05-29 17:17:33.981 14285-14285 ChatbotManager          com.example.jupitertheaterapp        D  Combined message: Για να υποβάλετε αξιολόγηση, χρειάζομαι: βαθμολογία αστεριών.<sep>Παρακαλώ δώστε τις πληροφορίες που λείπουν.
+2025-05-29 17:17:33.982 14285-14285 System.out              com.example.jupitertheaterapp        I  Current Node: ChatbotNode{
+2025-05-29 17:17:33.982 14285-14285 System.out              com.example.jupitertheaterapp        I    id='review_incomplete',
+2025-05-29 17:17:33.982 14285-14285 System.out              com.example.jupitertheaterapp        I    category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    type='EXTRACT',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    message1='',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    message2='Για να υποβάλετε αξιολόγηση, χρειάζομαι: <missing>.<sep>Παρακαλώ δώστε τις πληροφορίες που λείπουν.',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    systemMessage=SystemMessage{category='ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ', details={"reservation_number":{"value":"RES23456","pvalues":[]},"passcode":{"value":"pass234","pvalues":[]},"stars":{"value":[5],"pvalues":[1,2,3,4,5]},"review":{"value":"Καταπληκτική ερμηνεία της Παναγιας. Πραγματικά συγκινητικό το έργο και άψογη η απόδοση από τους ηθοποιούς.","pvalues":[]}}, error='null', type=2},
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    userMessage=null,
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    content='',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    fallback='Χρειαζόμαστε τον αριθμό κράτησης, τον κωδικό επιβεβαίωσης και τη βαθμολογία σας για να καταχωρήσουμε την αξιολόγησή σας.',
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    childrenCount=2,
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    parent=axiologiseis_sxolia,
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    pendingChildIds=[],
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I    msgTemplate=ReviewTemplate{reservationNumber='RES23456', passcode='pass234', stars=0, review='', possibleStarRatings=[]}
+2025-05-29 17:17:33.983 14285-14285 System.out              com.example.jupitertheaterapp        I  }

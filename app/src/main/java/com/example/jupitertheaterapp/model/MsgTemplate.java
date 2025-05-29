@@ -255,15 +255,13 @@ public abstract class MsgTemplate {
             // Return true anyway so the message can still be shown
             return true;
         }
-    }
-
-    /**
+    }    /**
      * Populates the template fields from a JSONObject
      * 
      * @param jsonObject JSONObject to extract values from
      * @return true if population was successful, false otherwise
      */
-    protected abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;
+    public abstract boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException;
 
     /**
      * Extracts details from a JSON response
@@ -332,14 +330,24 @@ public abstract class MsgTemplate {
             return fieldObject.getString("value");
         }
         return "";
-    }
-
-    protected int extractIntValue(JSONObject fieldObject) throws JSONException {
+    }    protected int extractIntValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
+            Object valueObj = fieldObject.get("value");
+            
+            // Handle the case where value is a JSON array
+            if (valueObj instanceof JSONArray) {
+                JSONArray valueArray = (JSONArray) valueObj;
+                if (valueArray.length() == 0) {
+                    return 0;
+                }
+                // If array has elements, convert first element to integer
+                return valueArray.getInt(0);
+            }
+            
             return fieldObject.getInt("value");
         }
         return 0;
-    }    protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
+    }protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
         List<String> values = new ArrayList<>();
         if (fieldObject.has("value")) {
             Object valueObj = fieldObject.get("value");
@@ -432,7 +440,7 @@ class ShowInfoTemplate extends MsgTemplate {
     }
 
     @Override
-    protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
+    public boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("name")) {
@@ -780,7 +788,7 @@ class BookingTemplate extends MsgTemplate {
     }
 
     @Override
-    protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
+    public boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("show_name")) {
@@ -1140,7 +1148,7 @@ class CancellationTemplate extends MsgTemplate {
     }
 
     @Override
-    protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
+    public boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("reservation_number")) {
@@ -1338,7 +1346,7 @@ class DiscountTemplate extends MsgTemplate {
     }
 
     @Override
-    protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
+    public boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("show_name")) {
@@ -1568,7 +1576,7 @@ class ReviewTemplate extends MsgTemplate {
     }
 
     @Override
-    protected boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
+    public boolean populateFromJsonObject(JSONObject jsonObject) throws JSONException {
         try {
             // Only update fields that have non-empty values in the JSON response
             if (jsonObject.has("reservation_number")) {
