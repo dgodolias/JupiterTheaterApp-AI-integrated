@@ -445,11 +445,10 @@ public class ChatbotManager {
     }    public void reset() {
         // Reset to root node
         currentNode = rootNode;
-        
-        // Reset root node's template and category
+          // Reset root node's template and category
         if (rootNode != null) {
             rootNode.setMessageTemplate(null);
-            rootNode.setCategory("-"); // Use the consistent category identifier for root
+            rootNode.setCategory("root"); // Use the consistent category identifier for root
             
             // Debug verification to confirm reset
             System.out.println("DEBUG: Reset chatbot - Template and category reset for root node");

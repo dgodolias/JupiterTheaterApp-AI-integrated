@@ -828,10 +828,9 @@ public class ChatbotNode {
             if (!category.isEmpty()) {
                 this.category = category;
             }
-            
-            // Always initialize the template if possible, even if there are no details
+              // Always initialize the template if possible, even if there are no details
             // This ensures we can process <missing> placeholders in message1 and message2
-            if (msgTemplate == null && !category.isEmpty() && !category.equals("unknown")) {
+            if (msgTemplate == null && !category.isEmpty() && !category.equals("unknown") && !category.equals("root")) {
                 try {
                     System.out.println("Creating template for category: " + category);
                     msgTemplate = MsgTemplate.createTemplate(category);
@@ -1363,12 +1362,11 @@ public class ChatbotNode {
      */
     private ChatbotNode handleNodeSelectionWithState(ChatbotNode nextNode) {
         if (nextNode != null) {
-            System.out.println("DEBUG: Selected next node: " + nextNode.getId() + ", handling state transition");
-
-            // If the next node is the root node, ensure its template is cleared and not inherited.
+            System.out.println("DEBUG: Selected next node: " + nextNode.getId() + ", handling state transition");            // If the next node is the root node, ensure its template is cleared and not inherited.
             if ("root".equals(nextNode.getId())) {
-                System.out.println("DEBUG: Next node is root. Clearing its message template.");
+                System.out.println("DEBUG: Next node is root. Clearing its message template and resetting category.");
                 nextNode.setMessageTemplate(null);
+                nextNode.setCategory("root"); // Reset category to prevent template recreation from old category
             } else {
                 // Original template transfer/merge logic for non-root nodes
                 if (this.msgTemplate != null && nextNode.getMessageTemplate() == null) {
