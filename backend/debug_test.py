@@ -1,31 +1,30 @@
 import json
-from information_extractor import extract_review_info
+from information_extractor import extract_discount_info
 from llm_utils import send_message_to_llm, AVAILABLE_MODELS
 
-def debug_review_extraction():
-    test_message = "Κράτηση RES012345 με κωδικό GHI789 - Εξαιρετική παράσταση! Οι ηθοποιοί ήταν καταπληκτικοί και η σκηνοθεσία άψογη. 5 αστέρια!"
+def debug_discount_extraction():
+    test_message = "ειμαστε 5 ατομα που θελουμε να ερθουμε  στο τερα`ς της λιμνης, δικαιουμαστε καποια εκπτωση?"
     
-    print("=== DEBUG REVIEW EXTRACTION ===")
+    print("=== DEBUG DISCOUNT EXTRACTION ===")
     print(f"Test message: {test_message}")
     
-    # Load the review prompt
-    with open("prompts/review.txt", "r", encoding="utf-8") as f:
-        review_prompt = f.read()
+    # Load the discount prompt
+    with open("prompts/discount.txt", "r", encoding="utf-8") as f:
+        discount_prompt = f.read()
     
-    print("\n=== REVIEW SYSTEM PROMPT ===")
-    print(review_prompt)
+    print("\n=== DISCOUNT SYSTEM PROMPT ===")
+    print(discount_prompt)
     
-    # Call LLM directly with review prompt
+    # Call LLM directly with discount prompt
     result = send_message_to_llm(
         user_message=test_message,
-        system_message=review_prompt,
+        system_message=discount_prompt,
         model=AVAILABLE_MODELS["primary"],
         max_tokens=300
     )
     
     print("\n=== RAW LLM RESPONSE ===")
-    print(f"'{result}'")
-    
+    print(f"'{result}'")    
     # Try to parse JSON
     extracted_info = {}
     try:
@@ -44,22 +43,32 @@ def debug_review_extraction():
         print(f"Error: {e}")
     
     # Call the actual function
-    print("\n=== EXTRACT_REVIEW_INFO FUNCTION RESULT ===")
-    function_result = extract_review_info(test_message)
+    print("\n=== EXTRACT_DISCOUNT_INFO FUNCTION RESULT ===")
+    function_result = extract_discount_info(test_message)
     print(json.dumps(function_result, ensure_ascii=False, indent=2))
     
-    # Check what the LLM extracted for stars specifically
-    if extracted_info and "stars" in extracted_info:
-        print(f"\n=== STARS FIELD ANALYSIS ===")
-        stars_field = extracted_info["stars"]
-        print(f"Stars field from LLM: {stars_field}")
-        if "value" in stars_field:
-            print(f"Stars value: {stars_field['value']} (type: {type(stars_field['value'])})")
+    # Check what the LLM extracted for no_of_people specifically
+    if extracted_info and "no_of_people" in extracted_info:
+        print(f"\n=== NO_OF_PEOPLE FIELD ANALYSIS ===")
+        people_field = extracted_info["no_of_people"]
+        print(f"No_of_people field from LLM: {people_field}")
+        if "value" in people_field:
+            print(f"No_of_people value: {people_field['value']} (type: {type(people_field['value'])})")
         else:
-            print("No 'value' key in stars field")
+            print("No 'value' key in no_of_people field")
     else:
-        print("\n=== NO STARS FIELD IN LLM RESPONSE ===")
-        print("The LLM did not return a stars field in the JSON")
+        print("\n=== NO NO_OF_PEOPLE FIELD IN LLM RESPONSE ===")
+        print("The LLM did not return a no_of_people field in the JSON")
+    
+    # Check show_name extraction
+    if extracted_info and "show_name" in extracted_info:
+        print(f"\n=== SHOW_NAME FIELD ANALYSIS ===")
+        show_field = extracted_info["show_name"]
+        print(f"Show_name field from LLM: {show_field}")
+        if "value" in show_field:
+            print(f"Show_name value: {show_field['value']} (type: {type(show_field['value'])})")
+        else:
+            print("No 'value' key in show_name field")
 
 if __name__ == "__main__":
-    debug_review_extraction()
+    debug_discount_extraction()

@@ -140,20 +140,22 @@ public abstract class MsgTemplate {
      * Get a formatted string of existing field names with their values in Greek
      * 
      * @return Formatted string of existing field names with values
-     */
-    public String getExistingFieldsWithValuesAsGreekString() {
+     */    public String getExistingFieldsWithValuesAsGreekString() {
         Map<String, String> fieldsWithValues = getExistingFieldsWithValues();
+        System.out.println("DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: " + fieldsWithValues);
         StringBuilder result = new StringBuilder();
         int i = 0;
         for (Map.Entry<String, String> entry : fieldsWithValues.entrySet()) {
             String fieldName = getGreekFieldName(entry.getKey());
             String fieldValue = entry.getValue();
+            System.out.println("DEBUG: Processing field - English: " + entry.getKey() + ", Greek: " + fieldName + ", Value: " + fieldValue);
             result.append(fieldName).append(": ").append(fieldValue);
             if (i < fieldsWithValues.size() - 1) {
                 result.append(", ");
             }
             i++;
         }
+        System.out.println("DEBUG: Final result: " + result.toString());
         return result.toString();
     }
 
@@ -1408,19 +1410,34 @@ class DiscountTemplate extends MsgTemplate {
     public Map<String, String> getExistingFieldsWithValues() {
         Map<String, String> fieldsWithValues = new HashMap<>();
         
+        System.out.println("DEBUG: DiscountTemplate.getExistingFieldsWithValues()");
+        System.out.println("DEBUG: showName.isEmpty(): " + showName.isEmpty() + ", showName: " + showName);
+        System.out.println("DEBUG: numberOfPeople.isEmpty(): " + numberOfPeople.isEmpty() + ", numberOfPeople: " + numberOfPeople);
+        System.out.println("DEBUG: age.isEmpty(): " + age.isEmpty() + ", age: " + age);
+        System.out.println("DEBUG: date.isEmpty(): " + date.isEmpty() + ", date: " + date);
+        
         if (!showName.isEmpty()) {
-            fieldsWithValues.put("show_name", String.join(", ", showName));
+            String joinedShowName = String.join(", ", showName);
+            fieldsWithValues.put("show_name", joinedShowName);
+            System.out.println("DEBUG: Added show_name: " + joinedShowName);
         }
         if (!numberOfPeople.isEmpty()) {
-            fieldsWithValues.put("no_of_people", String.join(", ", numberOfPeople));
+            String joinedNumberOfPeople = String.join(", ", numberOfPeople);
+            fieldsWithValues.put("no_of_people", joinedNumberOfPeople);
+            System.out.println("DEBUG: Added no_of_people: " + joinedNumberOfPeople);
         }
         if (!age.isEmpty()) {
-            fieldsWithValues.put("age", String.join(", ", age));
+            String joinedAge = String.join(", ", age);
+            fieldsWithValues.put("age", joinedAge);
+            System.out.println("DEBUG: Added age: " + joinedAge);
         }
         if (!date.isEmpty()) {
-            fieldsWithValues.put("date", String.join(", ", date));
+            String joinedDate = String.join(", ", date);
+            fieldsWithValues.put("date", joinedDate);
+            System.out.println("DEBUG: Added date: " + joinedDate);
         }
         
+        System.out.println("DEBUG: Final fieldsWithValues: " + fieldsWithValues);
         return fieldsWithValues;
     }@Override
     public String processTemplate(String templateString) {

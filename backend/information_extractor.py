@@ -296,19 +296,28 @@ def extract_discount_info(user_message):
                     elif extracted_value:
                         discount_template[key]["value"] = [extracted_value]
                 else:
-                    discount_template[key]["value"] = extracted_value
-
-        # Ειδική διαχείριση για no_of_people (integer field)
+                    discount_template[key]["value"] = extracted_value        # Ειδική διαχείριση για no_of_people (integer field)
         if "no_of_people" in extracted_info and "no_of_people" in discount_template:
             try:
                 people_value = extracted_info["no_of_people"].get("value", "")
                 if people_value:
-                    discount_template["no_of_people"]["value"] = int(people_value)
+                    # Αν είναι λίστα, πάρε το πρώτο στοιχείο
+                    if isinstance(people_value, list) and people_value:
+                        discount_template["no_of_people"]["value"] = [people_value[0]]
+                    elif isinstance(people_value, (int, str)):
+                        # Αν είναι αριθμός ή string, μετέτρεψε σε αριθμό και βάλτο σε λίστα
+                        num_value = int(people_value) if isinstance(people_value, str) and people_value.isdigit() else people_value
+                        discount_template["no_of_people"]["value"] = [num_value]
             except (ValueError, TypeError):
                 if isinstance(people_value, str) and any(c.isdigit() for c in people_value):
                     digits = ''.join(c for c in people_value if c.isdigit())
                     if digits:
-                        discount_template["no_of_people"]["value"] = int(digits)
+                        discount_template["no_of_people"]["value"] = [int(digits)]
+        
+        # Διαχείριση για discount και code (string fields)
+        for key in ["discount", "code"]:
+            if key in extracted_info and key in discount_template:
+                discount_template[key]["value"] = extracted_info[key].get("value", "")
     
     return discount_template
 
@@ -370,15 +379,15 @@ def extract_review_info(user_message):
         for key in ["reservation_number", "passcode", "review"]:
             if key in extracted_info and key in review_template:
                 review_template[key]["value"] = extracted_info[key].get("value", "")
-        
-        # Ειδική διαχείριση για stars field
+          # Ειδική διαχείριση για stars field (πρέπει να είναι array)
         if "stars" in extracted_info and "stars" in review_template:
             stars_value = extracted_info["stars"].get("value", "")
             if stars_value:
                 # Το LLM μπορεί να επιστρέψει λίστα [5] ή απλό αριθμό 5
-                if isinstance(stars_value, list) and len(stars_value) > 0:
-                    review_template["stars"]["value"] = stars_value[0]
-                else:
+                if isinstance(stars_value, list):
                     review_template["stars"]["value"] = stars_value
+                else:
+                    # Αν επιστρέφει single value, βάλτο σε λίστα
+                    review_template["stars"]["value"] = [stars_value]
     
     return review_template

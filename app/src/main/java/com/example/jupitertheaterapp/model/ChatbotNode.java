@@ -189,13 +189,13 @@ public class ChatbotNode {
         // Process template placeholders if we have a template and the message contains placeholders
         if (msgTemplate != null && result != null && 
             (result.contains("<") && result.contains(">"))) {
-            
-            // Only process if it contains actual placeholders (not just <results> or <sep>)
+              // Only process if it contains actual placeholders (not just <results> or <sep>)
             if (result.contains("<reservation_number>") || result.contains("<passcode>") || 
                 result.contains("<show_name>") || result.contains("<room>") || 
                 result.contains("<day>") || result.contains("<time>") || 
                 result.contains("<person_name>") || result.contains("<person_age>") || 
-                result.contains("<person_seat>") || result.contains("<missing>")) {
+                result.contains("<person_seat>") || result.contains("<missing>") || 
+                result.contains("<!missing>")) {
                 
                 System.out.println("DEBUG: Processing template placeholders in getMessage2() for: " + this.id);
                 System.out.println("DEBUG: Original message2: " + result);
