@@ -1,23 +1,26 @@
-Extract basic booking information from the user's message.
-Translate all Greek text to English.
+Εξάγετε βασικές πληροφορίες κράτησης από το μήνυμα του χρήστη.
 
-Return a simple JSON (or an array of them if multiple people) with these fields:
-- show_name: Name of the show
-- room: Theater room/venue
-- day: Day of the week in English
-- time: Show time in 24-hour format
-- person: {"name": "Person's name", "age": "age", "seat": "seat number"}
+Επιστρέψτε ένα JSON ακριβώς όπως το παρακάτω template, χωρίς τα πεδία "pvalues":
 
-PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["< 18", "> 18", "> 65"]) and that list is NOT empty, the value for "age" MUST be one of those "pvalues". If "pvalues" for age is empty, determine the age value freely.
-
-Only include information that is explicitly mentioned.
-
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
-
-Example (for one person, respond with raw JSON only):
 {
-  "show_name": "Hamlet",
-  "day": "Friday",
-  "time": "20:00",
-  "person": {"name": "John", "age": "> 18", "seat": ""}
+    "show_name": {"value": ""},
+    "room": {"value": ""},
+    "day": {"value": ""},
+    "time": {"value": ""},
+    "person": {
+        "name": {"value": ""},
+        "age": {"value": ""},
+        "seat": {"value": ""}
+    }
 }
+
+ΚΑΝΟΝΕΣ:
+- Γεμίστε τα πεδία μόνο με τιμές από τις παρακάτω λίστες:
+- show_name: ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]
+- day: ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]
+- time: ["18:00", "19:30", "20:00","20:30", "21:00","21:30", "22:00"]
+- age: ["< 18", "> 18", "> 65"]
+- Αν δεν βρίσκετε αντιστοιχία, αφήστε κενό ("").
+- Για το όνομα γράψτε όπως το αναφέρει ο χρήστης.
+
+ΚΡΙΣΙΜΟ: Μόνο JSON, χωρίς επεξηγήσεις.

@@ -1,19 +1,23 @@
-Extract basic discount information from the user's message.
-Translate all Greek text to English.
+Εξάγετε βασικές πληροφορίες έκπτωσης από το μήνυμα του χρήστη.
 
-Return a simple JSON with these fields:
-- show_name: Name(s) of the show(s) (array)
-- no_of_people: Number of people (number)
-- age: Age(s) mentioned (array).
-- date: Date(s) mentioned (array)
+Επιστρέψτε ένα JSON όπως το παρακάτω template, χωρίς τα πεδία "pvalues":
 
-PVALUES RULE: If the "age" field has "pvalues" in its template (e.g. ["< 18", "> 18", "> 65"]) and that list is NOT empty, the values in the "age" array MUST be from that list. If "pvalues" for age is empty, determine age values freely.
-
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
-Example (respond with raw JSON only):
 {
-  "show_name": ["Hamlet"],
-  "no_of_people": 2,
-  "age": ["< 18"],
-  "date": ["Friday"]
+    "show_name": {"value": []},
+    "no_of_people": {"value": []},
+    "age": {"value": []},
+    "date": {"value": []},
+    "discount": {"value": ""},
+    "code": {"value": ""}
 }
+
+ΚΑΝΟΝΕΣ:
+- Γεμίστε τα πεδία μόνο με τιμές από τις προκαθορισμένες λίστες:
+- show_name: ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]
+- no_of_people: [1,2,3,4,5,6,7,8,9,10]
+- age: ["< 18", "> 18", "> 65"]
+- date: ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]
+- discount: ["5%", "10%", "15%", "20%", "25%", "30%", "35%", "40%", "50%"]
+- Αν δεν βρίσκετε αντιστοιχία, αφήστε κενό ([] ή "").
+
+ΚΡΙΣΙΜΟ: Μόνο JSON, χωρίς επεξηγήσεις.

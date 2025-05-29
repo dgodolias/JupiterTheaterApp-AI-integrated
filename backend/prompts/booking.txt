@@ -1,45 +1,37 @@
-Extract booking information from the user's message, which may be in Greek or English.
+Εξάγετε πληροφορίες κράτησης από το μήνυμα του χρήστη.
 
-IMPORTANT: TRANSLATE/TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
-- Show name (translate if possible, otherwise transliterate)
-- Person names (transliterate properly)
-- Theater room or venue names (transliterate)
+Επιστρέψτε ένα JSON αντικείμενο ακριβώς όπως το παρακάτω template, αλλά χωρίς τα πεδία "pvalues":
 
-For days, use English day names: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+TEMPLATE (χωρίς pvalues):
+{
+    "show_name": {"value": ""},
+    "room": {"value": ""},
+    "day": {"value": ""},
+    "time": {"value": ""},
+    "person": {
+        "name": {"value": ""},
+        "age": {"value": ""},
+        "seat": {"value": ""}
+    }
+}
 
-Return a valid JSON object or an array of JSON objects if multiple people are booking separately.
-Each JSON object should have these fields:
-- show_name: Name of the show (string)
-- room: Theater room number or name (string)
-- day: Day of the week for the booking (string)
-- time: Time of the show in 24-hour format (HH:MM) (string)
-- person: Information for the person in the booking (object)
-  The person object should have:
-  - name: Person's name (string)
-  - age: Person's age (string or number).
-  - seat: Requested seat number/location if specified (string)
+ΚΑΝΟΝΕΣ ΕΞΑΓΩΓΗΣ:
+1. Προσπαθήστε να γεμίσετε κάθε πεδίο "value" με μια από τις παρακάτω πιθανές τιμές:
 
-PVALUES RULE: If a field has a "pvalues" list in its template (e.g., for "age" or "day") and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. For example, if "age" is "10" and "pvalues" for age are ["< 18", "> 18", "> 65"], the "value" for age MUST be "< 18". If the "pvalues" list is empty for a field, you can determine the appropriate value based on the user's input.
+show_name πιθανές τιμές: ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]
 
-Only include person fields that are explicitly mentioned. If no specific seats are requested,
-leave the seat fields empty.
+room πιθανές τιμές: ["Αιθουσα Απόλλων", "Αίθουσα Διόνυσος", "Αίθουσα Αθηνά", "Αίθουσα Ερμής", "Αίθουσα Άρτεμις"]
 
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+day πιθανές τιμές: ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]
 
-Example for a booking with 2 people (will be an array of two such objects, respond with raw JSON only):
-[
-  {
-    "show_name": "Hamlet",
-    "room": "Main Stage",
-    "day": "Friday",
-    "time": "20:00",
-    "person": {"name": "John Smith", "age": "> 18", "seat": "A12"}
-  },
-  {
-    "show_name": "Hamlet",
-    "room": "Main Stage",
-    "day": "Friday",
-    "time": "20:00",
-    "person": {"name": "Jane Doe", "age": "> 18", "seat": "A13"}
-  }
-]
+time πιθανές τιμές: ["18:00", "19:30", "20:00","20:30", "21:00","21:30", "22:00"]
+
+age πιθανές τιμές: ["< 18", "> 18", "> 65"]
+
+seat πιθανές τιμές: ["Α1", "Α2", "Α3", "Α4", "Α5", "Α6", "Α7", "Α8", "Α9", "Α10", "Β1", "Β2", "Β3", "Β4", "Β5", "Β6", "Β7", "Β8", "Β9", "Β10", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"]
+
+2. Αν το μήνυμα του χρήστη δεν περιέχει κάποια από τις παραπάνω τιμές για ένα πεδίο, αφήστε το πεδίο "value" κενό ("").
+
+3. Για το πεδίο "name" δεν υπάρχουν προκαθορισμένες τιμές - γράψτε το όνομα όπως το αναφέρει ο χρήστης.
+
+ΚΡΙΣΙΜΟ: Απαντήστε ΜΟΝΟ με το JSON περιεχόμενο, χωρίς επεξηγήσεις ή μορφοποίηση markdown.

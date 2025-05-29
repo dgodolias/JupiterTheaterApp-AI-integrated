@@ -1,19 +1,17 @@
-Extract basic review information from the user's message.
-Translate all Greek text to English.
+Εξάγετε βασικές πληροφορίες αξιολόγησης από το μήνυμα του χρήστη.
 
-Return a simple JSON with these fields:
-- reservation_number: Booking reference number
-- passcode: Verification code
-- stars: Rating (number 1-5).
-- review: User's comments (translated to English)
+Επιστρέψτε ένα JSON όπως το παρακάτω template, χωρίς τα πεδία "pvalues":
 
-PVALUES RULE: If the "stars" field has "pvalues" in its template (e.g. [1, 2, 3, 4, 5]) and that list is NOT empty, the value for "stars" MUST be one of those "pvalues". If "pvalues" for stars is empty, determine stars value freely.
-
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
-Example (respond with raw JSON only):
 {
-  "reservation_number": "12345678",
-  "passcode": "AB123",
-  "stars": 4,
-  "review": "Great performance"
+    "reservation_number": {"value": ""},
+    "passcode": {"value": ""},
+    "stars": {"value": []},
+    "review": {"value": ""}
 }
+
+ΚΑΝΟΝΕΣ:
+- Για stars χρησιμοποιήστε μόνο: [1, 2, 3, 4, 5]
+- Αν δεν βρίσκετε αντιστοιχία, αφήστε κενό ("" ή []).
+- Για reservation_number και passcode γράψτε ό,τι αναφέρει ο χρήστης.
+
+ΚΡΙΣΙΜΟ: Μόνο JSON, χωρίς επεξηγήσεις.

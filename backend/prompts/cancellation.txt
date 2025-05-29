@@ -1,24 +1,24 @@
-Extract cancellation information from the user's message, which may be in Greek or English.
+Εξάγετε πληροφορίες ακύρωσης από το μήνυμα του χρήστη.
 
-IMPORTANT: Focus on finding the RESERVATION NUMBER and PASSCODE.
-- Reservation numbers are typically 6-10 digits
-- Passcodes are typically 4-6 digits or alphanumeric codes
+Επιστρέψτε ένα JSON αντικείμενο ακριβώς όπως το παρακάτω template, αλλά χωρίς τα πεδία "pvalues":
 
-Look for phrases like:
-- "Cancel reservation number..."
-- "My booking number is..."
-- "Passcode/PIN/verification code..."
-- "Ακύρωση κράτησης με αριθμό..."
-- "Κωδικός επιβεβαίωσης..."
+TEMPLATE (χωρίς pvalues):
+{
+    "reservation_number": {"value": ""},
+    "passcode": {"value": ""}
+}
 
-Return ONLY a valid JSON object with these fields:
-- reservation_number: The booking reference number (string)
-- passcode: The verification code or passcode (string)
+ΚΑΝΟΝΕΣ ΕΞΑΓΩΓΗΣ:
+1. Εστιάστε στην εύρεση του ΑΡΙΘΜΟΥ ΚΡΑΤΗΣΗΣ και του ΚΩΔΙΚΟΥ ΕΠΙΒΕΒΑΙΩΣΗΣ.
 
-PVALUES RULE: If a field has a "pvalues" list in its template and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. If the "pvalues" list is empty, determine the value freely.
+2. Αναζητήστε φράσεις όπως:
+   - "Ακύρωση κράτησης με αριθμό..."
+   - "Ο αριθμός κράτησής μου είναι..."
+   - "Κωδικός επιβεβαίωσης/PIN..."
+   - "Θέλω να ακυρώσω την κράτηση..."
 
-If either field is not found in the message, leave it as an empty string.
+3. Για αυτά τα πεδία δεν υπάρχουν προκαθορισμένες τιμές - γράψτε ό,τι αναφέρει ο χρήστης.
 
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
-Example (respond with raw JSON only):
-{"reservation_number": "12345678", "passcode": "AB123"}
+4. Αν κάποιο πεδίο δεν αναφέρεται στο μήνυμα, αφήστε το ως κενό string ("").
+
+ΚΡΙΣΙΜΟ: Απαντήστε ΜΟΝΟ με το JSON περιεχόμενο, χωρίς επεξηγήσεις ή μορφοποίηση markdown.

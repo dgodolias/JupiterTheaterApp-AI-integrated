@@ -1,32 +1,40 @@
-Extract information about theater shows from the user's message, which may be in Greek or English.
+Εξάγετε πληροφορίες για θεατρικές παραστάσεις από το μήνυμα του χρήστη.
 
-IMPORTANT: TRANSLITERATE ALL GREEK TEXT TO ENGLISH, including:
-- Names of actors/performers (transliterate properly)
-- Show titles (transliterate or translate when possible)
-- Venue or theater names (transliterate)
-- Topics/genres (translate to English equivalent terms)
+Επιστρέψτε ένα JSON αντικείμενο ακριβώς όπως το παρακάτω template, αλλά χωρίς τα πεδία "pvalues":
 
-For days of the week, use: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+TEMPLATE (χωρίς pvalues):
+{
+    "name": {"value": []},
+    "day": {"value": []},
+    "topic": {"value": []},
+    "time": {"value": []},
+    "cast": {"value": []},
+    "room": {"value": []},
+    "duration": {"value": []},
+    "stars": {"value": []}
+}
 
-TIME FORMATTING RULES:
-- For "after X time" use ">HH:MM" format (e.g., after 7 PM = ">19:00")
-- For "before X time" use "<HH:MM" format
-- For time ranges "between X and Y" use ">HH:MM,<HH:MM" format (e.g., between 5-7 PM = ">17:00,<19:00")
-- For "before X OR after Y" use "<HH:MM,>HH:MM" format (e.g., before 5 PM or after 8 PM = "<17:00,>20:00")
+ΚΑΝΟΝΕΣ ΕΞΑΓΩΓΗΣ:
+1. Προσπαθήστε να γεμίσετε κάθε πεδίο "value" με μια ή περισσότερες από τις παρακάτω πιθανές τιμές:
 
-Return ONLY a valid JSON object with these fields (all must be arrays, even if single value):
-- name: Show names (array of strings)
-- day: Days of the week (array of strings).
-- topic: Show genres/topics (array of strings)
-- time: Time constraints with operators (array of strings)
-- cast: Cast member names mentioned (array of strings) - TRANSLITERATED TO ENGLISH
-- room: Room numbers or theater venues (array of strings)
-- duration: Show durations (array of strings)
-- stars: Star ratings (array of numbers or strings with operators like ">4").
+name πιθανές τιμές: ["Ο Μάγος του Οζ", "Η Παναγία των Παρισίων", "Το Τέρας της Λίμνης", "Η Καλύβα του Μπαρμπα-Θωμά", "Το Μυστικό της Αλίκης", "Ο Θησαυρός της Βαγδάτης","Η Κωμωδία των Παρεξηγήσεων", "Ο Βυσσινόκηπος"]
 
-PVALUES RULE: If a field (e.g. "day" or "stars") has a "pvalues" list in its template and that list is NOT empty, the extracted "value"(s) for that field MUST be from that "pvalues" list. If "pvalues" is empty, determine value(s) freely.
+day πιθανές τιμές: ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"]
 
-IMPORTANT: If weekend ("Σαββατοκύριακο" or similar) is mentioned, include both Saturday and Sunday in the day array.
+topic πιθανές τιμές: ["Παιδικό Θέατρο","Αρχαία Τραγωδία","Δράμα","Θρίλερ","Κλασικό Θέατρο","Κωμωδία"]
 
-Only include fields explicitly mentioned.
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
+time πιθανές τιμές: ["18:00", "19:30", "20:00","20:30", "21:00","21:30", "22:00"]
+
+cast πιθανές τιμές: ["Αλέξανδρος Παπαδόπουλος", "Βασίλης Κωνσταντίνου", "Γιώργος Δημητρίου", "Δημήτρης Παπαδημητρίου", "Ελένη Παπαδάκη", "Νίκος Ιωάννου", "Σοφία Καραγιάννη", "Χρήστος Παπακωνσταντίνου", "Κωνσταντίνος Αλεξίου", "Μαρία Σταθοπούλου", "Ανδρέας Παπαδόπουλος", "Ευαγγελία Κωνσταντίνου", "Ιωάννα Παπαδοπούλου", "Στέφανος Ιωαννίδης"]
+
+room πιθανές τιμές: ["Αιθουσα Απόλλων", "Αίθουσα Διόνυσος", "Αίθουσα Αθηνά", "Αίθουσα Ερμής", "Αίθουσα Άρτεμις"]
+
+duration πιθανές τιμές: ["90", "120", "150"]
+
+stars πιθανές τιμές: [1, 2, 3, 4, 5]
+
+2. Αν το μήνυμα του χρήστη δεν περιέχει κάποια από τις παραπάνω τιμές για ένα πεδίο, αφήστε το πεδίο "value" ως κενό array ([]).
+
+3. Τα πεδία είναι arrays, επομένως μπορείτε να βάλετε περισσότερες από μια τιμές αν χρειάζεται.
+
+ΚΡΙΣΙΜΟ: Απαντήστε ΜΟΝΟ με το JSON περιεχόμενο, χωρίς επεξηγήσεις ή μορφοποίηση markdown.

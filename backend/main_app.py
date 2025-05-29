@@ -31,14 +31,12 @@ if __name__ == "__main__":
         # Extract show information for information requests
         show_info = extract_show_info(user_input)
         print(f"Extracted information: {json.dumps(show_info, ensure_ascii=False, indent=2)}")
-    
     elif category == "ΚΡΑΤΗΣΗ":
         # Extract booking information for reservation requests
-        bookings = extract_booking_info(user_input) # Returns a list of bookings
-        if bookings:
-            print("Extracted booking(s):")
-            for i, booking_info in enumerate(bookings):
-                print(f"booking {i+1}: {json.dumps(booking_info, ensure_ascii=False, indent=2)}")
+        booking_info = extract_booking_info(user_input) # Returns a single booking dictionary
+        if booking_info:
+            print("Extracted booking information:")
+            print(json.dumps(booking_info, ensure_ascii=False, indent=2))
         else:
             print("Could not extract booking information.")
             

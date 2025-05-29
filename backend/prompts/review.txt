@@ -1,29 +1,28 @@
-Extract review/rating information from the user's message, which may be in Greek or English.
+Εξάγετε πληροφορίες αξιολόγησης από το μήνυμα του χρήστη.
 
-IMPORTANT: TRANSLATE ALL GREEK TEXT TO ENGLISH for the review field.
+Επιστρέψτε ένα JSON αντικείμενο ακριβώς όπως το παρακάτω template, αλλά χωρίς τα πεδία "pvalues":
 
-Return a valid JSON object with these fields:
-- reservation_number: The booking reference number (string)
-- passcode: The verification code or passcode (string)
-- stars: Star rating given, typically 1-5 (number).
-- review: The user's review text or comments (string) - TRANSLATED TO ENGLISH
-
-Look for phrases that indicate ratings such as:
-- "I rate this show X stars"
-- "X out of 5"
-- "Rating: X"
-- "Βαθμολογία: X"
-- "X αστέρια"
-
-PVALUES RULE: If a field (e.g. "stars") has a "pvalues" list in its template and that list is NOT empty, the extracted "value" for that field MUST be one of the values from that "pvalues" list. If "pvalues" is empty, determine value freely.
-
-If specific fields are not found in the message, leave as empty string (or 0 for stars).
-CRITICAL: Respond with ONLY the raw JSON content, without any surrounding text, explanations, or markdown formatting.
-
-Example (respond with raw JSON only):
+TEMPLATE (χωρίς pvalues):
 {
-  "reservation_number": "12345678",
-  "passcode": "AB123",
-  "stars": 4,
-  "review": "The performance was excellent, with outstanding acting."
+    "reservation_number": {"value": ""},
+    "passcode": {"value": ""},
+    "stars": {"value": []},
+    "review": {"value": ""}
 }
+
+ΚΑΝΟΝΕΣ ΕΞΑΓΩΓΗΣ:
+1. Για το πεδίο "stars", χρησιμοποιήστε μόνο τιμές από τη λίστα: [1, 2, 3, 4, 5]
+
+2. Αναζητήστε φράσεις που δείχνουν βαθμολογία όπως:
+   - "βαθμολογώ με X αστέρια"
+   - "X από τα 5"
+   - "X αστέρια"
+   - "βαθμολογία: X"
+
+3. Αν δεν βρίσκετε βαθμολογία από τις παραπάνω τιμές, αφήστε το "stars" ως κενό array ([]).
+
+4. Για τα πεδία "reservation_number" και "passcode" δεν υπάρχουν προκαθορισμένες τιμές - γράψτε ό,τι αναφέρει ο χρήστης.
+
+5. Για το "review" γράψτε το σχόλιο του χρήστη όπως το αναφέρει.
+
+ΚΡΙΣΙΜΟ: Απαντήστε ΜΟΝΟ με το JSON περιεχόμενο, χωρίς επεξηγήσεις ή μορφοποίηση markdown.
