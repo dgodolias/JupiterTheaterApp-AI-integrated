@@ -167,9 +167,10 @@ public class ChatbotNode {
         }
         
         return result;
-    }/**
+    }    /**
      * Gets message_2 (the alternative message format, often all caps)
      * If the message contains a <results> tag, it will be processed to include database query results
+     * If the message contains template placeholders and we have a template, it will be processed
      */
     public String getMessage2() {
         // Return message2 from the node directly
@@ -182,6 +183,24 @@ public class ChatbotNode {
             if (manager != null) {
                 // Process the <results> tag with the template
                 result = manager.processResultsTag(result, category, msgTemplate);
+            }
+        }
+        
+        // Process template placeholders if we have a template and the message contains placeholders
+        if (msgTemplate != null && result != null && 
+            (result.contains("<") && result.contains(">"))) {
+            
+            // Only process if it contains actual placeholders (not just <results> or <sep>)
+            if (result.contains("<reservation_number>") || result.contains("<passcode>") || 
+                result.contains("<show_name>") || result.contains("<room>") || 
+                result.contains("<day>") || result.contains("<time>") || 
+                result.contains("<person_name>") || result.contains("<person_age>") || 
+                result.contains("<person_seat>") || result.contains("<missing>")) {
+                
+                System.out.println("DEBUG: Processing template placeholders in getMessage2() for: " + this.id);
+                System.out.println("DEBUG: Original message2: " + result);
+                result = msgTemplate.processTemplate(result);
+                System.out.println("DEBUG: Processed message2: " + result);
             }
         }
         
@@ -935,10 +954,9 @@ public class ChatbotNode {
                         }
                     }                    // Process the template with values from our template object
                     String processedMessage = msgTemplate.processTemplate(templateStr);
-                    this.message2 = processedMessage;
+                    // Don't overwrite this.message2 - preserve the original template string for future use
+                    // The processing will happen on-demand in getMessage2()
                     
-
-
                     System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
                 } else {
@@ -957,8 +975,8 @@ public class ChatbotNode {
                 // using the template if it exists
                 if (msgTemplate != null) {
 
-                    
-                    // Process message2 to replace <missing> placeholders
+                      // Process message2 to replace <missing> placeholders only
+                    // We keep <missing> processing because it's structural, not user-specific data
                     if (this.message2 != null && !this.message2.isEmpty() && this.message2.contains("<missing>")) {
                         this.message2 = msgTemplate.processTemplate(this.message2);
                         System.out.println("DEBUG: Processed message2 with template (no details): " + this.message2);
