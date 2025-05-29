@@ -15,7 +15,7 @@ from information_extractor import (
 
 # Set to True to use random category responses instead of the LLM
 # This saves API calls/resources when testing
-DUMMY_RESPONSES = True
+DUMMY_RESPONSES = False
 
 # Set to True to use full dummy data, False for partial dummy data
 DUMMY_FULL = False
