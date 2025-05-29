@@ -82,11 +82,9 @@ def extract_show_info(user_message):
                     extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
             print("Failed to extract show_info even with simplified prompt")
-            return show_template  # Επιστρέφουμε το κενό template
-
-    # Συγχώνευση των εξαγόμενων πληροφοριών με το template
+            return show_template  # Επιστρέφουμε το κενό template    # Συγχώνευση των εξαγόμενων πληροφοριών με το template
     if extracted_info:
-        for key in ["show_name", "room", "day", "time"]:
+        for key in ["name", "day", "topic", "time", "cast", "room", "duration", "stars"]:
             if key in extracted_info and key in show_template:
                 extracted_value = extracted_info[key].get("value", "")
                 if isinstance(show_template[key]["value"], list):
@@ -367,24 +365,20 @@ def extract_review_info(user_message):
                     extracted_info = json.loads(json_str_fallback)
         except json.JSONDecodeError:
             print("Failed to extract review info even with simplified prompt")
-            return review_template  # Επιστρέφουμε το κενό template
-
-    # Συγχώνευση των εξαγόμενων πληροφοριών με το template
+            return review_template  # Επιστρέφουμε το κενό template    # Συγχώνευση των εξαγόμενων πληροφοριών με το template
     if extracted_info:
         for key in ["reservation_number", "passcode", "review"]:
             if key in extracted_info and key in review_template:
                 review_template[key]["value"] = extracted_info[key].get("value", "")
-
-        # Ειδική διαχείριση για stars (integer field)
+        
+        # Ειδική διαχείριση για stars field
         if "stars" in extracted_info and "stars" in review_template:
-            try:
-                stars_value = extracted_info["stars"].get("value", "")
-                if stars_value:
-                    review_template["stars"]["value"] = int(stars_value)
-            except (ValueError, TypeError):
-                if isinstance(stars_value, str):
-                    digits = ''.join(c for c in stars_value if c.isdigit())
-                    if digits:
-                        review_template["stars"]["value"] = int(digits[0])
+            stars_value = extracted_info["stars"].get("value", "")
+            if stars_value:
+                # Το LLM μπορεί να επιστρέψει λίστα [5] ή απλό αριθμό 5
+                if isinstance(stars_value, list) and len(stars_value) > 0:
+                    review_template["stars"]["value"] = stars_value[0]
+                else:
+                    review_template["stars"]["value"] = stars_value
     
     return review_template
