@@ -1629,7 +1629,8 @@ class ReviewTemplate extends MsgTemplate {
             missingFields.add("passcode");
         if (stars <= 0)
             missingFields.add("stars");
-        // Review is optional, so we don't check for it
+        if (review.isEmpty())
+            missingFields.add("review");
         return missingFields;
     }
 
@@ -1642,7 +1643,8 @@ class ReviewTemplate extends MsgTemplate {
             existingFields.add("passcode");
         if (stars > 0)
             existingFields.add("stars");
-        // Review is optional, so we don't check for it
+        if (!review.isEmpty())
+            existingFields.add("review");
         return existingFields;
     }
 
