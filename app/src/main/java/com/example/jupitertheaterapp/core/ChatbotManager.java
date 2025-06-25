@@ -151,15 +151,23 @@ public class ChatbotManager {
         // Log.d(TAG, "Set category for node " + id + " to: " + category);
 
         // Try to assign the appropriate MsgTemplate based on the node's category
-        try {
-            MsgTemplate template = MsgTemplate.createTemplate(category);
-            node.setMessageTemplate(template);
-            // Log.d(TAG, "Assigned template to node: " + id + " with category: " +
-            // category);
-        } catch (IllegalArgumentException e) {
-            // No template available for this node category; that's ok
-            // Log.d(TAG, "No template available for node: " + id + " with category: " +
-            // category);
+        // IMPORTANT: Never assign templates to the root node!
+        if (!"root".equals(id)) {
+            try {
+                MsgTemplate template = MsgTemplate.createTemplate(category);
+                node.setMessageTemplate(template);
+                // Log.d(TAG, "Assigned template to node: " + id + " with category: " +
+                // category);
+            } catch (IllegalArgumentException e) {
+                // No template available for this node category; that's ok
+                // Log.d(TAG, "No template available for node: " + id + " with category: " +
+                // category);
+            }
+        } else {
+            // Root node should NEVER have a template
+            Log.d(TAG, "Root node detected - ensuring no template is assigned");
+            node.setMessageTemplate(null);
+            node.setCategory("root"); // Ensure root node always has "root" category
         }
 
         // Add node to the map - important to do this before processing children
@@ -293,6 +301,18 @@ public class ChatbotManager {
         
         if (rootNode != null) {
             Log.d(TAG, "Root node exists, checking messages");
+            
+            // Ensure root node has clean state for initial message
+            if (rootNode.getMessageTemplate() != null) {
+                Log.d(TAG, "Root node has leftover template - clearing for fresh start");
+                rootNode.setMessageTemplate(null);
+            }
+            
+            // Also reset the root node's category to ensure clean state
+            if (!"root".equals(rootNode.getCategory())) {
+                Log.d(TAG, "Root node has leftover category '" + rootNode.getCategory() + "' - resetting to 'root'");
+                rootNode.setCategory("root");
+            }
             
             // Check current leftover message
             String currentLeftover = getLeftoverMessage();
@@ -871,6 +891,30 @@ public class ChatbotManager {
             // Store the original user message for confirmation node navigation
             final String originalUserMessage = userMessage;
             
+            // Check if this is a greeting that should reset the conversation to clean state
+            boolean isGreeting = userMessage.toLowerCase().contains("καλησπερα") ||
+                    userMessage.toLowerCase().contains("καλημερα") ||
+                    userMessage.toLowerCase().contains("γεια") ||
+                    userMessage.toLowerCase().contains("hello") ||
+                    userMessage.toLowerCase().contains("hi") ||
+                    (userMessage.toLowerCase().contains("πως") && userMessage.toLowerCase().contains("βοηθ"));
+            
+            // If it's a greeting and we're at root node, ensure clean state
+            if (isGreeting && "root".equals(currentNode.getId())) {
+                Log.d(TAG, "Greeting detected at root node - ensuring clean state");
+                if (rootNode.getMessageTemplate() != null) {
+                    Log.d(TAG, "Clearing leftover template from root node");
+                    rootNode.setMessageTemplate(null);
+                }
+                if (!"root".equals(rootNode.getCategory())) {
+                    Log.d(TAG, "Resetting root node category from '" + rootNode.getCategory() + "' to 'root'");
+                    rootNode.setCategory("root");
+                }
+                // Clear any leftover messages
+                clearLeftoverMessage();
+                Log.d(TAG, "Root node state cleaned for greeting");
+            }
+            
             // Check if we're at a confirmation node and user said "yes"
             // In this case, we want to skip server communication and go directly to root
             boolean isConfirmation = userMessage.toLowerCase().contains("yes") ||
@@ -1041,6 +1085,15 @@ public class ChatbotManager {
             makeServerRequest(jsonRequest, new ServerRequestCallback() {@Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
+                        // Check if we're at root node and need to clear template for new category
+                        if ("root".equals(currentNode.getId())) {
+                            Log.d(TAG, "At root node - ensuring clean state for category: '" + category + "'");
+                            // Root node should NEVER have a template or non-root category
+                            currentNode.setMessageTemplate(null);
+                            currentNode.setCategory("root"); // Always keep root category as "root"
+                            Log.d(TAG, "Root node state reset - Template: null, Category: root");
+                        }
+                        
                         // IMPORTANT - First populate the template with the server response
                         // Process the JSON and populate the template for the current node
                         // This ensures template data is available before making navigation decisions

@@ -302,6 +302,12 @@ public class ChatbotNode {
     }
 
     public void setMessageTemplate(MsgTemplate msgTemplate) {
+        // Root nodes should NEVER have templates
+        if ("root".equals(this.id) && msgTemplate != null) {
+            System.out.println("WARNING: Attempted to assign template to root node - ignoring");
+            this.msgTemplate = null;
+            return;
+        }
         this.msgTemplate = msgTemplate;
     }
 
