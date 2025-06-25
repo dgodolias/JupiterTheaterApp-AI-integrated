@@ -322,7 +322,19 @@ public class ChatbotNode {
     public JSONObject createRequestJson(String userMessage) {
         JSONObject jsonRequest = new JSONObject();
         try {
-            if ("CATEGORISE".equals(type)) {
+            // Special case: completion nodes should send CATEGORIZE requests when user presses any key
+            // This allows proper categorization of new input instead of trying to extract from completed flows
+            boolean isCompletionNode = this.id.endsWith("_complete") && 
+                                     this.message2 != null && 
+                                     this.message2.contains("Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση");
+            
+            if (isCompletionNode) {
+                // Override EXTRACT type with CATEGORIZE for completion nodes
+                jsonRequest.put("type", "CATEGORISE");
+                jsonRequest.put("category", ""); // Empty category for categorization
+                jsonRequest.put("message", userMessage);
+                System.out.println("COMPLETION NODE - CREATED CATEGORISE REQUEST: " + jsonRequest.toString());
+            } else if ("CATEGORISE".equals(type)) {
                 jsonRequest.put("type", "CATEGORISE");
                 jsonRequest.put("category", this.category); // Use this node's category instead of empty string
                 jsonRequest.put("message", userMessage);
