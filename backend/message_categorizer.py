@@ -104,13 +104,13 @@ def categorize_prompt(user_message):
     # Validate category
     valid_categories = [
         "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
-        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
+        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "NULL"
     ]
     
-    # Return the category if valid, otherwise default to ΠΛΗΡΟΦΟΡΙΕΣ
+    # Return the category if valid, otherwise default to NULL for unclear messages
     if any(category in result for category in valid_categories):
         for category in valid_categories:
             if category in result:
                 return category
     
-    return "ΠΛΗΡΟΦΟΡΙΕΣ"  # Default category
+    return "NULL"  # Default category for unclear/unclassifiable messages

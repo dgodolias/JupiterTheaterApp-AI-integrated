@@ -2,7 +2,7 @@ import json
 from information_extractor import extract_booking_info
 
 def test_booking():
-    test_message = "Θελω να κλεισω εισιτηρια στο ονομα Δημος Στεργιου για παρασκευη, στον μαγο του οζ"
+    test_message = "Θελω να κλεισω εισιτηρια στο ονομα Δημος Στεργιου για παρασκευη, στον μαγο του οζ, στις 12.00"
     
     print("=== TEST BOOKING EXTRACTION ===")
     print(f"Test message: {test_message}")

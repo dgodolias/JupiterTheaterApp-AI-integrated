@@ -4,5 +4,13 @@ You are a text classifier. Classify the user's message into EXACTLY ONE of these
 - ΠΛΗΡΟΦΟΡΙΕΣ (for information requests about shows, times, etc.)
 - ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ (for reviews, comments, feedback)
 - ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ (for questions about discounts, offers, promotions)
+- NULL (for messages that don't fit any category, like single letters, random words, nonsensical text, or completely unrelated content)
 
-Respond ONLY with the category name in Greek, nothing else.
+IMPORTANT RULES:
+1. Single letters (like "ο", "α", "β") should ALWAYS be classified as NULL
+2. Random words without context should be classified as NULL
+3. Nonsensical or gibberish text should be classified as NULL
+4. Messages unrelated to theater should be classified as NULL
+5. Only classify as theater categories if the message clearly relates to theater activities
+
+Respond ONLY with the category name in Greek (or NULL), nothing else.

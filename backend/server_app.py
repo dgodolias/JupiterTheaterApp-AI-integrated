@@ -28,7 +28,7 @@ def get_dummy_category():
     """Returns a random category from the predefined list to save LLM API calls."""
     valid_categories = [
         "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ", 
-        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"
+        "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ", "NULL"
     ]
     choice = random.choice(valid_categories)
     choice = "ΠΛΗΡΟΦΟΡΙΕΣ"
@@ -112,20 +112,26 @@ def process_client_request(client_data):
                     "ΚΡΑΤΗΣΗ": "booking.json",
                     "ΑΚΥΡΩΣΗ": "cancellation.json",
                     "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ": "discount.json",
-                    "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ": "review.json"
+                    "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ": "review.json",
+                    "NULL": None  # NULL category doesn't need dummy data
                 }
                 
                 if request_category in file_mapping:
-                    json_file = os.path.join(base_path, file_mapping[request_category])
-                    try:
-                        with open(json_file, 'r', encoding='utf-8') as f:
-                            dummy_data = json.load(f)
-                        data_completeness = "full" if current_dummy_full_state else "partial"
-                        print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}:",dummy_data)
-                    except Exception as e:
-                        print(f"Error loading dummy data from {json_file}: {e}")
-                        # Fallback to empty data structure if file cannot be loaded
-                        dummy_data = {}
+                    if request_category == "NULL":
+                        # NULL category returns empty data
+                        dummy_data = {"message": "Μήνυμα χωρίς κατηγοριοποίηση"}
+                        print(f"Using NULL category response")
+                    else:
+                        json_file = os.path.join(base_path, file_mapping[request_category])
+                        try:
+                            with open(json_file, 'r', encoding='utf-8') as f:
+                                dummy_data = json.load(f)
+                            data_completeness = "full" if current_dummy_full_state else "partial"
+                            print(f"Using {data_completeness} DUMMY data for {request_category} from {json_file}:",dummy_data)
+                        except Exception as e:
+                            print(f"Error loading dummy data from {json_file}: {e}")
+                            # Fallback to empty data structure if file cannot be loaded
+                            dummy_data = {}
                 else:
                     raise ValueError(f"Unsupported category: {request_category}")
                 
@@ -149,6 +155,9 @@ def process_client_request(client_data):
                 elif request_category == "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ":
                     details = extract_review_info(request_message)
                     print(f"Extracted review info: {details}")
+                elif request_category == "NULL":
+                    details = {"message": "Μήνυμα χωρίς κατηγοριοποίηση"}
+                    print(f"NULL category - no extraction needed")
                 else:
                     raise ValueError(f"Unsupported category: {request_category}")
                 
