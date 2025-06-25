@@ -1114,6 +1114,28 @@ public class ChatbotManager {
                         ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);
                         if (nextNode != null) {
                             Log.d(TAG, "Navigation successful - Moving from '" + currentNode.getId() + "' to '" + nextNode.getId() + "'");
+                            
+                            // Special handling for fresh conversations (root -> category node)
+                            boolean isStartingFreshConversation = "root".equals(currentNode.getId()) && 
+                                                                (nextNode.getId().equals("plirofories") || 
+                                                                 nextNode.getId().equals("kratisi") || 
+                                                                 nextNode.getId().equals("akyrosi") || 
+                                                                 nextNode.getId().equals("axiologiseis_sxolia") || 
+                                                                 nextNode.getId().equals("prosfores_ekptoseis"));
+                            
+                            if (isStartingFreshConversation) {
+                                Log.d(TAG, "Starting fresh conversation - ensuring next node has clean template");
+                                // Create a completely fresh template for the new conversation
+                                try {
+                                    MsgTemplate freshTemplate = MsgTemplate.createTemplate(nextNode.getCategory());
+                                    nextNode.setMessageTemplate(freshTemplate);
+                                    Log.d(TAG, "Created fresh template for " + nextNode.getId() + ": " + freshTemplate.getClass().getSimpleName());
+                                } catch (IllegalArgumentException e) {
+                                    Log.d(TAG, "No template available for " + nextNode.getId() + " category: " + nextNode.getCategory());
+                                    nextNode.setMessageTemplate(null);
+                                }
+                            }
+                            
                             // Update the current node to the next one
                             currentNode = nextNode;
                             

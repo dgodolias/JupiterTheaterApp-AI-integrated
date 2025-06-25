@@ -1401,20 +1401,79 @@ public class ChatbotNode {
                 nextNode.setMessageTemplate(null);
                 nextNode.setCategory("root"); // Reset category to prevent template recreation from old category
             } else {
-                // Original template transfer/merge logic for non-root nodes
-                if (this.msgTemplate != null && nextNode.getMessageTemplate() == null) {
-                    System.out.println("DEBUG: Transferring template from " + this.id + " to " + nextNode.getId());
-                    nextNode.setMessageTemplate(this.msgTemplate);
-                    System.out.println("DEBUG: Template transferred: " + this.msgTemplate.getClass().getSimpleName() + " with fields: " +
-                        (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" :
-                        "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
-                } else if (this.msgTemplate != null && nextNode.getMessageTemplate() != null) {
-                    System.out.println("DEBUG: Both nodes have templates, attempting merge from " + this.id + " to " + nextNode.getId());
-                    boolean merged = nextNode.getMessageTemplate().mergeFrom(this.msgTemplate);
-                    System.out.println("DEBUG: Merge successful: " + merged);
-                    if (!merged) {
-                        System.out.println("DEBUG: Merge failed (e.g. different types or no new info), replacing template in " + nextNode.getId() + " with template from " + this.id);
+                // Check if we're starting a fresh conversation (root -> category node)
+                boolean isStartingFreshConversation = "root".equals(this.id) && 
+                                                    (nextNode.getId().equals("plirofories") || 
+                                                     nextNode.getId().equals("kratisi") || 
+                                                     nextNode.getId().equals("akyrosi") || 
+                                                     nextNode.getId().equals("axiologiseis_sxolia") || 
+                                                     nextNode.getId().equals("prosfores_ekptoseis"));
+                
+                if (isStartingFreshConversation) {
+                    System.out.println("DEBUG: Starting fresh conversation from root to " + nextNode.getId() + " - ensuring clean template");
+                    // For fresh conversations, create a completely new template instead of merging
+                    try {
+                        MsgTemplate freshTemplate = MsgTemplate.createTemplate(nextNode.getCategory());
+                        nextNode.setMessageTemplate(freshTemplate);
+                        System.out.println("DEBUG: Created fresh template for " + nextNode.getId() + ": " + freshTemplate.getClass().getSimpleName());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("DEBUG: No template available for " + nextNode.getId() + " category: " + nextNode.getCategory());
+                        nextNode.setMessageTemplate(null);
+                    }
+                } else {
+                    // Check if this is a fresh conversation starting from root
+                    boolean isFreshConversation = false;
+                    
+                    // If current node is "plirofories" and we're transitioning to "info_confirmation",
+                    // check if this is a fresh conversation by looking at the parent path
+                    if (this.id.equals("plirofories") && nextNode.getId().equals("info_confirmation")) {
+                        // Check if we came directly from root (fresh conversation)
+                        // We can determine this by checking if the current template has minimal data
+                        // (only fields populated by the most recent server response)
+                        if (this.msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
+                            com.example.jupitertheaterapp.model.ShowInfoTemplate currentTemplate = 
+                                (com.example.jupitertheaterapp.model.ShowInfoTemplate) this.msgTemplate;
+                            
+                            // Count non-empty fields in current template
+                            int populatedFields = 0;
+                            if (currentTemplate.getName() != null && !currentTemplate.getName().isEmpty()) populatedFields++;
+                            if (currentTemplate.getDay() != null && !currentTemplate.getDay().isEmpty()) populatedFields++;
+                            if (currentTemplate.getTopic() != null && !currentTemplate.getTopic().isEmpty()) populatedFields++;
+                            if (currentTemplate.getTime() != null && !currentTemplate.getTime().isEmpty()) populatedFields++;
+                            if (currentTemplate.getCast() != null && !currentTemplate.getCast().isEmpty()) populatedFields++;
+                            if (currentTemplate.getRoom() != null && !currentTemplate.getRoom().isEmpty()) populatedFields++;
+                            if (currentTemplate.getDuration() != null && !currentTemplate.getDuration().isEmpty()) populatedFields++;
+                            if (currentTemplate.getStars() != null && !currentTemplate.getStars().isEmpty()) populatedFields++;
+                            
+                            // If only 1-2 fields are populated, likely a fresh conversation
+                            if (populatedFields <= 2) {
+                                isFreshConversation = true;
+                                System.out.println("DEBUG: Detected fresh conversation - only " + populatedFields + " fields populated in current template");
+                            }
+                        }
+                    }
+                    
+                    if (isFreshConversation) {
+                        // For fresh conversations, don't merge - just transfer the current template
+                        System.out.println("DEBUG: Fresh conversation detected - transferring template without merging to avoid contamination");
                         nextNode.setMessageTemplate(this.msgTemplate);
+                    } else {
+                        // Original template transfer/merge logic for non-fresh conversations
+                        if (this.msgTemplate != null && nextNode.getMessageTemplate() == null) {
+                            System.out.println("DEBUG: Transferring template from " + this.id + " to " + nextNode.getId());
+                            nextNode.setMessageTemplate(this.msgTemplate);
+                            System.out.println("DEBUG: Template transferred: " + this.msgTemplate.getClass().getSimpleName() + " with fields: " +
+                                (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" :
+                                "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
+                        } else if (this.msgTemplate != null && nextNode.getMessageTemplate() != null) {
+                            System.out.println("DEBUG: Both nodes have templates, attempting merge from " + this.id + " to " + nextNode.getId());
+                            boolean merged = nextNode.getMessageTemplate().mergeFrom(this.msgTemplate);
+                            System.out.println("DEBUG: Merge successful: " + merged);
+                            if (!merged) {
+                                System.out.println("DEBUG: Merge failed (e.g. different types or no new info), replacing template in " + nextNode.getId() + " with template from " + this.id);
+                                nextNode.setMessageTemplate(this.msgTemplate);
+                            }
+                        }
                     }
                 }
             }
