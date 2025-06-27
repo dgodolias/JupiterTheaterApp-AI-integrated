@@ -577,10 +577,10 @@ public class ChatbotNode {
                 completePattern = "confirmation";
                 incompletePattern = "incomplete";
             } else if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(this.getCategory()) || "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ".equals(this.getCategory())) {
-                completePattern = "cofirmation";
+                completePattern = "confirmation";
                 incompletePattern = "incomplete";
                 System.out.println(
-                        "DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'cofirmation' pattern for available info, 'incomplete' for no info");
+                        "DEBUG: For ΠΛΗΡΟΦΟΡΙΕΣ category - Using 'confirmation' pattern for available info, 'incomplete' for no info");
                 System.out.println("DEBUG: Template state: hasCompleteInfo=" + hasCompleteInfo +
                         ", Will search for child with '" + (hasCompleteInfo ? completePattern : incompletePattern)
                         + "' in ID");
