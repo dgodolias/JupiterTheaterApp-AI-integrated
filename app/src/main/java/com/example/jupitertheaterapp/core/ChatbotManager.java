@@ -28,7 +28,8 @@ public class ChatbotManager {
     private JSONObject jsonTree; // Keep for reference
     private ChatbotNode rootNode; // Root node of conversation tree
     private Map<String, ChatbotNode> nodeMap;
-    private ChatbotNode currentNode;    private ConversationState conversationState;
+    private ChatbotNode currentNode;
+    private ConversationState conversationState;
     private Client client; // Client for server communications
     private static ChatbotManager instance;
     private String leftoverMessage; // Store completion messages for the root node
@@ -51,6 +52,7 @@ public class ChatbotManager {
 
     /**
      * Gets the singleton instance of the ChatbotManager
+     *
      * @return The ChatbotManager instance
      */
     public static synchronized ChatbotManager getInstance() {
@@ -237,30 +239,30 @@ public class ChatbotManager {
     /**
      * Propagates templates from parent nodes to their children.
      * The root node is exempt from receiving templates.
-     * 
+     *
      * @param node The current node to process
      */
     private void propagateTemplatesToChildren(ChatbotNode node) {
         // Use a helper method with a Set to track visited nodes
         propagateTemplatesToChildren(node, new HashSet<String>());
     }
-    
+
     /**
      * Helper method that uses a Set to track visited nodes and avoid infinite recursion.
-     * 
-     * @param node The current node to process
+     *
+     * @param node         The current node to process
      * @param visitedNodes Set of node IDs that have already been visited
      */
     private void propagateTemplatesToChildren(ChatbotNode node, HashSet<String> visitedNodes) {
         if (node == null)
             return;
-            
+
         // Add this node's ID to the visited set to avoid processing it again
         if (!visitedNodes.add(node.getId())) {
             // If we couldn't add the ID because it's already in the set, return immediately
             return;
         }
-        
+
         // We're no longer propagating templates, but we'll keep the structure for
         // traversing children
 
@@ -289,52 +291,56 @@ public class ChatbotManager {
             return null;
         }
         return json;
-    }    private void createMinimalStructure() {
+    }
+
+    private void createMinimalStructure() {
         rootNode = new ChatbotNode("root", "CATEGORISE",
                 "Γεια σας! Πώς μπορώ να σας βοηθήσω;", "",
                 "Δεν κατάλαβα την ερώτησή σας.");
         rootNode.setCategory("root"); // Set category explicitly
         nodeMap.put("root", rootNode);
         currentNode = rootNode;
-    }    public String getInitialMessage() {
+    }
+
+    public String getInitialMessage() {
         Log.d(TAG, "Getting initial message from root node");
-        
+
         if (rootNode != null) {
             Log.d(TAG, "Root node exists, checking messages");
-            
+
             // Ensure root node has clean state for initial message
             if (rootNode.getMessageTemplate() != null) {
                 Log.d(TAG, "Root node has leftover template - clearing for fresh start");
                 rootNode.setMessageTemplate(null);
             }
-            
+
             // Also reset the root node's category to ensure clean state
             if (!"root".equals(rootNode.getCategory())) {
                 Log.d(TAG, "Root node has leftover category '" + rootNode.getCategory() + "' - resetting to 'root'");
                 rootNode.setCategory("root");
             }
-            
+
             // Check current leftover message
             String currentLeftover = getLeftoverMessage();
             Log.d(TAG, "Current leftover message: " + currentLeftover);
-            
+
             // Get both message1 and message2 from the root node
             String message1 = rootNode.getMessage();
             String message2 = rootNode.getMessage2();
-            
+
             Log.d(TAG, "Root node message1 (after processing): " + message1);
             Log.d(TAG, "Root node message2: " + message2);
-            
+
             // Build the combined message
             StringBuilder combinedMessage = new StringBuilder();
-              // Add message1 if it exists (leftover message)
+            // Add message1 if it exists (leftover message)
             if (message1 != null && !message1.isEmpty()) {
                 Log.d(TAG, "Adding message1 to combined message");
                 combinedMessage.append(message1);
             } else {
                 Log.d(TAG, "Message1 is null or empty, skipping");
             }
-            
+
             // Add message2 if it exists and is different from message1
             if (message2 != null && !message2.isEmpty()) {
                 Log.d(TAG, "Processing message2");
@@ -349,25 +355,27 @@ public class ChatbotManager {
             } else {
                 Log.d(TAG, "Message2 is null or empty, skipping");
             }
-            
+
             // Return the combined message or fallback to message2 or default
             String result = combinedMessage.toString();
             String finalResult = !result.isEmpty() ? result : (message2 != null ? message2 : "Γεια σας! Πώς μπορώ να σας βοηθήσω;");
-            
+
             Log.d(TAG, "Final initial message: " + finalResult);
-            
+
             // Clear leftover message after using it
             if (currentLeftover != null && !currentLeftover.isEmpty()) {
                 Log.d(TAG, "Clearing leftover message after use");
                 clearLeftoverMessage();
             }
-            
+
             return finalResult;
         }
-        
+
         Log.d(TAG, "Root node is null, returning default message");
         return "Γεια σας! Πώς μπορώ να σας βοηθήσω;";
-    }public String getResponseForNodeId(String category) {
+    }
+
+    public String getResponseForNodeId(String category) {
         Log.d(TAG, "Getting response for category: " + category);
 
         // Find node by category
@@ -386,7 +394,7 @@ public class ChatbotManager {
         currentNode = foundNode;        // Get both message1 and message2 from the node
         String message1 = foundNode.getMessage();
         String message2 = foundNode.getMessage2();
-        
+
         // Combine message1 and message2 with a newline between them, avoiding empty lines
         String combinedMessage = "";
         if (message1 != null && !message1.isEmpty()) {
@@ -411,9 +419,9 @@ public class ChatbotManager {
      * The ChatbotNode.chooseNextNode() method is now responsible for
      * selecting the next conversation node based on user input and conversation
      * context.
-     * 
+     *
      * @deprecated Use ChatbotNode.chooseNextNode() instead for history-based node
-     *             selection
+     * selection
      */
     @Deprecated
     private ChatbotNode legacyChooseNextNode(String userInput) {
@@ -428,7 +436,9 @@ public class ChatbotManager {
             childrenInfo.append(child.getId()).append(", ");
         }
         Log.d(TAG, childrenInfo.toString());
-    }    public String findNodeResponseById(String nodeIdOrCategory) {
+    }
+
+    public String findNodeResponseById(String nodeIdOrCategory) {
         // First try to get by direct ID
         ChatbotNode node = nodeMap.get(nodeIdOrCategory);
 
@@ -445,7 +455,7 @@ public class ChatbotManager {
         if (node != null) {            // Get both message1 and message2 from the node
             String message1 = node.getMessage();
             String message2 = node.getMessage2();
-            
+
             // Combine message1 and message2 with a newline between them, avoiding empty lines
             String combinedMessage = "";
             if (message1 != null && !message1.isEmpty()) {
@@ -458,24 +468,26 @@ public class ChatbotManager {
                     combinedMessage = message2;
                 }
             }
-            
+
             return combinedMessage;
         }
         return "Δεν βρέθηκε απάντηση.";
-    }    public void reset() {
+    }
+
+    public void reset() {
         // Reset to root node
         currentNode = rootNode;
-          // Reset root node's template and category
+        // Reset root node's template and category
         if (rootNode != null) {
             rootNode.setMessageTemplate(null);
             rootNode.setCategory("root"); // Use the consistent category identifier for root
-            
+
             // Debug verification to confirm reset
             System.out.println("DEBUG: Reset chatbot - Template and category reset for root node");
-            System.out.println("DEBUG: Root node state after reset: Template=" + 
-                             (rootNode.getMessageTemplate() == null ? "null" : rootNode.getMessageTemplate().getClass().getSimpleName()) +
-                             ", Category='" + rootNode.getCategory() + "'");
-            
+            System.out.println("DEBUG: Root node state after reset: Template=" +
+                    (rootNode.getMessageTemplate() == null ? "null" : rootNode.getMessageTemplate().getClass().getSimpleName()) +
+                    ", Category='" + rootNode.getCategory() + "'");
+
             // Double check if template somehow wasn't reset
             if (rootNode.getMessageTemplate() != null) {
                 System.out.println("CRITICAL ERROR: Root template still not null after reset! Forcing null again.");
@@ -498,7 +510,7 @@ public class ChatbotManager {
 
     /**
      * Gets a node by its ID
-     * 
+     *
      * @param nodeId The ID of the node to retrieve
      * @return The ChatbotNode with the given ID, or null if not found
      */
@@ -529,7 +541,7 @@ public class ChatbotManager {
      * Helper method to recursively print a node and its children with proper
      * indentation.
      * Handles circular references by keeping track of visited nodes.
-     * 
+     *
      * @param node    The node to print
      * @param depth   The current depth in the tree (for indentation)
      * @param visited Set of already visited node IDs to prevent infinite recursion
@@ -633,7 +645,7 @@ public class ChatbotManager {
      * Helper method to recursively build a string representation of a node and its
      * children.
      * Handles circular references by keeping track of visited nodes.
-     * 
+     *
      * @param node    The node to process
      * @param depth   The current depth in the tree (for indentation)
      * @param visited Set of already visited node IDs to prevent infinite recursion
@@ -704,7 +716,7 @@ public class ChatbotManager {
 
     /**
      * Detects and returns a list of nodes that have circular references.
-     * 
+     *
      * @return List of node IDs that have circular references
      */
     public List<String> detectCircularReferences() {
@@ -742,7 +754,7 @@ public class ChatbotManager {
      * messages.
      * This shows only the conversation path that has been traversed, not the entire
      * tree.
-     * 
+     *
      * @return A string representation of the conversation nodes
      */
     public String getConversationNodeList() {
@@ -792,7 +804,7 @@ public class ChatbotManager {
      * Finds the path from root node to the current node.
      * Uses parent references to build the path, ensuring we can track the full
      * conversation.
-     * 
+     *
      * @return A list of nodes representing the conversation path
      */
     private List<ChatbotNode> getPathToCurrentNode() {
@@ -833,7 +845,7 @@ public class ChatbotManager {
     /**
      * Single entry point to process user messages and continue the conversation.
      * Handles both local and server responses based on current settings.
-     * 
+     *
      * @param userMessage The user's message to process
      * @param callback    Callback to handle the bot's response or errors
      */
@@ -855,7 +867,7 @@ public class ChatbotManager {
     public interface MessageResponseCallback {
         /**
          * Called when a response is ready
-         * 
+         *
          * @param response    The response message
          * @param messageType The type of message (BOT or SERVER)
          */
@@ -863,7 +875,7 @@ public class ChatbotManager {
 
         /**
          * Called when a server request should be made
-         * 
+         *
          * @param userMessage The user's message
          * @param currentNode The current node in the conversation
          */
@@ -871,7 +883,7 @@ public class ChatbotManager {
 
         /**
          * Called when an error occurs
-         * 
+         *
          * @param errorMessage Error message
          */
         void onError(String errorMessage);
@@ -881,16 +893,17 @@ public class ChatbotManager {
      * Gets a response for the provided user message.
      * This method handles both local and server responses internally,
      * making it the only method MainActivity needs to call.
-     * 
+     *
      * @param userMessage      The message from the user
      * @param responseCallback Callback to receive the response
-     */    public void getResponse(String userMessage, ResponseCallback responseCallback) {
+     */
+    public void getResponse(String userMessage, ResponseCallback responseCallback) {
         Log.d(TAG, "Getting response for user message: " + userMessage);
 
         try {
             // Store the original user message for confirmation node navigation
             final String originalUserMessage = userMessage;
-            
+
             // Check if this is a greeting that should reset the conversation to clean state
             boolean isGreeting = userMessage.toLowerCase().contains("καλησπερα") ||
                     userMessage.toLowerCase().contains("καλημερα") ||
@@ -898,7 +911,7 @@ public class ChatbotManager {
                     userMessage.toLowerCase().contains("hello") ||
                     userMessage.toLowerCase().contains("hi") ||
                     (userMessage.toLowerCase().contains("πως") && userMessage.toLowerCase().contains("βοηθ"));
-            
+
             // If it's a greeting and we're at root node, ensure clean state
             if (isGreeting && "root".equals(currentNode.getId())) {
                 Log.d(TAG, "Greeting detected at root node - ensuring clean state");
@@ -914,7 +927,7 @@ public class ChatbotManager {
                 clearLeftoverMessage();
                 Log.d(TAG, "Root node state cleaned for greeting");
             }
-            
+
             // Check if we're at a confirmation node and user said "yes"
             // In this case, we want to skip server communication and go directly to root
             boolean isConfirmation = userMessage.toLowerCase().contains("yes") ||
@@ -929,21 +942,22 @@ public class ChatbotManager {
                     userMessage.toLowerCase().contains("ενταξει") ||
                     userMessage.toLowerCase().contains("οκ") ||
                     userMessage.toLowerCase().contains("ok");
-            
+
             boolean isAtConfirmationNode = currentNode.getId().contains("confirmation");
-              if (isAtConfirmationNode && isConfirmation) {
+            if (isAtConfirmationNode && isConfirmation) {
                 Log.d(TAG, "User confirmed at confirmation node - navigating to root without server request");
-                
+
                 // PERFORM DATABASE OPERATIONS BEFORE NAVIGATION
                 // Check which type of confirmation and execute appropriate database operation
                 String currentNodeId = currentNode.getId();
                 if (currentNode.getMessageTemplate() != null) {
                     Log.d(TAG, "Performing database operation for node: " + currentNodeId);
-                    
+
                     SimpleDatabase database = SimpleDatabase.getInstance();
                     boolean operationSuccess = false;
                     String sepChar = "<sep>";
-                    switch (currentNodeId) {                        case "booking_confirmation":
+                    switch (currentNodeId) {
+                        case "booking_confirmation":
                             Log.d(TAG, "Validating booking details against shows database");
                             // First validate that the show exists with the provided details
                             boolean showExists = database.validateShowExists(currentNode.getMessageTemplate());
@@ -956,23 +970,24 @@ public class ChatbotManager {
                                     Log.d(TAG, "Booking successfully added to database");
                                     // Log the current count for verification
                                     Log.d(TAG, "Bookings table now has " + database.getTableRecordCount("bookings") + " records");
-                                    
+
                                     // Set leftover message for booking completion with reservation details
                                     MsgTemplate template = currentNode.getMessageTemplate();
                                     String showName = getTemplateField(template, "show_name");
                                     String leftoverMsg;
                                     if (!"N/A".equals(showName)) {
                                         leftoverMsg = "Η κράτησή σας για την παράσταση " + showName + " επιβεβαιώθηκε επιτυχώς!" + sepChar +
-                                                     "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
-                                                     "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;
+                                                "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
+                                                "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;
                                     } else {
                                         leftoverMsg = "Η κράτησή σας επιβεβαιώθηκε επιτυχώς!" + sepChar +
-                                                     "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
-                                                     "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;                                    }
+                                                "Αριθμός κράτησης: " + bookingResult.reservationId + sepChar +
+                                                "Κωδικός επιβεβαίωσης: " + bookingResult.reservationPassword + sepChar;
+                                    }
                                     Log.d(TAG, "Setting leftover message for booking: " + leftoverMsg);
                                     setLeftoverMessage(leftoverMsg);
                                     Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
-                                }else {
+                                } else {
                                     Log.e(TAG, "Failed to add booking to database");
                                     String leftoverMsg = "Υπήρξε πρόβλημα με την κράτησή σας. Παρακαλώ δοκιμάστε ξανά.";
                                     Log.d(TAG, "Setting leftover message for booking failure: " + leftoverMsg);
@@ -982,13 +997,13 @@ public class ChatbotManager {
                             } else {
                                 Log.e(TAG, "Show validation failed - no matching show found");
                                 operationSuccess = false; // Mark operation as failed
-                                String leftoverMsg = "συγγνωμη δεν υπάρχει παράσταση που να ικανοποιει τα κριτήριαπου θέσατε. Παρακαλώ μέσα απο το menu πληροφοριων, δειτε τις σωστές πληροφορίες και δοκιμάστε ξανα!"+sepChar;
+                                String leftoverMsg = "συγγνωμη δεν υπάρχει παράσταση που να ικανοποιει τα κριτήριαπου θέσατε. Παρακαλώ μέσα απο το menu πληροφοριων, δειτε τις σωστές πληροφορίες και δοκιμάστε ξανα!" + sepChar;
                                 Log.d(TAG, "Setting leftover message for show validation failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
                             }
                             break;
-                              case "cancel_confirmation":
+                        case "cancel_confirmation":
                             Log.d(TAG, "Removing booking from database");
                             operationSuccess = database.removeBooking(currentNode.getMessageTemplate());
                             if (operationSuccess) {
@@ -998,13 +1013,14 @@ public class ChatbotManager {
                                 String reservationNumber = getTemplateField(template, "reservation_number");
                                 String leftoverMsg;
                                 if (!"N/A".equals(reservationNumber)) {
-                                    leftoverMsg = "Η κράτησή σας με αριθμό " + reservationNumber + " ακυρώθηκε επιτυχώς."+ sepChar;
+                                    leftoverMsg = "Η κράτησή σας με αριθμό " + reservationNumber + " ακυρώθηκε επιτυχώς." + sepChar;
                                 } else {
-                                    leftoverMsg = "Η κράτησή σας ακυρώθηκε επιτυχώς."+ sepChar;
+                                    leftoverMsg = "Η κράτησή σας ακυρώθηκε επιτυχώς." + sepChar;
                                 }
                                 Log.d(TAG, "Setting leftover message for cancellation: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
-                                Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                            } else {
+                                Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
+                            } else {
                                 Log.e(TAG, "Failed to remove booking from database");
                                 String leftoverMsg = "Δεν βρέθηκε κράτηση με αυτόν τον συνδυασμό στοιχείων.<sep>";
                                 Log.d(TAG, "Setting leftover message for cancellation failure: " + leftoverMsg);
@@ -1012,7 +1028,7 @@ public class ChatbotManager {
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
                             }
                             break;
-                              case "review_confirmation":
+                        case "review_confirmation":
                             Log.d(TAG, "Adding review to database");
                             operationSuccess = database.addReview(currentNode.getMessageTemplate());
                             if (operationSuccess) {
@@ -1022,27 +1038,28 @@ public class ChatbotManager {
                                 String reservationNumber = getTemplateField(template, "reservation_number");
                                 String leftoverMsg;
                                 if (!"N/A".equals(reservationNumber)) {
-                                    leftoverMsg = "Η αξιολόγησή σας για την κράτηση " + reservationNumber + " καταχωρήθηκε επιτυχώς!"+ sepChar;
+                                    leftoverMsg = "Η αξιολόγησή σας για την κράτηση " + reservationNumber + " καταχωρήθηκε επιτυχώς!" + sepChar;
                                 } else {
-                                    leftoverMsg = "Η αξιολόγησή σας καταχωρήθηκε επιτυχώς!"+ sepChar;
+                                    leftoverMsg = "Η αξιολόγησή σας καταχωρήθηκε επιτυχώς!" + sepChar;
                                 }
                                 Log.d(TAG, "Setting leftover message for review: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
-                                Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());                            } else {
+                                Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
+                            } else {
                                 Log.e(TAG, "Failed to add review to database");
-                                String leftoverMsg = "Υπήρξε πρόβλημα με την καταχώρηση της αξιολόγησής σας. Παρακαλώ δοκιμάστε ξανά."+ sepChar;
+                                String leftoverMsg = "Υπήρξε πρόβλημα με την καταχώρηση της αξιολόγησής σας. Παρακαλώ δοκιμάστε ξανά." + sepChar;
                                 Log.d(TAG, "Setting leftover message for review failure: " + leftoverMsg);
                                 setLeftoverMessage(leftoverMsg);
                                 Log.d(TAG, "Leftover message set, current value: " + getLeftoverMessage());
                             }
                             break;
-                            
+
                         default:
                             Log.d(TAG, "No database operation needed for node: " + currentNodeId);
                             operationSuccess = true; // No operation needed, consider it successful
                             break;
                     }
-                    
+
                     // Log operation result and current database state
                     if (operationSuccess) {
                         Log.d(TAG, "Database operation completed successfully for " + currentNodeId);
@@ -1053,17 +1070,17 @@ public class ChatbotManager {
                 } else {
                     Log.w(TAG, "No template available for database operation at node: " + currentNodeId);
                 }
-                  // Directly navigate to the next node (which should be root)
+                // Directly navigate to the next node (which should be root)
                 ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);
                 Log.d(TAG, "Chosen next node after confirmation: " + (nextNode != null ? nextNode.getId() : "null"));
-                
+
                 if (nextNode != null && "root".equals(nextNode.getId())) {
                     Log.d(TAG, "Successfully navigating to root node - skipping server communication");
                     currentNode = nextNode;
-                    
+
                     // Return the root node's message without any server communication
                     String rootMessage = getInitialMessage();
-                    
+
                     Log.d(TAG, "Returning root message without server request: " + rootMessage);
                     responseCallback.onResponseReceived(rootMessage, ChatMessage.TYPE_BOT);
                     return; // Skip the rest of the method
@@ -1071,7 +1088,7 @@ public class ChatbotManager {
                     Log.w(TAG, "Next node is not root or is null - continuing with normal flow");
                 }
             }
-            
+
             // For all other cases, proceed with normal server communication
             // Create JSON request using the current node
             JSONObject jsonRequest = currentNode.createRequestJson(userMessage);
@@ -1082,7 +1099,8 @@ public class ChatbotManager {
             System.out.println("Current node: " + currentNode);
 
             // Make the server request
-            makeServerRequest(jsonRequest, new ServerRequestCallback() {@Override
+            makeServerRequest(jsonRequest, new ServerRequestCallback() {
+                @Override
                 public void onSuccess(String category, String fullJsonResponse) {
                     try {
                         // Check if we're at root node and need to clear template for new category
@@ -1093,36 +1111,36 @@ public class ChatbotManager {
                             currentNode.setCategory("root"); // Always keep root category as "root"
                             Log.d(TAG, "Root node state reset - Template: null, Category: root");
                         }
-                        
+
                         // IMPORTANT - First populate the template with the server response
                         // Process the JSON and populate the template for the current node
                         // This ensures template data is available before making navigation decisions
                         String initialResponse = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
                         Log.d(TAG, "Initial JSON processing complete, template populated");
-                          // Set the category as user message for node navigation purposes
+                        // Set the category as user message for node navigation purposes
                         currentNode.setUserMessage(category);
-                        
+
                         // Clear leftover message for information requests
                         if ("ΠΛΗΡΟΦΟΡΙΕΣ".equals(category)) {
                             Log.d(TAG, "Information request detected - clearing leftover message");
                             clearLeftoverMessage();
                         }
-                        
+
                         // Try to get the next node based on category AND template completeness
                         // Pass the original user input for proper confirmation node navigation
                         Log.d(TAG, "Navigation debug - Original user input: '" + originalUserMessage + "', Server category: '" + category + "'");
                         ChatbotNode nextNode = currentNode.chooseNextNode(originalUserMessage);
                         if (nextNode != null) {
                             Log.d(TAG, "Navigation successful - Moving from '" + currentNode.getId() + "' to '" + nextNode.getId() + "'");
-                            
+
                             // Special handling for fresh conversations (root -> category node)
-                            boolean isStartingFreshConversation = "root".equals(currentNode.getId()) && 
-                                                                (nextNode.getId().equals("plirofories") || 
-                                                                 nextNode.getId().equals("kratisi") || 
-                                                                 nextNode.getId().equals("akyrosi") || 
-                                                                 nextNode.getId().equals("axiologiseis_sxolia") || 
-                                                                 nextNode.getId().equals("prosfores_ekptoseis"));
-                            
+                            boolean isStartingFreshConversation = "root".equals(currentNode.getId()) &&
+                                    (nextNode.getId().equals("plirofories") ||
+                                            nextNode.getId().equals("kratisi") ||
+                                            nextNode.getId().equals("akyrosi") ||
+                                            nextNode.getId().equals("axiologiseis_sxolia") ||
+                                            nextNode.getId().equals("prosfores_ekptoseis"));
+
                             if (isStartingFreshConversation) {
                                 Log.d(TAG, "Starting fresh conversation - ensuring next node has clean template");
                                 // Create a completely fresh template for the new conversation
@@ -1135,16 +1153,16 @@ public class ChatbotManager {
                                     nextNode.setMessageTemplate(null);
                                 }
                             }
-                            
+
                             // Update the current node to the next one
                             currentNode = nextNode;
-                            
+
                             // Now process the conversation turn for the new node
                             // This handles state transition, message processing, and response building
                             String combinedMessage = currentNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
                             Log.d(TAG, "Conversation turn processed for node: " + currentNode.getId());
                             Log.d(TAG, "Current state: " + currentNode.getCurrentState());
-                            
+
                             int messageType = currentNode.getSystemMessage().getType();
 
                             // Debug logging
@@ -1159,7 +1177,7 @@ public class ChatbotManager {
                             // Use the current state but with the temporary node
                             String combinedMessage = tempNode.handleConversationTurn(fullJsonResponse, ChatMessage.TYPE_SERVER);
                             Log.d(TAG, "Fallback handler processed message");
-                            
+
                             Log.d(TAG, "Combined fallback message: " + combinedMessage);
                             responseCallback.onResponseReceived(combinedMessage, ChatMessage.TYPE_SERVER);
                         }
@@ -1193,7 +1211,7 @@ public class ChatbotManager {
 
     /**
      * Internal method to handle server communication
-     * 
+     *
      * @param jsonRequest The JSON request to send to the server
      * @param callback    Callback to handle the server response
      */
@@ -1225,7 +1243,7 @@ public class ChatbotManager {
     public interface ResponseCallback {
         /**
          * Called when a response is ready
-         * 
+         *
          * @param response    The response message
          * @param messageType The type of message (BOT or SERVER)
          */
@@ -1241,53 +1259,56 @@ public class ChatbotManager {
             System.out.println("Current Node: " + currentNode);
         } else {
             System.out.println("Current Node is null");
-        }    }
+        }
+    }
 
     /**
      * Gets a comprehensive debug information including tree structure, current node, and database state
+     *
      * @return A formatted string containing all debug information
      */
     public String getComprehensiveDebugInfo() {
         StringBuilder debugInfo = new StringBuilder();
-        
+
         // Add tree structure
         debugInfo.append("=== CONVERSATION TREE STRUCTURE ===\n");
         debugInfo.append(getTreeAsString());
         debugInfo.append("\n");
-        
+
         // Add current node information
         debugInfo.append("=== CURRENT NODE DETAILS ===\n");
         debugInfo.append(getCurrentNodeDebugInfo());
         debugInfo.append("\n");
-        
+
         // Add conversation path
         debugInfo.append("=== CONVERSATION PATH ===\n");
         debugInfo.append(getConversationNodeList());
         debugInfo.append("\n");
-        
+
         // Add database state
         debugInfo.append("=== DATABASE STATE ===\n");
         debugInfo.append(getDatabaseDebugInfo());
-        
+
         return debugInfo.toString();
     }
 
     /**
      * Gets detailed information about the current node
+     *
      * @return A formatted string with current node details
      */
     public String getCurrentNodeDebugInfo() {
         if (currentNode == null) {
             return "Current Node: null\n";
         }
-        
+
         StringBuilder info = new StringBuilder();
         info.append("Current Node Details:\n");
         info.append("- ID: ").append(currentNode.getId()).append("\n");
         info.append("- Category: ").append(currentNode.getCategory()).append("\n");
         info.append("- Type: ").append(currentNode.getType()).append("\n");
         info.append("- Current State: ").append(currentNode.getCurrentState()).append("\n");
-        
+
         // System message info
         if (currentNode.getSystemMessage() != null) {
             info.append("- System Message Type: ");
@@ -1295,24 +1316,24 @@ public class ChatbotManager {
             info.append("\n");
             info.append("- System Message: ").append(currentNode.getSystemMessage().getMessage()).append("\n");
         }
-        
+
         // User message info
         if (currentNode.getUserMessage() != null) {
             info.append("- User Message: ").append(currentNode.getUserMessage().getMessage()).append("\n");
         }
-        
+
         // Template info
         if (currentNode.getMessageTemplate() != null) {
             MsgTemplate template = currentNode.getMessageTemplate();
             info.append("- Template Type: ").append(template.getClass().getSimpleName()).append("\n");
             info.append("- Template Fields: ").append(template.getFieldValuesMap()).append("\n");
-            
+
             List<String> missingFields = template.getMissingFields();
             if (!missingFields.isEmpty()) {
                 info.append("- Missing Fields: ").append(missingFields).append("\n");
             }
         }
-        
+
         // Children info
         info.append("- Children Count: ").append(currentNode.getChildren().size()).append("\n");
         if (!currentNode.getChildren().isEmpty()) {
@@ -1323,21 +1344,22 @@ public class ChatbotManager {
             info.setLength(info.length() - 2); // Remove last comma and space
             info.append("\n");
         }
-        
+
         return info.toString();
     }
 
     /**
      * Gets comprehensive database state information for debugging
+     *
      * @return A formatted string with database state details
      */
     public String getDatabaseDebugInfo() {
         SimpleDatabase db = SimpleDatabase.getInstance();
         StringBuilder dbInfo = new StringBuilder();
-        
+
         dbInfo.append("Database State Information:\n");
         dbInfo.append("==========================================\n");
-        
+
         // Table record counts
         dbInfo.append("TABLE RECORD COUNTS:\n");
         dbInfo.append("- Bookings: ").append(db.getTableRecordCount("bookings")).append(" records\n");
@@ -1345,52 +1367,53 @@ public class ChatbotManager {
         dbInfo.append("- Shows: ").append(db.getTableRecordCount("shows")).append(" records\n");
         dbInfo.append("- Discounts: ").append(db.getTableRecordCount("discounts")).append(" records\n");
         dbInfo.append("\n");
-        
+
         // Recent database operations (from logs)
         dbInfo.append("RECENT DATABASE ACTIVITY:\n");
         dbInfo.append("(Check system logs for detailed operation history)\n");
         dbInfo.append("\n");
-          // Sample data from each table
+        // Sample data from each table
         dbInfo.append("ALL DATABASE ENTRIES:\n");
-        
+
         // Bookings - all entries
         dbInfo.append("--- All Bookings ---\n");
         String bookingsSample = getDatabaseTableSample("bookings", Integer.MAX_VALUE);
         dbInfo.append(bookingsSample);
-        
+
         // Reviews - all entries
         dbInfo.append("--- All Reviews ---\n");
         String reviewsSample = getDatabaseTableSample("reviews", Integer.MAX_VALUE);
         dbInfo.append(reviewsSample);
-        
+
         // Shows - all entries
         dbInfo.append("--- All Shows ---\n");
         String showsSample = getDatabaseTableSample("shows", Integer.MAX_VALUE);
         dbInfo.append(showsSample);
-        
+
         // Discounts - all entries
         dbInfo.append("--- All Discounts ---\n");
         String discountsSample = getDatabaseTableSample("discounts", Integer.MAX_VALUE);
         dbInfo.append(discountsSample);
-        
+
         dbInfo.append("==========================================\n");
         return dbInfo.toString();
     }
 
     /**
      * Gets a sample of data from a specific database table
+     *
      * @param tableName The name of the table
-     * @param limit Maximum number of records to return
+     * @param limit     Maximum number of records to return
      * @return Formatted string with sample data
      */
     private String getDatabaseTableSample(String tableName, int limit) {
         SimpleDatabase db = SimpleDatabase.getInstance();
         StringBuilder sample = new StringBuilder();
-        
+
         try {
             // Query all records from the table (SimpleDatabase handles the limit internally)
             JSONArray results = db.queryRecords(tableName, null);
-            
+
             if (results == null || results.length() == 0) {
                 sample.append("No records found.\n");
             } else {
@@ -1398,7 +1421,7 @@ public class ChatbotManager {
                 for (int i = 0; i < recordsToShow; i++) {
                     JSONObject record = results.getJSONObject(i);
                     sample.append("Record ").append(i + 1).append(": ");
-                      // Format key fields based on table type
+                    // Format key fields based on table type
                     switch (tableName) {
                         case "bookings":
                             sample.append("Show: ").append(getFieldValue(record, "show_name"));
@@ -1413,7 +1436,8 @@ public class ChatbotManager {
                             sample.append(", Reservation: ").append(getFieldValue(record, "reservation_number"));
                             sample.append(", Rating: ").append(getFieldValue(record, "stars"));
                             String reviewText = getFieldValue(record, "review");
-                            if (reviewText.length() > 50) reviewText = reviewText.substring(0, 47) + "...";
+                            if (reviewText.length() > 50)
+                                reviewText = reviewText.substring(0, 47) + "...";
                             sample.append(", Review: ").append(reviewText);
                             break;
                         case "shows":
@@ -1435,8 +1459,9 @@ public class ChatbotManager {
                             sample.append(record.toString());
                             break;
                     }
-                    sample.append("\n");                }
-                
+                    sample.append("\n");
+                }
+
                 // Only show "more records" message if we're actually limiting the results
                 if (results.length() > limit && limit != Integer.MAX_VALUE) {
                     sample.append("... and ").append(results.length() - limit).append(" more records\n");
@@ -1446,7 +1471,7 @@ public class ChatbotManager {
             sample.append("Error retrieving data: ").append(e.getMessage()).append("\n");
             Log.e(TAG, "Error getting database sample for table: " + tableName, e);
         }
-        
+
         sample.append("\n");
         return sample.toString();
     }
@@ -1460,41 +1485,42 @@ public class ChatbotManager {
         if (message == null || !message.contains("<results>")) {
             return message; // No processing needed
         }
-        
+
         // Get the database instance
         SimpleDatabase db = SimpleDatabase.getInstance();
-        
+
         // Get the corresponding table for this category
         String tableName = db.getCategoryTableMapping(category);
         if (tableName == null) {
             Log.e(TAG, "No table mapping found for category: " + category);
             return message.replace("<results>", "Δεν βρέθηκαν αποτελέσματα.");
         }
-        
+
         // Check if template has queryable fields
         if (template == null || !template.hasQueryableFields()) {
             Log.e(TAG, "Template has no queryable fields for category: " + category);
             return message.replace("<results>", "Δεν υπάρχουν επαρκή στοιχεία για αναζήτηση.");
         }
-        
+
         // Query the database
         JSONArray results = db.queryRecords(tableName, template);
-          // Format the results
+        // Format the results
         String formattedResults;
         if (results == null || results.length() == 0) {
             formattedResults = "Δεν βρέθηκαν αποτελέσματα που να ταιριάζουν με τα κριτήρια σας.";
         } else {
             formattedResults = db.formatResults(results, template);
         }
-        
+
         // Replace the <results> tag with formatted results
         return message.replace("<results>", formattedResults);
     }
-    
+
     /**
      * Helper method to extract field values from the nested JSON structure
      * Each field in the database has format: {"value": "actual_value", "pvalues": [...]}
-     * @param record The JSON record
+     *
+     * @param record    The JSON record
      * @param fieldName The name of the field to extract
      * @return The actual value or "N/A" if not found
      */
@@ -1509,12 +1535,13 @@ public class ChatbotManager {
             return "N/A";
         }
     }
-    
+
     /**
      * Helper method to extract nested field values (like person.name)
-     * @param record The JSON record
+     *
+     * @param record      The JSON record
      * @param parentField The parent field name (e.g., "person")
-     * @param childField The child field name (e.g., "name")
+     * @param childField  The child field name (e.g., "name")
      * @return The actual value or "N/A" if not found
      */
     private String getNestedFieldValue(JSONObject record, String parentField, String childField) {
@@ -1526,41 +1553,47 @@ public class ChatbotManager {
                     return field.optString("value", "N/A");
                 }
             }
-            return "N/A";        } catch (Exception e) {
+            return "N/A";
+        } catch (Exception e) {
             return "N/A";
         }
     }
-    
+
     /**
      * Sets the leftover message for the root node
+     *
      * @param message The completion message to display
      */
     public void setLeftoverMessage(String message) {
         this.leftoverMessage = message;
     }
-    
+
     /**
      * Gets the current leftover message
+     *
      * @return The leftover message or null if not set
      */
     public String getLeftoverMessage() {
         return this.leftoverMessage;
     }
-      /**
+
+    /**
      * Clears the leftover message
      */
     public void clearLeftoverMessage() {
         this.leftoverMessage = null;
     }
-      /**
+
+    /**
      * Helper method to extract field values from a template
-     * @param template The message template
+     *
+     * @param template  The message template
      * @param fieldName The field name to extract
      * @return The field value or "N/A" if not found
      */
     private String getTemplateField(MsgTemplate template, String fieldName) {
         if (template == null) return "N/A";
-        
+
         Map<String, List<String>> fieldValues = template.getFieldValuesMap();
         if (fieldValues.containsKey(fieldName)) {
             List<String> values = fieldValues.get(fieldName);

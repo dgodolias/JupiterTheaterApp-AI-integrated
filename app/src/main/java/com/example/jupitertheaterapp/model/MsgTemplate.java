@@ -26,7 +26,7 @@ public abstract class MsgTemplate {
 
     /**
      * Gets the Greek display name for a field
-     * 
+     *
      * @param fieldName The field name in English
      * @return The field name in Greek, or the original name if not found
      */
@@ -39,7 +39,7 @@ public abstract class MsgTemplate {
 
     /**
      * Get a comma-separated list of missing fields in Greek
-     * 
+     *
      * @param missingFields List of missing field names in English
      * @return Comma-separated list of missing fields in Greek
      */
@@ -57,7 +57,7 @@ public abstract class MsgTemplate {
     /**
      * Merges data from another template of the same type
      * This allows template data to be preserved when navigating between nodes
-     * 
+     *
      * @param otherTemplate The template to merge data from
      * @return true if merged successfully, false otherwise
      */
@@ -74,14 +74,14 @@ public abstract class MsgTemplate {
 
     /**
      * Get a list of field names that are missing or incomplete
-     * 
+     *
      * @return List of field names that are missing values
      */
     public abstract List<String> getMissingFields();
 
     /**
      * Get a comma-separated string of missing field names in Greek
-     * 
+     *
      * @return Comma-separated string of missing field names in Greek
      */
     public String getMissingFieldsAsGreekString() {
@@ -91,14 +91,14 @@ public abstract class MsgTemplate {
 
     /**
      * Get a list of field names that have values (not missing)
-     * 
+     *
      * @return List of field names that have values
      */
     public abstract List<String> getExistingFields();
 
     /**
      * Get a comma-separated string of existing field names in Greek
-     * 
+     *
      * @return Comma-separated string of existing field names in Greek
      */
     public String getExistingFieldsAsGreekString() {
@@ -108,14 +108,14 @@ public abstract class MsgTemplate {
 
     /**
      * Abstract method to get a map of existing field names and their values
-     * 
+     *
      * @return Map with field names as keys and their values as values
      */
     public abstract Map<String, String> getExistingFieldsWithValues();
 
     /**
      * Get a map of field names to their values list for database queries
-     * 
+     *
      * @return Map with field names as keys and list of values as values
      */
     public abstract Map<String, List<String>> getFieldValuesMap();
@@ -123,7 +123,7 @@ public abstract class MsgTemplate {
     /**
      * Checks if the template has any non-empty field values that can be used for
      * queries
-     * 
+     *
      * @return true if at least one field has values, false otherwise
      */
     public boolean hasQueryableFields() {
@@ -138,9 +138,10 @@ public abstract class MsgTemplate {
 
     /**
      * Get a formatted string of existing field names with their values in Greek
-     * 
+     *
      * @return Formatted string of existing field names with values
-     */    public String getExistingFieldsWithValuesAsGreekString() {
+     */
+    public String getExistingFieldsWithValuesAsGreekString() {
         Map<String, String> fieldsWithValues = getExistingFieldsWithValues();
         System.out.println("DEBUG: getExistingFieldsWithValuesAsGreekString - fieldsWithValues: " + fieldsWithValues);
         StringBuilder result = new StringBuilder();
@@ -162,13 +163,13 @@ public abstract class MsgTemplate {
     /**
      * Processes a template string by replacing variable placeholders with actual
      * values
-     * 
+     *
      * @param templateString Template string with variables in <variable_name>
      *                       format
      * @return Processed string with all variables replaced with their values
      */
     public abstract String processTemplate(String templateString); // Special handler for the <missing> placeholder in
-                                                                   // templates
+    // templates
 
     protected String processMissingFieldsPlaceholder(String templateString) {
         // Handle <missing> placeholder for missing fields
@@ -188,7 +189,7 @@ public abstract class MsgTemplate {
 
     /**
      * Helper method to replace a template variable with its value
-     * 
+     *
      * @param template     The template string
      * @param variableName Variable name without brackets
      * @param value        Value to replace the variable with
@@ -203,7 +204,7 @@ public abstract class MsgTemplate {
 
     /**
      * Creates an appropriate MsgTemplate instance based on the provided node ID
-     * 
+     *
      * @param id The node ID used to determine which template to create
      * @return A new instance of the appropriate MsgTemplate subclass
      * @throws IllegalArgumentException if no template is registered for the given
@@ -219,7 +220,7 @@ public abstract class MsgTemplate {
 
     /**
      * Fills the template fields from a JSON string
-     * 
+     *
      * @param jsonString JSON string to parse
      * @return true if parsing was successful, false otherwise
      */
@@ -255,9 +256,11 @@ public abstract class MsgTemplate {
             // Return true anyway so the message can still be shown
             return true;
         }
-    }    /**
+    }
+
+    /**
      * Populates the template fields from a JSONObject
-     * 
+     *
      * @param jsonObject JSONObject to extract values from
      * @return true if population was successful, false otherwise
      */
@@ -265,7 +268,7 @@ public abstract class MsgTemplate {
 
     /**
      * Extracts details from a JSON response
-     * 
+     *
      * @param jsonObject The JSON object containing the response
      * @return JSONObject with the extracted details or null if not found or null
      */
@@ -284,7 +287,7 @@ public abstract class MsgTemplate {
 
     /**
      * Populates the template from the details section of the response
-     * 
+     *
      * @param jsonObject The complete JSON response object
      * @return true if successfully populated, false otherwise
      */
@@ -330,10 +333,12 @@ public abstract class MsgTemplate {
             return fieldObject.getString("value");
         }
         return "";
-    }    protected int extractIntValue(JSONObject fieldObject) throws JSONException {
+    }
+
+    protected int extractIntValue(JSONObject fieldObject) throws JSONException {
         if (fieldObject.has("value")) {
             Object valueObj = fieldObject.get("value");
-            
+
             // Handle the case where value is a JSON array
             if (valueObj instanceof JSONArray) {
                 JSONArray valueArray = (JSONArray) valueObj;
@@ -343,11 +348,13 @@ public abstract class MsgTemplate {
                 // If array has elements, convert first element to integer
                 return valueArray.getInt(0);
             }
-            
+
             return fieldObject.getInt("value");
         }
         return 0;
-    }protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
+    }
+
+    protected List<String> extractStringListValue(JSONObject fieldObject) throws JSONException {
         List<String> values = new ArrayList<>();
         if (fieldObject.has("value")) {
             Object valueObj = fieldObject.get("value");
@@ -556,7 +563,8 @@ class ShowInfoTemplate extends MsgTemplate {
         if (!room.isEmpty())
             existingFields.add("room");
         if (!duration.isEmpty())
-            existingFields.add("duration");        if (!stars.isEmpty())
+            existingFields.add("duration");
+        if (!stars.isEmpty())
             existingFields.add("stars");
         return existingFields;
     }
@@ -564,7 +572,7 @@ class ShowInfoTemplate extends MsgTemplate {
     @Override
     public Map<String, String> getExistingFieldsWithValues() {
         Map<String, String> fieldsWithValues = new HashMap<>();
-        
+
         if (!name.isEmpty()) {
             fieldsWithValues.put("name", String.join(", ", name));
         }
@@ -589,7 +597,7 @@ class ShowInfoTemplate extends MsgTemplate {
         if (!stars.isEmpty()) {
             fieldsWithValues.put("stars", String.join(", ", stars));
         }
-        
+
         return fieldsWithValues;
     }
 
@@ -1258,7 +1266,7 @@ class CancellationTemplate extends MsgTemplate {
             List<String> passcodeList = new ArrayList<>();
             passcodeList.add(passcode);
             fieldsMap.put("reservation_password", passcodeList); // Use "reservation_password" to match the field in
-                                                                 // JSON
+            // JSON
         } else {
             fieldsMap.put("reservation_password", new ArrayList<>());
         }
@@ -1354,7 +1362,8 @@ class DiscountTemplate extends MsgTemplate {
                 if (newShowName != null && !newShowName.isEmpty()) {
                     showName = newShowName;
                 }
-            }            if (jsonObject.has("no_of_people")) {
+            }
+            if (jsonObject.has("no_of_people")) {
                 List<String> newNumberOfPeople = extractStringListValue(jsonObject.getJSONObject("no_of_people"));
                 if (newNumberOfPeople != null && !newNumberOfPeople.isEmpty()) {
                     numberOfPeople = newNumberOfPeople;
@@ -1414,16 +1423,18 @@ class DiscountTemplate extends MsgTemplate {
         if (!date.isEmpty())
             existingFields.add("date");
         return existingFields;
-    }    @Override
+    }
+
+    @Override
     public Map<String, String> getExistingFieldsWithValues() {
         Map<String, String> fieldsWithValues = new HashMap<>();
-        
+
         System.out.println("DEBUG: DiscountTemplate.getExistingFieldsWithValues()");
         System.out.println("DEBUG: showName.isEmpty(): " + showName.isEmpty() + ", showName: " + showName);
         System.out.println("DEBUG: numberOfPeople.isEmpty(): " + numberOfPeople.isEmpty() + ", numberOfPeople: " + numberOfPeople);
         System.out.println("DEBUG: age.isEmpty(): " + age.isEmpty() + ", age: " + age);
         System.out.println("DEBUG: date.isEmpty(): " + date.isEmpty() + ", date: " + date);
-        
+
         if (!showName.isEmpty()) {
             String joinedShowName = String.join(", ", showName);
             fieldsWithValues.put("show_name", joinedShowName);
@@ -1444,10 +1455,12 @@ class DiscountTemplate extends MsgTemplate {
             fieldsWithValues.put("date", joinedDate);
             System.out.println("DEBUG: Added date: " + joinedDate);
         }
-        
+
         System.out.println("DEBUG: Final fieldsWithValues: " + fieldsWithValues);
         return fieldsWithValues;
-    }@Override
+    }
+
+    @Override
     public String processTemplate(String templateString) {
         // Handle <missing> placeholder first
         templateString = processMissingFieldsPlaceholder(templateString);

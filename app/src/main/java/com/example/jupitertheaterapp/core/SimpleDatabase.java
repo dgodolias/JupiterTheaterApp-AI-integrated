@@ -2,9 +2,11 @@ package com.example.jupitertheaterapp.core;
 
 import android.content.Context;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileOutputStream;
@@ -20,18 +22,18 @@ import com.example.jupitertheaterapp.model.MsgTemplate;
 
 public class SimpleDatabase {
     private static final String TAG = "SimpleDatabase";
-    
+
     // Data tables stored as JSONObject for simplicity
     private Map<String, JSONArray> tables;
     private Context context; // Store context for file operations
-    
+
     // Singleton instance
     private static SimpleDatabase instance;
-    
+
     private SimpleDatabase() {
         tables = new HashMap<>();
     }
-    
+
     /**
      * Get the singleton instance of the database
      */
@@ -41,9 +43,10 @@ public class SimpleDatabase {
         }
         return instance;
     }
-    
+
     /**
      * Initialize the database by loading all JSON files
+     *
      * @param context The application context
      */
     public void initialize(Context context) {
@@ -57,11 +60,12 @@ public class SimpleDatabase {
             Log.d(TAG, "Table '" + tableName + "' loaded with " + tables.get(tableName).length() + " records");
         }
     }
-    
+
     /**
      * Load JSON file into memory
-     * @param context The application context
-     * @param fileName The JSON file name in assets
+     *
+     * @param context   The application context
+     * @param fileName  The JSON file name in assets
      * @param tableName The table name to identify the data
      */
     private void loadJsonFile(Context context, String fileName, String tableName) {
@@ -82,10 +86,11 @@ public class SimpleDatabase {
             Log.e(TAG, "Error parsing " + fileName + ": " + e.getMessage());
         }
     }
-    
+
     /**
      * Read JSON from assets
-     * @param context The application context
+     *
+     * @param context  The application context
      * @param fileName The file name to read
      * @return String content of the file
      */
@@ -104,9 +109,10 @@ public class SimpleDatabase {
         }
         return json;
     }
-    
+
     /**
      * Map category to table name
+     *
      * @param category The category from the conversation
      * @return The corresponding table name
      */
@@ -125,11 +131,12 @@ public class SimpleDatabase {
                 return null;
         }
     }
-    
+
     /**
      * Query records from a table based on template values
+     *
      * @param tableName The name of the table to query
-     * @param template The message template containing query criteria
+     * @param template  The message template containing query criteria
      * @return JSON array of matching records or null if not found
      */
     public JSONArray queryRecords(String tableName, MsgTemplate template) {
@@ -137,10 +144,10 @@ public class SimpleDatabase {
             Log.e(TAG, "Table '" + tableName + "' not found");
             return null;
         }
-        
+
         JSONArray table = tables.get(tableName);
         List<JSONObject> results = new ArrayList<>();
-        
+
         try {
             for (int i = 0; i < table.length(); i++) {
                 JSONObject record = table.getJSONObject(i);
@@ -151,33 +158,36 @@ public class SimpleDatabase {
         } catch (JSONException e) {
             Log.e(TAG, "Error querying table '" + tableName + "': " + e.getMessage());
         }
-        
+
         // Convert result list to JSONArray
         JSONArray resultArray = new JSONArray();
         for (JSONObject result : results) {
             resultArray.put(result);
-        }        return resultArray;
+        }
+        return resultArray;
     }
-    
+
     /**
      * Check if a record matches the template criteria
-     * @param record The record to check
+     *
+     * @param record   The record to check
      * @param template The template containing the criteria
      * @return True if the record matches all criteria
-     */    private boolean matchesTemplate(JSONObject record, MsgTemplate template) {
+     */
+    private boolean matchesTemplate(JSONObject record, MsgTemplate template) {
         // If template is null, match all records (used for debug sampling)
         if (template == null) {
             return true;
         }
-        
+
         Map<String, List<String>> criteria = template.getFieldValuesMap();
         Log.d(TAG, "matchesTemplate: Starting comparison with criteria: " + criteria);
-          for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : criteria.entrySet()) {
             String field = entry.getKey();
             List<String> values = entry.getValue();
-            
+
             Log.d(TAG, "matchesTemplate: Checking field '" + field + "' with values: " + values);
-            
+
             if (values == null || values.isEmpty()) {
                 Log.d(TAG, "matchesTemplate: Skipping empty field '" + field + "'");
                 continue; // Skip empty criteria
@@ -195,17 +205,17 @@ public class SimpleDatabase {
                         return false; // Field doesn't exist
                     }
                 }
-                  // Get field value from record - handle both string and array formats
+                // Get field value from record - handle both string and array formats
                 JSONObject fieldObj = record.getJSONObject(field);
                 List<String> recordValues = getFieldValues(record, field);
-                
+
                 Log.d(TAG, "matchesTemplate: Record values for field '" + field + "': " + recordValues);
-                  // Check if any of the template values match any of the record values
+                // Check if any of the template values match any of the record values
                 boolean foundMatch = false;
                 for (String value : values) {
                     for (String recordValue : recordValues) {
                         Log.d(TAG, "matchesTemplate: Comparing record value '" + recordValue + "' with template value '" + value + "'");
-                        
+
                         // Use smart comparison for special fields
                         if (smartFieldComparison(field, recordValue, value)) {
                             Log.d(TAG, "matchesTemplate: SMART MATCH FOUND for field '" + field + "'");
@@ -219,7 +229,7 @@ public class SimpleDatabase {
                     }
                     if (foundMatch) break;
                 }
-                
+
                 // If no match found for this field, record doesn't match criteria
                 if (!foundMatch) {
                     Log.d(TAG, "matchesTemplate: NO MATCH found for field '" + field + "' - record rejected");
@@ -230,13 +240,15 @@ public class SimpleDatabase {
                 return false;
             }
         }
-        
+
         // All criteria matched
         Log.d(TAG, "matchesTemplate: ALL criteria matched - record accepted");
         return true;
     }
-      /**
+
+    /**
      * Case-insensitive string matching
+     *
      * @param str1 First string
      * @param str2 Second string
      * @return True if strings match ignoring case
@@ -245,11 +257,12 @@ public class SimpleDatabase {
         if (str1 == null || str2 == null) return false;
         return str1.toLowerCase(Locale.ROOT).equals(str2.toLowerCase(Locale.ROOT));
     }
-    
+
     /**
      * Smart field comparison for special fields with business logic
-     * @param fieldName The name of the field being compared
-     * @param recordValue The value from the database record
+     *
+     * @param fieldName     The name of the field being compared
+     * @param recordValue   The value from the database record
      * @param templateValue The value from the user template
      * @return True if the values match according to the field's business rules
      */
@@ -258,21 +271,21 @@ public class SimpleDatabase {
         if ("age".equals(fieldName)) {
             return compareAgeFields(recordValue, templateValue);
         }
-        
+
         // Handle stars field comparisons (higher ratings include lower search values)
         if ("stars".equals(fieldName)) {
             return compareStarsFields(recordValue, templateValue);
         }
-        
+
         // Handle number of people field comparisons (equal or fewer people)
         if ("no_of_people".equals(fieldName) || "numberOfPeople".equals(fieldName)) {
             return compareNumberOfPeopleFields(recordValue, templateValue);
         }
-        
+
         // For other fields, use regular comparison
         return false;
     }
-    
+
     /**
      * Compare age fields with special logic:
      * - If user searches for <18, match only <18
@@ -282,13 +295,13 @@ public class SimpleDatabase {
     private boolean compareAgeFields(String recordValue, String templateValue) {
         try {
             Log.d(TAG, "compareAgeFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
-            
+
             // Direct match first
             if (caseInsensitiveMatch(recordValue, templateValue)) {
                 Log.d(TAG, "compareAgeFields: Direct match found");
                 return true;
             }
-            
+
             // Special logic for >18 template value
             if ("> 18".equals(templateValue.trim())) {
                 // Match both "> 18" and "> 65" records
@@ -296,17 +309,17 @@ public class SimpleDatabase {
                 Log.d(TAG, "compareAgeFields: >18 template matches " + recordValue + ": " + matches);
                 return matches;
             }
-            
+
             // For <18 and >65, only exact matches (already handled above)
             Log.d(TAG, "compareAgeFields: No special match found");
             return false;
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error in compareAgeFields: " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Compare stars fields with special logic:
      * - If user searches for 3 stars, match 3, 4, and 5 star records
@@ -315,21 +328,21 @@ public class SimpleDatabase {
     private boolean compareStarsFields(String recordValue, String templateValue) {
         try {
             Log.d(TAG, "compareStarsFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
-            
+
             int recordStars = Integer.parseInt(recordValue.trim());
             int templateStars = Integer.parseInt(templateValue.trim());
-            
+
             // Record stars must be >= template stars (higher ratings include lower search values)
             boolean matches = recordStars >= templateStars;
             Log.d(TAG, "compareStarsFields: " + recordStars + " >= " + templateStars + ": " + matches);
             return matches;
-            
+
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing stars values in compareStarsFields: " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Compare number of people fields with special logic:
      * - If user searches for 10 people, match 10, 9, 8, 7... (equal or fewer people discounts)
@@ -338,23 +351,24 @@ public class SimpleDatabase {
     private boolean compareNumberOfPeopleFields(String recordValue, String templateValue) {
         try {
             Log.d(TAG, "compareNumberOfPeopleFields: Comparing record '" + recordValue + "' with template '" + templateValue + "'");
-            
+
             int recordPeople = Integer.parseInt(recordValue.trim());
             int templatePeople = Integer.parseInt(templateValue.trim());
-            
+
             // Record people must be <= template people (user can use discounts for equal or fewer people)
             boolean matches = recordPeople <= templatePeople;
             Log.d(TAG, "compareNumberOfPeopleFields: " + recordPeople + " <= " + templatePeople + ": " + matches);
             return matches;
-            
+
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing number of people values in compareNumberOfPeopleFields: " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Format results as a human-readable string
+     *
      * @param results JSONArray of query results
      * @return Formatted string for display
      */
@@ -362,18 +376,18 @@ public class SimpleDatabase {
         if (results == null || results.length() == 0) {
             return "Δεν βρέθηκαν αποτελέσματα.";
         }
-        
+
         StringBuilder sb = new StringBuilder();
         sb.append("Βρέθηκαν ").append(results.length()).append(" αποτελέσματα:\n\n");
-        
+
         try {
             for (int i = 0; i < results.length(); i++) {
                 JSONObject record = results.getJSONObject(i);
-                
+
                 // Add <sep> before each result
                 sb.append("<sep>\n");
                 sb.append("• Αποτέλεσμα ").append(i + 1).append(":\n");
-                
+
                 // Add all fields from the record
                 JSONArray names = record.names();
                 if (names != null) {
@@ -382,7 +396,7 @@ public class SimpleDatabase {
                         try {
                             JSONObject fieldObj = record.getJSONObject(name);
                             String value = fieldObj.getString("value");
-                              // Get Greek field name from template, fallback to English if not available
+                            // Get Greek field name from template, fallback to English if not available
                             String displayName;
                             if (template != null) {
                                 displayName = template.getGreekFieldName(name);
@@ -394,7 +408,7 @@ public class SimpleDatabase {
                                 // Fallback to formatted English name
                                 displayName = name.substring(0, 1).toUpperCase() + name.substring(1).replace("_", " ");
                             }
-                            
+
                             // Remove brackets from value and format
                             String cleanValue = value.replaceAll("^\\[|\\]$", "").replaceAll("\"", "");
                             sb.append(displayName).append(": ").append(cleanValue).append("\n");
@@ -402,7 +416,7 @@ public class SimpleDatabase {
                             // Handle special case for nested objects like "person"
                             try {
                                 JSONObject nestedObj = record.getJSONObject(name);
-                                  // Get Greek field name for nested object
+                                // Get Greek field name for nested object
                                 String displayName;
                                 if (template != null) {
                                     displayName = template.getGreekFieldName(name);
@@ -414,14 +428,14 @@ public class SimpleDatabase {
                                     displayName = name;
                                 }
                                 sb.append(displayName).append(":\n");
-                                
+
                                 JSONArray nestedNames = nestedObj.names();
                                 if (nestedNames != null) {
                                     for (int k = 0; k < nestedNames.length(); k++) {
                                         String nestedName = nestedNames.getString(k);
                                         JSONObject nestedFieldObj = nestedObj.getJSONObject(nestedName);
                                         String nestedValue = nestedFieldObj.getString("value");
-                                          // Get Greek field name for nested field
+                                        // Get Greek field name for nested field
                                         String nestedDisplayName;
                                         if (template != null) {
                                             nestedDisplayName = template.getGreekFieldName(nestedName);
@@ -432,7 +446,7 @@ public class SimpleDatabase {
                                         } else {
                                             nestedDisplayName = nestedName;
                                         }
-                                        
+
                                         String cleanNestedValue = nestedValue.replaceAll("^\\[|\\]$", "").replaceAll("\"", "");
                                         sb.append("  ").append(nestedDisplayName).append(": ").append(cleanNestedValue).append("\n");
                                     }
@@ -443,27 +457,29 @@ public class SimpleDatabase {
                         }
                     }
                 }
-                
+
                 sb.append("\n");
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error formatting results: " + e.getMessage());
         }
-        
+
         return sb.toString();
     }
 
     // Overloaded method for backward compatibility
     public String formatResults(JSONArray results) {
         return formatResults(results, null);
-    }    /**
+    }
+
+    /**
      * Result class for booking operations that include reservation details
      */
     public static class BookingResult {
         public final boolean success;
         public final String reservationId;
         public final String reservationPassword;
-        
+
         public BookingResult(boolean success, String reservationId, String reservationPassword) {
             this.success = success;
             this.reservationId = reservationId;
@@ -473,6 +489,7 @@ public class SimpleDatabase {
 
     /**
      * Add a new booking to the database and return reservation details
+     *
      * @param template The message template containing booking data
      * @return BookingResult containing success status and reservation details
      */
@@ -482,20 +499,20 @@ public class SimpleDatabase {
             if (template != null) {
                 Log.d(TAG, "addBookingWithDetails: Template field values: " + template.getFieldValuesMap());
             }
-            
+
             JSONObject newBooking = createBookingFromTemplate(template);
             Log.d(TAG, "addBookingWithDetails: Created booking JSON: " + newBooking.toString(2));
-            
+
             // Extract reservation details before adding to database
             String reservationId = newBooking.getJSONObject("reservation_id").getString("value");
             String reservationPassword = newBooking.getJSONObject("reservation_password").getString("value");
-            
+
             // Add to in-memory table
             JSONArray bookingsTable = tables.get("bookings");
             if (bookingsTable != null) {
                 bookingsTable.put(newBooking);
                 Log.d(TAG, "addBookingWithDetails: Added new booking to in-memory database. Total bookings: " + bookingsTable.length());
-                
+
                 // Write to internal storage for verification
                 writeTableToInternalStorage("bookings", "test_bookings.json");
                 return new BookingResult(true, reservationId, reservationPassword);
@@ -510,6 +527,7 @@ public class SimpleDatabase {
 
     /**
      * Add a new booking to the database
+     *
      * @param template The message template containing booking data
      * @return True if booking was added successfully
      */
@@ -519,16 +537,16 @@ public class SimpleDatabase {
             if (template != null) {
                 Log.d(TAG, "addBooking: Template field values: " + template.getFieldValuesMap());
             }
-            
+
             JSONObject newBooking = createBookingFromTemplate(template);
             Log.d(TAG, "addBooking: Created booking JSON: " + newBooking.toString(2));
-            
+
             // Add to in-memory table
             JSONArray bookingsTable = tables.get("bookings");
             if (bookingsTable != null) {
                 bookingsTable.put(newBooking);
                 Log.d(TAG, "addBooking: Added new booking to in-memory database. Total bookings: " + bookingsTable.length());
-                
+
                 // Write to internal storage for verification
                 writeTableToInternalStorage("bookings", "test_bookings.json");
                 return true;
@@ -539,8 +557,11 @@ public class SimpleDatabase {
             Log.e(TAG, "addBooking: Error adding booking: " + e.getMessage());
         }
         return false;
-    }/**
+    }
+
+    /**
      * Remove a booking from the database
+     *
      * @param template The message template containing booking criteria to remove
      * @return True if booking was removed successfully
      */
@@ -548,24 +569,24 @@ public class SimpleDatabase {
         try {
             JSONArray bookingsTable = tables.get("bookings");
             if (bookingsTable == null) return false;
-            
+
             Log.d(TAG, "removeBooking: Starting removal process with template: " + template);
             if (template != null) {
                 Log.d(TAG, "removeBooking: Template field values: " + template.getFieldValuesMap());
             }
-            
+
             // Find and remove matching booking
             for (int i = 0; i < bookingsTable.length(); i++) {
                 JSONObject booking = bookingsTable.getJSONObject(i);
-                Log.d(TAG, "removeBooking: Checking booking " + i + ": reservation_id=" + 
-                      booking.optJSONObject("reservation_id").optString("value") + 
-                      ", reservation_password=" + 
-                      booking.optJSONObject("reservation_password").optString("value"));
-                
+                Log.d(TAG, "removeBooking: Checking booking " + i + ": reservation_id=" +
+                        booking.optJSONObject("reservation_id").optString("value") +
+                        ", reservation_password=" +
+                        booking.optJSONObject("reservation_password").optString("value"));
+
                 if (matchesTemplate(booking, template)) {
                     bookingsTable.remove(i);
                     Log.d(TAG, "Removed booking from in-memory database");
-                    
+
                     // Write to internal storage for verification
                     writeTableToInternalStorage("bookings", "test_bookings.json");
                     return true;
@@ -578,8 +599,11 @@ public class SimpleDatabase {
             Log.e(TAG, "Error removing booking: " + e.getMessage());
         }
         return false;
-    }    /**
+    }
+
+    /**
      * Add a new review to the database
+     *
      * @param template The message template containing review data
      * @return True if review was added successfully
      */
@@ -589,16 +613,16 @@ public class SimpleDatabase {
             if (template != null) {
                 Log.d(TAG, "addReview: Template field values: " + template.getFieldValuesMap());
             }
-            
+
             JSONObject newReview = createReviewFromTemplate(template);
             Log.d(TAG, "addReview: Created review JSON: " + newReview.toString(2));
-            
+
             // Add to in-memory table
             JSONArray reviewsTable = tables.get("reviews");
             if (reviewsTable != null) {
                 reviewsTable.put(newReview);
                 Log.d(TAG, "addReview: Added new review to in-memory database. Total reviews: " + reviewsTable.length());
-                
+
                 // Write to internal storage for verification
                 writeTableToInternalStorage("reviews", "test_reviews.json");
                 return true;
@@ -609,8 +633,11 @@ public class SimpleDatabase {
             Log.e(TAG, "addReview: Error adding review: " + e.getMessage());
         }
         return false;
-    }    /**
+    }
+
+    /**
      * Create a booking JSON object from template data
+     *
      * @param template The message template containing booking data
      * @return JSONObject representing the booking
      */
@@ -618,26 +645,26 @@ public class SimpleDatabase {
         Log.d(TAG, "createBookingFromTemplate: Starting booking creation");
         JSONObject booking = new JSONObject();
         Map<String, List<String>> fields = template.getFieldValuesMap();
-        
+
         Log.d(TAG, "createBookingFromTemplate: Template fields: " + fields);
-        
+
         // Generate unique reservation ID and password
         String reservationId = "RES" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        String reservationPassword = "pass" + (int)(Math.random() * 1000);
-        
+        String reservationPassword = "pass" + (int) (Math.random() * 1000);
+
         Log.d(TAG, "createBookingFromTemplate: Generated booking with ID: " + reservationId + " and password: " + reservationPassword);
-        
+
         // Add all fields from template
         for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
             String fieldName = entry.getKey();
             List<String> values = entry.getValue();
-            
+
             Log.d(TAG, "createBookingFromTemplate: Processing field '" + fieldName + "' with values: " + values);
-            
+
             if (values != null && !values.isEmpty()) {
                 String value = values.get(0); // Take first value
                 Log.d(TAG, "createBookingFromTemplate: Setting field '" + fieldName + "' to value '" + value + "'");
-                
+
                 // Handle nested person object
                 if (fieldName.equals("name") || fieldName.equals("age") || fieldName.equals("seat")) {
                     if (!booking.has("person")) {
@@ -657,36 +684,38 @@ public class SimpleDatabase {
                     fieldObj.put("pvalues", new JSONArray());
                     booking.put(fieldName, fieldObj);
                     Log.d(TAG, "createBookingFromTemplate: Added regular field '" + fieldName + "' = '" + value + "'");
-                }        }
-        
-        // Add reservation ID and password
+                }
+            }
+
+            // Add reservation ID and password
+            JSONObject resIdObj = new JSONObject();
+            resIdObj.put("value", reservationId);
+            resIdObj.put("pvalues", new JSONArray());
+            booking.put("reservation_id", resIdObj);
+
+            JSONObject resPassObj = new JSONObject();
+            resPassObj.put("value", reservationPassword);
+            resPassObj.put("pvalues", new JSONArray());
+            booking.put("reservation_password", resPassObj);
+
+            Log.d(TAG, "createBookingFromTemplate: Created booking structure: " + booking.toString(2));
+            return booking;
+        }
         JSONObject resIdObj = new JSONObject();
         resIdObj.put("value", reservationId);
         resIdObj.put("pvalues", new JSONArray());
         booking.put("reservation_id", resIdObj);
-        
+
         JSONObject resPassObj = new JSONObject();
         resPassObj.put("value", reservationPassword);
         resPassObj.put("pvalues", new JSONArray());
         booking.put("reservation_password", resPassObj);
-        
-        Log.d(TAG, "createBookingFromTemplate: Created booking structure: " + booking.toString(2));
         return booking;
-    }
-        JSONObject resIdObj = new JSONObject();
-        resIdObj.put("value", reservationId);
-        resIdObj.put("pvalues", new JSONArray());
-        booking.put("reservation_id", resIdObj);
-        
-        JSONObject resPassObj = new JSONObject();
-        resPassObj.put("value", reservationPassword);
-        resPassObj.put("pvalues", new JSONArray());
-        booking.put("reservation_password", resPassObj);
-          return booking;
     }
 
     /**
      * Create a review JSON object from template data
+     *
      * @param template The message template containing review data
      * @return JSONObject representing the review
      */
@@ -694,20 +723,20 @@ public class SimpleDatabase {
         Log.d(TAG, "createReviewFromTemplate: Starting review creation");
         JSONObject review = new JSONObject();
         Map<String, List<String>> fields = template.getFieldValuesMap();
-        
+
         Log.d(TAG, "createReviewFromTemplate: Template fields: " + fields);
-        
+
         // Add all fields from template
         for (Map.Entry<String, List<String>> entry : fields.entrySet()) {
             String fieldName = entry.getKey();
             List<String> values = entry.getValue();
-            
+
             Log.d(TAG, "createReviewFromTemplate: Processing field '" + fieldName + "' with values: " + values);
-            
+
             if (values != null && !values.isEmpty()) {
                 String value = values.get(0); // Take first value
                 Log.d(TAG, "createReviewFromTemplate: Setting field '" + fieldName + "' to value '" + value + "'");
-                
+
                 JSONObject fieldObj = new JSONObject();
                 fieldObj.put("value", value);
                 fieldObj.put("pvalues", new JSONArray());
@@ -716,43 +745,44 @@ public class SimpleDatabase {
                 Log.w(TAG, "createReviewFromTemplate: Skipping empty field '" + fieldName + "'");
             }
         }
-        
+
         Log.d(TAG, "createReviewFromTemplate: Created review structure: " + review.toString(2));
         return review;
     }
 
     /**
      * Write a table to internal storage for testing/verification
+     *
      * @param tableName The name of the table
-     * @param filename The filename to write to
+     * @param filename  The filename to write to
      */
     private void writeTableToInternalStorage(String tableName, String filename) {
         if (context == null) {
             Log.w(TAG, "Context is null, cannot write to internal storage");
             return;
         }
-        
+
         try {
             JSONArray table = tables.get(tableName);
             if (table == null) {
                 Log.w(TAG, "Table " + tableName + " not found");
                 return;
             }
-            
+
             // Create the JSON structure
             JSONObject root = new JSONObject();
             root.put(tableName, table);
-            
+
             // Write to internal storage
             File file = new File(context.getFilesDir(), filename);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(root.toString(2).getBytes());
             fos.close();
-            
+
             Log.d(TAG, "Successfully wrote " + tableName + " table to " + filename);
             Log.d(TAG, "File location: " + file.getAbsolutePath());
             Log.d(TAG, "Table now contains " + table.length() + " records");
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error writing table to internal storage: " + e.getMessage());
         }
@@ -760,6 +790,7 @@ public class SimpleDatabase {
 
     /**
      * Get the current count of records in a table - useful for testing
+     *
      * @param tableName The name of the table
      * @return The number of records in the table
      */
@@ -780,8 +811,10 @@ public class SimpleDatabase {
         }
         Log.d(TAG, "=====================");
     }
-      /**
+
+    /**
      * Validate that the booking details match an existing show
+     *
      * @param template The message template containing booking data
      * @return True if a matching show exists, false otherwise
      */
@@ -792,59 +825,60 @@ public class SimpleDatabase {
                 Log.e(TAG, "validateShowExists: Shows table is null!");
                 return false;
             }
-            
+
             Log.d(TAG, "validateShowExists: Starting validation with template: " + template);
             if (template != null) {
                 Log.d(TAG, "validateShowExists: Template field values: " + template.getFieldValuesMap());
             }
-            
+
             // Extract the booking details we need to validate
             Map<String, List<String>> criteria = template.getFieldValuesMap();
             String showName = getFirstValue(criteria, "show_name");
             String room = getFirstValue(criteria, "room");
             String day = getFirstValue(criteria, "day");
             String time = getFirstValue(criteria, "time");
-            
-            Log.d(TAG, "validateShowExists: Looking for show - name: '" + showName + 
-                  "', room: '" + room + "', day: '" + day + "', time: '" + time + "'");
-            
+
+            Log.d(TAG, "validateShowExists: Looking for show - name: '" + showName +
+                    "', room: '" + room + "', day: '" + day + "', time: '" + time + "'");
+
             // Check each show in the shows table
             for (int i = 0; i < showsTable.length(); i++) {
                 JSONObject show = showsTable.getJSONObject(i);
-                
+
                 // Get all possible values for each field (handling arrays)
                 List<String> showNames = getFieldValues(show, "name");
                 List<String> showRooms = getFieldValues(show, "room");
                 List<String> showDays = getFieldValues(show, "day");
                 List<String> showTimes = getFieldValues(show, "time");
-                
-                Log.d(TAG, "validateShowExists: Checking show " + i + " - names: " + showNames + 
-                      ", rooms: " + showRooms + ", days: " + showDays + ", times: " + showTimes);
-                
+
+                Log.d(TAG, "validateShowExists: Checking show " + i + " - names: " + showNames +
+                        ", rooms: " + showRooms + ", days: " + showDays + ", times: " + showTimes);
+
                 // Check if the booking details match any combination in this show
                 boolean nameMatch = containsIgnoreCase(showNames, showName);
                 boolean roomMatch = containsIgnoreCase(showRooms, room);
                 boolean dayMatch = containsIgnoreCase(showDays, day);
                 boolean timeMatch = containsIgnoreCase(showTimes, time);
-                
+
                 if (nameMatch && roomMatch && dayMatch && timeMatch) {
                     Log.d(TAG, "validateShowExists: MATCH FOUND! Show exists with all required details");
                     return true;
                 }
             }
-            
+
             Log.d(TAG, "validateShowExists: NO MATCHING SHOW FOUND");
             return false;
-            
+
         } catch (JSONException e) {
             Log.e(TAG, "validateShowExists: Error validating show: " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Helper method to check if a list contains a string (case-insensitive)
-     * @param list The list to search in
+     *
+     * @param list   The list to search in
      * @param target The target string to find
      * @return True if found (case-insensitive), false otherwise
      */
@@ -859,11 +893,12 @@ public class SimpleDatabase {
         }
         return false;
     }
-    
+
     /**
      * Helper method to get the first value from a criteria list
+     *
      * @param criteria The criteria map
-     * @param field The field name
+     * @param field    The field name
      * @return The first value or empty string if not found
      */
     private String getFirstValue(Map<String, List<String>> criteria, String field) {
@@ -873,10 +908,11 @@ public class SimpleDatabase {
         }
         return "";
     }
-    
+
     /**
      * Helper method to get field values from a JSON object, handling both string and array formats
-     * @param record The JSON record
+     *
+     * @param record    The JSON record
      * @param fieldName The field name to extract
      * @return List of values from the field
      */
@@ -885,7 +921,7 @@ public class SimpleDatabase {
         try {
             if (record.has(fieldName)) {
                 JSONObject fieldObj = record.getJSONObject(fieldName);
-                
+
                 // Check if value is an array or a string
                 Object valueObj = fieldObj.get("value");
                 if (valueObj instanceof JSONArray) {
@@ -910,7 +946,8 @@ public class SimpleDatabase {
 
     /**
      * Helper method to get the first field value from a JSON object, handling both string and array formats
-     * @param record The JSON record
+     *
+     * @param record    The JSON record
      * @param fieldName The field name to extract
      * @return The first value or empty string if not found
      */

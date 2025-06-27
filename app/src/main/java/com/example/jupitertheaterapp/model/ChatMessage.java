@@ -29,11 +29,11 @@ public abstract class ChatMessage {
     public int getType() {
         return type;
     }
-    
+
     public String getCategory() {
         return category;
     }
-    
+
     public void setCategory(String category) {
         this.category = category;
     }
@@ -42,7 +42,7 @@ public abstract class ChatMessage {
     public boolean isSystemMessage() {
         return type == TYPE_BOT || type == TYPE_SERVER;
     }
-    
+
     /**
      * Creates appropriate message subtype based on the type
      */
@@ -66,7 +66,7 @@ class SystemMessage extends ChatMessage {
     private JSONObject details;
     private String error;
     private String message; // Used internally for getMessage method
-    
+
     public SystemMessage(String message, int type) {
         super(type);
         this.message = message;
@@ -75,12 +75,12 @@ class SystemMessage extends ChatMessage {
             this.type = TYPE_BOT; // Default to BOT if an invalid type is provided
         }
     }
-    
+
     // Constructor with default BOT type
     public SystemMessage(String message) {
         this(message, TYPE_BOT);
     }
-    
+
     // Constructor for server responses with JSON
     public SystemMessage(JSONObject jsonResponse, int type) {
         super(type, jsonResponse.optString("category", "-"));
@@ -89,7 +89,8 @@ class SystemMessage extends ChatMessage {
         // Set a default message based on category
         this.message = "Server response for category: " + this.category;
     }
-      // Constructor accepting server response as a JSON string
+
+    // Constructor accepting server response as a JSON string
     public SystemMessage(String jsonString, int type, boolean isJson) {
         super(type);
         if (isJson) {
@@ -107,42 +108,47 @@ class SystemMessage extends ChatMessage {
         } else {
             this.message = jsonString;
         }
-    }      @Override
+    }
+
+    @Override
     public String getMessage() {
         return message;
     }
-      public JSONObject getDetails() {
+
+    public JSONObject getDetails() {
         return details;
     }
-    
+
     public String getError() {
         return error;
     }
-    
+
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
     public void setDetails(JSONObject details) {
         this.details = details;
     }
-    
+
     public void setError(String error) {
         this.error = error;
     }
-      /**
+
+    /**
      * Gets the JSON representation of this message
+     *
      * @return A JSONObject containing all the message data
      */
     public JSONObject toJsonObject() {
         JSONObject json = new JSONObject();
         try {
             json.put("category", category != null ? category : "-");
-            
+
             if (details != null) {
                 json.put("details", details);
             }
-            
+
             if (error != null && !error.isEmpty()) {
                 json.put("error", error);
             }
@@ -151,15 +157,16 @@ class SystemMessage extends ChatMessage {
         }
         return json;
     }
-    
+
     /**
      * Gets a specific field from the details JSON
+     *
      * @param fieldName The name of the field to get
      * @return The field value as a string, or null if not found
      */
     public String getDetailField(String fieldName) {
         if (details == null) return null;
-        
+
         try {
             if (details.has(fieldName)) {
                 Object value = details.get(fieldName);
@@ -168,23 +175,24 @@ class SystemMessage extends ChatMessage {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     /**
      * Creates a server-type system message
      */
     public static SystemMessage createServerMessage(String message) {
         return new SystemMessage(message, TYPE_SERVER);
     }
-    
+
     /**
      * Creates a bot-type system message
      */
     public static SystemMessage createBotMessage(String message) {
         return new SystemMessage(message, TYPE_BOT);
     }    //toString method to get the message and the super class fields
+
     @Override
     public String toString() {
         return "SystemMessage{" +
@@ -194,7 +202,7 @@ class SystemMessage extends ChatMessage {
                 ", type=" + type +
                 '}';
     }
-    
+
 }
 
 /**
@@ -203,23 +211,24 @@ class SystemMessage extends ChatMessage {
  */
 class UserMessage extends ChatMessage {
     private String message;
-    
+
     public UserMessage(String message) {
         super(TYPE_USER);
         this.message = message;
     }
-    
+
     @Override
     public String getMessage() {
         return message;
     }
-    
+
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
     /**
      * Gets the JSON representation of this message
+     *
      * @return A JSONObject containing all the message data
      */
     public JSONObject toJsonObject() {
@@ -233,7 +242,7 @@ class UserMessage extends ChatMessage {
         }
         return json;
     }
-    
+
     @Override
     public String toString() {
         return "UserMessage{" +

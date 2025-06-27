@@ -96,7 +96,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     /**
      * Add a message with manual splitting by newlines
-     * 
+     *
      * @param messageText The combined message text
      * @param messageType The type of message (USER, BOT, SERVER)
      * @param category    The message category

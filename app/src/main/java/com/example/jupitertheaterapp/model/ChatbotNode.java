@@ -75,7 +75,7 @@ public class ChatbotNode {
      * Constructor that explicitly takes system and user messages
      */
     public ChatbotNode(String id, String type, ChatMessage systemMessage, ChatMessage userMessage,
-            String content, String fallback) {
+                       String content, String fallback) {
         this.id = id;
         this.category = id; // Default category to id, but should be overridden by proper category
         this.type = type;
@@ -137,21 +137,23 @@ public class ChatbotNode {
 
     public String getType() {
         return type;
-    }    public String getMessage() {
+    }
+
+    public String getMessage() {
         // Return message1 from the node directly
         String result = message1 != null ? message1 : "";
-        
+
         // Check if the message contains a <leftover> tag and if this is the root node
         if (result.contains("<leftover>") && "root".equals(this.id)) {
             System.out.println("DEBUG: Found <leftover> placeholder in root node message1: " + result);
-            
+
             // Get the ChatbotManager instance
             ChatbotManager manager = ChatbotManager.getInstance();
             if (manager != null) {
                 // Get the leftover message from the manager
                 String leftoverMessage = manager.getLeftoverMessage();
                 System.out.println("DEBUG: Retrieved leftover message from manager: " + leftoverMessage);
-                
+
                 if (leftoverMessage != null && !leftoverMessage.isEmpty()) {
                     result = result.replace("<leftover>", leftoverMessage);
                     System.out.println("DEBUG: Replaced <leftover> with actual message: " + result);
@@ -165,9 +167,11 @@ public class ChatbotNode {
                 result = null;
             }
         }
-        
+
         return result;
-    }    /**
+    }
+
+    /**
      * Gets message_2 (the alternative message format, often all caps)
      * If the message contains a <results> tag, it will be processed to include database query results
      * If the message contains template placeholders and we have a template, it will be processed
@@ -175,7 +179,7 @@ public class ChatbotNode {
     public String getMessage2() {
         // Return message2 from the node directly
         String result = message2 != null ? message2 : "";
-        
+
         // Check if the message contains a <results> tag and if this is a complete node (has template)
         if (result.contains("<results>") && msgTemplate != null) {
             // Get the ChatbotManager instance
@@ -185,25 +189,25 @@ public class ChatbotNode {
                 result = manager.processResultsTag(result, category, msgTemplate);
             }
         }
-        
+
         // Process template placeholders if we have a template and the message contains placeholders
-        if (msgTemplate != null && result != null && 
-            (result.contains("<") && result.contains(">"))) {
-              // Only process if it contains actual placeholders (not just <results> or <sep>)
-            if (result.contains("<reservation_number>") || result.contains("<passcode>") || 
-                result.contains("<show_name>") || result.contains("<room>") || 
-                result.contains("<day>") || result.contains("<time>") || 
-                result.contains("<person_name>") || result.contains("<person_age>") || 
-                result.contains("<person_seat>") || result.contains("<missing>") || 
-                result.contains("<!missing>")) {
-                
+        if (msgTemplate != null && result != null &&
+                (result.contains("<") && result.contains(">"))) {
+            // Only process if it contains actual placeholders (not just <results> or <sep>)
+            if (result.contains("<reservation_number>") || result.contains("<passcode>") ||
+                    result.contains("<show_name>") || result.contains("<room>") ||
+                    result.contains("<day>") || result.contains("<time>") ||
+                    result.contains("<person_name>") || result.contains("<person_age>") ||
+                    result.contains("<person_seat>") || result.contains("<missing>") ||
+                    result.contains("<!missing>")) {
+
                 System.out.println("DEBUG: Processing template placeholders in getMessage2() for: " + this.id);
                 System.out.println("DEBUG: Original message2: " + result);
                 result = msgTemplate.processTemplate(result);
                 System.out.println("DEBUG: Processed message2: " + result);
             }
         }
-        
+
         return result;
     }
 
@@ -275,7 +279,7 @@ public class ChatbotNode {
     /**
      * Gets the first child of this node
      * This replaces the random selection with a deterministic approach
-     * 
+     *
      * @return The first child node, or null if no children
      */
     public ChatbotNode getFirstChild() {
@@ -315,7 +319,7 @@ public class ChatbotNode {
      * and the given message.
      * For EXTRACT nodes, creates a JSON with type=EXTRACT, category from parent
      * node or current category, and the given message.
-     * 
+     *
      * @param userMessage The user's message to include in the request
      * @return JSONObject formatted for server communication
      */
@@ -324,10 +328,10 @@ public class ChatbotNode {
         try {
             // Special case: completion nodes should send CATEGORIZE requests when user presses any key
             // This allows proper categorization of new input instead of trying to extract from completed flows
-            boolean isCompletionNode = this.id.endsWith("_complete") && 
-                                     this.message2 != null && 
-                                     this.message2.contains("Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση");
-            
+            boolean isCompletionNode = this.id.endsWith("_complete") &&
+                    this.message2 != null &&
+                    this.message2.contains("Πατήστε οτιδήποτε για να επιστρέψετε στην αρχική κατάσταση");
+
             if (isCompletionNode) {
                 // Override EXTRACT type with CATEGORIZE for completion nodes
                 jsonRequest.put("type", "CATEGORISE");
@@ -362,7 +366,7 @@ public class ChatbotNode {
 
     /**
      * Gets the conversation path from the root node to this node
-     * 
+     *
      * @return List of nodes in the conversation path (from root to this node)
      */
     public List<ChatbotNode> getConversationPath() {
@@ -379,18 +383,20 @@ public class ChatbotNode {
         }
 
         return path;
-    }    /**
+    }
+
+    /**
      * Choose the next node in the conversation based on the current state and user
      * message. Uses a robust approach without relying on level-based handler
      * functions.
-     * 
+     *
      * @param actualUserInput The actual user input before any processing
      * @return The next node in the conversation
      */
     public ChatbotNode chooseNextNode(String actualUserInput) {
         // Use the actual user input for decision making
         String userMessageText = actualUserInput != null ? actualUserInput : "";
-        
+
         // Also get the stored user message for fallback scenarios
         String storedUserMessage = "";
         if (userMessage != null) {
@@ -422,8 +428,8 @@ public class ChatbotNode {
         }
 
         // These are the valid categories that can be returned by the server
-        String[] validCategories = { "ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ",
-                "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ" };
+        String[] validCategories = {"ΚΡΑΤΗΣΗ", "ΑΚΥΡΩΣΗ", "ΠΛΗΡΟΦΟΡΙΕΣ", "ΑΞΙΟΛΟΓΗΣΕΙΣ & ΣΧΟΛΙΑ",
+                "ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ"};
 
         // Check if user message is a valid category from the server
         boolean isValidServerCategory = false;
@@ -440,7 +446,8 @@ public class ChatbotNode {
                 userMessageText.toLowerCase().contains("επιβεβαιώνω") ||
                 userMessageText.toLowerCase().contains("ναί") ||
                 userMessageText.toLowerCase().contains("οκ") ||
-                userMessageText.toLowerCase().contains("ok");        boolean isRejection = userMessageText.toLowerCase().contains("no") ||
+                userMessageText.toLowerCase().contains("ok");
+        boolean isRejection = userMessageText.toLowerCase().contains("no") ||
                 userMessageText.toLowerCase().contains("cancel") ||
                 userMessageText.toLowerCase().contains("όχι") ||  // with accent
                 userMessageText.toLowerCase().contains("οχι") ||  // without accent
@@ -522,11 +529,11 @@ public class ChatbotNode {
         // Case 3: If we're at a main category node, check for template completeness
         else if (validCategoryNode(this)) {
             System.out.println("DEBUG: At category node " + this.id + ", checking template completeness");// Check if
-                                                                                                           // the
-                                                                                                           // template
-                                                                                                           // has
-                                                                                                           // complete
-                                                                                                           // information
+            // the
+            // template
+            // has
+            // complete
+            // information
             boolean hasCompleteInfo = hasCompleteTemplateInformation();
             System.out.println("DEBUG: Template completeness: " + hasCompleteInfo);
 
@@ -612,18 +619,18 @@ public class ChatbotNode {
                 else if (msgTemplate != null
                         && msgTemplate instanceof com.example.jupitertheaterapp.model.DiscountTemplate) {
                     com.example.jupitertheaterapp.model.DiscountTemplate template = (com.example.jupitertheaterapp.model.DiscountTemplate) msgTemplate;                // Get all field values
-                String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
-                String numberOfPeople = template.getNumberOfPeople().isEmpty() ? "" : template.getNumberOfPeople().get(0);
-                String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
-                String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
+                    String showName = template.getShowName().isEmpty() ? "" : template.getShowName().get(0);
+                    String numberOfPeople = template.getNumberOfPeople().isEmpty() ? "" : template.getNumberOfPeople().get(0);
+                    String age = template.getAge().isEmpty() ? "" : template.getAge().get(0);
+                    String date = template.getDate().isEmpty() ? "" : template.getDate().get(0);
 
-                System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - DiscountTemplate content:");
-                System.out.println("DEBUG:   showName: '" + showName + "'");
-                System.out.println("DEBUG:   numberOfPeople: '" + numberOfPeople + "'");
-                System.out.println("DEBUG:   age: '" + age + "'");
+                    System.out.println("DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - DiscountTemplate content:");
+                    System.out.println("DEBUG:   showName: '" + showName + "'");
+                    System.out.println("DEBUG:   numberOfPeople: '" + numberOfPeople + "'");
+                    System.out.println("DEBUG:   age: '" + age + "'");
                     System.out.println("DEBUG:   date: '" + date + "'");                // Check if any fields are populated
-                boolean hasAtLeastOneField = !showName.isEmpty() || (numberOfPeople != null && !numberOfPeople.isEmpty()) ||
-                        !age.isEmpty() || !date.isEmpty();
+                    boolean hasAtLeastOneField = !showName.isEmpty() || (numberOfPeople != null && !numberOfPeople.isEmpty()) ||
+                            !age.isEmpty() || !date.isEmpty();
 
                     System.out.println(
                             "DEBUG: ΠΡΟΣΦΟΡΕΣ & ΕΚΠΤΩΣΕΙΣ - Has at least one field populated: " + hasAtLeastOneField);
@@ -780,7 +787,7 @@ public class ChatbotNode {
 
     /**
      * Checks if this is a valid category node (main category)
-     * 
+     *
      * @param node The node to check
      * @return true if it's a main category node, false otherwise
      */
@@ -795,7 +802,7 @@ public class ChatbotNode {
 
     /**
      * Checks if this is a terminal node that should return to root
-     * 
+     *
      * @param nodeId The node ID to check
      * @return true if it's a terminal node, false otherwise
      */
@@ -846,7 +853,7 @@ public class ChatbotNode {
      * Updates the system message with a JSON response from the server.
      * This method is now primarily used internally by processMessageByState()
      * but can still be called directly if needed.
-     * 
+     *
      * @param jsonResponse The JSON response from the server as a string
      * @param messageType  The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
@@ -862,7 +869,7 @@ public class ChatbotNode {
             if (!category.isEmpty()) {
                 this.category = category;
             }
-              // Always initialize the template if possible, even if there are no details
+            // Always initialize the template if possible, even if there are no details
             // This ensures we can process <missing> placeholders in message1 and message2
             if (msgTemplate == null && !category.isEmpty() && !category.equals("unknown") && !category.equals("root")) {
                 try {
@@ -891,7 +898,7 @@ public class ChatbotNode {
             if (msgTemplate != null) {
                 System.out.println("DEBUG: Current template before processing: " + msgTemplate.getClass().getSimpleName());
                 System.out.println("DEBUG: Missing fields: " + msgTemplate.getMissingFieldsAsGreekString());
-                
+
                 // Debug message placeholders
                 if (this.message1 != null && this.message1.contains("<missing>")) {
                     System.out.println("DEBUG: message1 contains <missing> placeholder: " + this.message1);
@@ -900,7 +907,7 @@ public class ChatbotNode {
                     System.out.println("DEBUG: message2 contains <missing> placeholder: " + this.message2);
                 }
             }
-            
+
             // Only try to apply template if we have details or error
             if (hasDetails || errorMessage != null) {
                 // Create or get template based on category from the response
@@ -971,7 +978,7 @@ public class ChatbotNode {
                     String processedMessage = msgTemplate.processTemplate(templateStr);
                     // Don't overwrite this.message2 - preserve the original template string for future use
                     // The processing will happen on-demand in getMessage2()
-                    
+
                     System.out.println("TEMPLATE APPLIED: " + processedMessage);
                     return true;
                 } else {
@@ -981,7 +988,8 @@ public class ChatbotNode {
                         this.message2 = basicMessage;
                     }
                     return true;
-                }            } else {
+                }
+            } else {
                 // If no details or error, just use the message as is without applying a
                 // template
                 System.out.println("No details in JSON response, skipping template application");
@@ -990,14 +998,14 @@ public class ChatbotNode {
                 // using the template if it exists
                 if (msgTemplate != null) {
 
-                      // Process message2 to replace <missing> placeholders only
+                    // Process message2 to replace <missing> placeholders only
                     // We keep <missing> processing because it's structural, not user-specific data
                     if (this.message2 != null && !this.message2.isEmpty() && this.message2.contains("<missing>")) {
                         this.message2 = msgTemplate.processTemplate(this.message2);
                         System.out.println("DEBUG: Processed message2 with template (no details): " + this.message2);
                     } else if (this.message2 == null || this.message2.isEmpty()) {
                         this.message2 = basicMessage;
-                        
+
                         // If basicMessage has <missing> placeholder, process it too
                         if (this.message2 != null && this.message2.contains("<missing>")) {
                             this.message2 = msgTemplate.processTemplate(this.message2);
@@ -1035,7 +1043,7 @@ public class ChatbotNode {
     /**
      * Ελέγχει αν το template του node έχει όλα τα απαραίτητα πεδία συμπληρωμένα
      * για την κατηγορία του
-     * 
+     *
      * @return true αν το template είναι πλήρες, false διαφορετικά
      */
     public boolean hasCompleteTemplateInformation() {
@@ -1157,7 +1165,7 @@ public class ChatbotNode {
     /**
      * Updates the conversation state based on the current node.
      * This method should be called whenever transitioning to a new node.
-     * 
+     *
      * @return The new state that was set
      */
     public ConversationState.State handleNodeTransition() {
@@ -1248,7 +1256,7 @@ public class ChatbotNode {
      * This method acts as a dispatcher that selects the appropriate processing
      * method
      * based on the current conversation state and node type.
-     * 
+     *
      * @param jsonResponse The JSON response from the server
      * @param messageType  The type of message (BOT or SERVER)
      * @return True if successful, false otherwise
@@ -1376,7 +1384,7 @@ public class ChatbotNode {
 
     /**
      * Gets the current conversation state
-     * 
+     *
      * @return The current conversation state
      */
     public ConversationState.State getCurrentState() {
@@ -1389,7 +1397,7 @@ public class ChatbotNode {
      * value
      * and performs state transition handling before returning it.
      * This ensures state is always updated when a new node is selected.
-     * 
+     *
      * @param nextNode The node that was selected by chooseNextNode
      * @return The same node, after handling any needed state transitions
      */
@@ -1402,13 +1410,13 @@ public class ChatbotNode {
                 nextNode.setCategory("root"); // Reset category to prevent template recreation from old category
             } else {
                 // Check if we're starting a fresh conversation (root -> category node)
-                boolean isStartingFreshConversation = "root".equals(this.id) && 
-                                                    (nextNode.getId().equals("plirofories") || 
-                                                     nextNode.getId().equals("kratisi") || 
-                                                     nextNode.getId().equals("akyrosi") || 
-                                                     nextNode.getId().equals("axiologiseis_sxolia") || 
-                                                     nextNode.getId().equals("prosfores_ekptoseis"));
-                
+                boolean isStartingFreshConversation = "root".equals(this.id) &&
+                        (nextNode.getId().equals("plirofories") ||
+                                nextNode.getId().equals("kratisi") ||
+                                nextNode.getId().equals("akyrosi") ||
+                                nextNode.getId().equals("axiologiseis_sxolia") ||
+                                nextNode.getId().equals("prosfores_ekptoseis"));
+
                 if (isStartingFreshConversation) {
                     System.out.println("DEBUG: Starting fresh conversation from root to " + nextNode.getId() + " - ensuring clean template");
                     // For fresh conversations, create a completely new template instead of merging
@@ -1423,7 +1431,7 @@ public class ChatbotNode {
                 } else {
                     // Check if this is a fresh conversation starting from root
                     boolean isFreshConversation = false;
-                    
+
                     // If current node is "plirofories" and we're transitioning to "info_confirmation",
                     // check if this is a fresh conversation by looking at the parent path
                     if (this.id.equals("plirofories") && nextNode.getId().equals("info_confirmation")) {
@@ -1431,20 +1439,28 @@ public class ChatbotNode {
                         // We can determine this by checking if the current template has minimal data
                         // (only fields populated by the most recent server response)
                         if (this.msgTemplate instanceof com.example.jupitertheaterapp.model.ShowInfoTemplate) {
-                            com.example.jupitertheaterapp.model.ShowInfoTemplate currentTemplate = 
-                                (com.example.jupitertheaterapp.model.ShowInfoTemplate) this.msgTemplate;
-                            
+                            com.example.jupitertheaterapp.model.ShowInfoTemplate currentTemplate =
+                                    (com.example.jupitertheaterapp.model.ShowInfoTemplate) this.msgTemplate;
+
                             // Count non-empty fields in current template
                             int populatedFields = 0;
-                            if (currentTemplate.getName() != null && !currentTemplate.getName().isEmpty()) populatedFields++;
-                            if (currentTemplate.getDay() != null && !currentTemplate.getDay().isEmpty()) populatedFields++;
-                            if (currentTemplate.getTopic() != null && !currentTemplate.getTopic().isEmpty()) populatedFields++;
-                            if (currentTemplate.getTime() != null && !currentTemplate.getTime().isEmpty()) populatedFields++;
-                            if (currentTemplate.getCast() != null && !currentTemplate.getCast().isEmpty()) populatedFields++;
-                            if (currentTemplate.getRoom() != null && !currentTemplate.getRoom().isEmpty()) populatedFields++;
-                            if (currentTemplate.getDuration() != null && !currentTemplate.getDuration().isEmpty()) populatedFields++;
-                            if (currentTemplate.getStars() != null && !currentTemplate.getStars().isEmpty()) populatedFields++;
-                            
+                            if (currentTemplate.getName() != null && !currentTemplate.getName().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getDay() != null && !currentTemplate.getDay().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getTopic() != null && !currentTemplate.getTopic().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getTime() != null && !currentTemplate.getTime().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getCast() != null && !currentTemplate.getCast().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getRoom() != null && !currentTemplate.getRoom().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getDuration() != null && !currentTemplate.getDuration().isEmpty())
+                                populatedFields++;
+                            if (currentTemplate.getStars() != null && !currentTemplate.getStars().isEmpty())
+                                populatedFields++;
+
                             // If only 1-2 fields are populated, likely a fresh conversation
                             if (populatedFields <= 2) {
                                 isFreshConversation = true;
@@ -1452,7 +1468,7 @@ public class ChatbotNode {
                             }
                         }
                     }
-                    
+
                     if (isFreshConversation) {
                         // For fresh conversations, don't merge - just transfer the current template
                         System.out.println("DEBUG: Fresh conversation detected - transferring template without merging to avoid contamination");
@@ -1463,8 +1479,8 @@ public class ChatbotNode {
                             System.out.println("DEBUG: Transferring template from " + this.id + " to " + nextNode.getId());
                             nextNode.setMessageTemplate(this.msgTemplate);
                             System.out.println("DEBUG: Template transferred: " + this.msgTemplate.getClass().getSimpleName() + " with fields: " +
-                                (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" :
-                                "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
+                                    (this.msgTemplate.getMissingFields().isEmpty() ? "all fields populated" :
+                                            "missing: " + this.msgTemplate.getMissingFieldsAsGreekString()));
                         } else if (this.msgTemplate != null && nextNode.getMessageTemplate() != null) {
                             System.out.println("DEBUG: Both nodes have templates, attempting merge from " + this.id + " to " + nextNode.getId());
                             boolean merged = nextNode.getMessageTemplate().mergeFrom(this.msgTemplate);
@@ -1477,7 +1493,7 @@ public class ChatbotNode {
                     }
                 }
             }
-            
+
             // This will update the state based on the node's type
             nextNode.handleNodeTransition();
         } else {
@@ -1489,7 +1505,7 @@ public class ChatbotNode {
     /**
      * Handles a complete conversation turn, processing the user message,
      * updating the conversation state, and formulating a response.
-     * 
+     *
      * @param jsonResponse JSON response from the server
      * @param messageType  Type of message (BOT, SERVER)
      * @return A combined response message to show to the user
@@ -1522,7 +1538,7 @@ public class ChatbotNode {
                 if (msgTemplate != null) {
                     boolean populated = msgTemplate.valuesFromJson(jsonResponse);
                     System.out.println("DEBUG: Template populated: " + populated); // Log missing fields after
-                                                                                   // populating
+                    // populating
                     List<String> missingFields = msgTemplate.getMissingFields();
                     System.out.println("DEBUG: After JSON population - Missing fields: " + missingFields.size());
                     if (!missingFields.isEmpty()) {
@@ -1605,7 +1621,7 @@ public class ChatbotNode {
         }        // 3. Combine message1 and message2 with a newline between them, avoiding empty lines
         String combinedMessage = getMessage();
         String message2 = getMessage2();
-        
+
         // Smart message combination to avoid empty lines when message1 is empty
         if (combinedMessage == null || combinedMessage.isEmpty()) {
             combinedMessage = (message2 != null && !message2.isEmpty()) ? message2 : "";
@@ -1637,7 +1653,7 @@ public class ChatbotNode {
     /**
      * Generates a prompt asking for specific missing information based on the
      * template
-     * 
+     *
      * @return A prompt for the missing information
      */
 }
