@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private static final String TAG = "Client";
-    private String serverHost = "10.5.24.193"; // Default from server logs
+    private String serverHost = "192.168.236.87"; // Default from server logs
     private int serverPort = 65432; // Default port
     private ChatbotManager chatbotManager;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
